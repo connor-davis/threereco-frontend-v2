@@ -1,6 +1,7 @@
 import "../globals.css";
 
 import { Inter as FontSans } from "next/font/google";
+import { Suspense } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 
@@ -23,9 +24,11 @@ export default function RootLayout({ children }) {
           fontSans.variable
         )}
       >
-        {children}
+        <Suspense>
+          {children}
 
-        <Toaster />
+          <Toaster />
+        </Suspense>
       </body>
     </html>
   );
