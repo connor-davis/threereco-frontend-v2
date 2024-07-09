@@ -14,7 +14,7 @@ export default function CollectorSearch({
   useEffect(() => {
     const disposeableTimeout = setTimeout(async () => {
       if (searchValue) {
-        const response = await fetch(`/api/collectors/search/${searchValue}`);
+        const response = await fetch(`/api/collector/search/${searchValue}`);
 
         console.log(await response.text());
       }
