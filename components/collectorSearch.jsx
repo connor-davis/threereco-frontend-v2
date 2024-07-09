@@ -71,19 +71,21 @@ export default function CollectorSearch({
         {searchResults.map((collector) => (
           <Button
             variant="outline"
-            className="flex flex-col items-start justify-start h-auto"
+            className="flex flex-col items-start justify-start h-auto space-y-2"
           >
             <Label>
               {[collector.first_name, collector.last_name].join(" ")}
             </Label>
-            <Label className="flex items-center">
-              <MailIcon className="w-4 h-4 mr-2" />
-              {collector.email}
-            </Label>
-            <Label className="flex items-center">
-              <PhoneIcon className="w-4 h-4 mr-2" />
-              {collector.phone_number}
-            </Label>
+            <div className="flex flex-col space-y-1">
+              <Label className="flex items-center text-muted-foreground">
+                <MailIcon className="w-4 h-4 mr-2" />
+                {collector.email}
+              </Label>
+              <Label className="flex items-center text-muted-foreground">
+                <PhoneIcon className="w-4 h-4 mr-2" />
+                {collector.phone_number}
+              </Label>
+            </div>
           </Button>
         ))}
       </div>
