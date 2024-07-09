@@ -76,11 +76,11 @@ export default function CollectorSearch({
             <Label>
               {[collector.first_name, collector.last_name].join(" ")}
             </Label>
-            <Label>
+            <Label className="flex items-center">
               <MailIcon className="w-4 h-4 mr-2" />
               {collector.email}
             </Label>
-            <Label>
+            <Label className="flex items-center">
               <PhoneIcon className="w-4 h-4 mr-2" />
               {collector.phone_number}
             </Label>
