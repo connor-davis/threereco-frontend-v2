@@ -26,6 +26,7 @@ import {
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { Button } from "@/components/ui/button";
+import CollectorSearch from "@/components/collectorSearch";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import LoadingSpinner from "@/components/loadingSpinner";
@@ -265,6 +266,8 @@ export default function CreateCollectionPage() {
                   )}
                 />
               </RoleGuard>
+
+              <CollectorSearch />
 
               <FormField
                 control={collectionForm.control}
