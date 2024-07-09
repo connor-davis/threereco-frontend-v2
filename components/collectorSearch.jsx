@@ -70,7 +70,7 @@ export default function CollectorSearch({
       />
 
       {searchResults.length > 0 && (
-        <div className="flex flex-col p-1 space-y-1 border bg-muted">
+        <div className="flex flex-col p-1 space-y-1 overflow-y-auto border bg-muted max-h-64">
           {searchResults.map((collector) => (
             <div
               className={cn(
