@@ -267,34 +267,17 @@ export default function CreateCollectionPage() {
                 />
               </RoleGuard>
 
-              <CollectorSearch />
-
               <FormField
                 control={collectionForm.control}
                 name="collector_id"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Collector</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
+                    <CollectorSearch
+                      onSelected={field.onChange}
                       defaultValue={field.value}
                       value={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a collector" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {collectors.map((collector) => (
-                          <SelectItem key={collector.id} value={collector.id}>
-                            {[collector.first_name, collector.last_name].join(
-                              " "
-                            )}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    />
                     <FormDescription>
                       Select a collector to add the collection to.
                     </FormDescription>

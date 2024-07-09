@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
+import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import useAuthenticationStore from "@/lib/state/authentication";
 
@@ -17,8 +18,10 @@ export default function CollectorSearch({
   const { token } = useAuthenticationStore();
 
   const [searchValue, setSearchValue] = useState(null);
-
   const [searchResults, setSearchResults] = useState([]);
+  const [selected, setSelected] = useState(
+    props.value || props.defaultValue || null
+  );
 
   useEffect(() => {
     const disposeableTimeout = setTimeout(async () => {
@@ -71,7 +74,15 @@ export default function CollectorSearch({
         {searchResults.map((collector) => (
           <Button
             variant="outline"
-            className="flex flex-col items-start justify-start h-auto space-y-2"
+            className={cn(
+              "flex flex-col items-start justify-start h-auto space-y-2",
+              selected === collector.id && "border-primary"
+            )}
+            key={collector.id}
+            onClick={() => {
+              setSelected(collector.id);
+              onSelected(collector.id);
+            }}
           >
             <Label>
               {[collector.first_name, collector.last_name].join(" ")}
