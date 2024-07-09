@@ -275,8 +275,8 @@ export default function CreateCollectionPage() {
                     <FormLabel>Collector</FormLabel>
                     <CollectorSearch
                       onSelected={field.onChange}
-                      defaultValue={field.value}
-                      value={field.value}
+                      defaultSelected={field.value}
+                      selected={field.value}
                     />
                     <FormDescription>
                       Select a collector to add the collection to.

@@ -20,7 +20,7 @@ export default function CollectorSearch({
   const [searchValue, setSearchValue] = useState(null);
   const [searchResults, setSearchResults] = useState([]);
   const [selected, setSelected] = useState(
-    props.value || props.defaultValue || null
+    props.selected ?? props.defaultSelected ?? null
   );
 
   useEffect(() => {
