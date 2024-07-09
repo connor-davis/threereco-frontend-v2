@@ -2,19 +2,13 @@
 
 import {
   Card,
+  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 
-import { Label } from "@/components/ui/label";
-import RoleGuard from "@/components/guards/role";
-import { cn } from "@/lib/utils";
-import useUserStore from "@/lib/state/user";
-
 export default function DashboardPage() {
-  const { user } = useUserStore();
-
   return (
     <div className="flex flex-col w-full h-full">
       {/* <div
@@ -60,6 +54,11 @@ export default function DashboardPage() {
               This page is currently under construction. Please check back
               later.
             </CardDescription>
+            <CardContent>
+              Please contact the administrator if you have any questions or
+              concerns.
+            </CardContent>
+            <CardFooter className="text-center">Thank You!</CardFooter>
           </CardHeader>
         </Card>
       </div>
