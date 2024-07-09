@@ -71,7 +71,7 @@ export default function CollectorSearch({
         {searchResults.map((collector) => (
           <Button
             variant="outline"
-            className="flex flex-col items-start justify-start"
+            className="flex flex-col items-start justify-start h-auto"
           >
             <Label>
               {[collector.first_name, collector.last_name].join(" ")}
