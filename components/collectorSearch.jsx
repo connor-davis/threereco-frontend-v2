@@ -62,7 +62,7 @@ export default function CollectorSearch({
     return () => {
       clearTimeout(disposeableTimeout);
     };
-  }, [searchValue]);
+  }, [searchValue, props.selected, props.defaultSelected]);
 
   return (
     <div className="flex flex-col space-y-3">
