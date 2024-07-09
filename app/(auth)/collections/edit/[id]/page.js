@@ -312,20 +312,26 @@ export default function EditCollectionPage({ params: { id } }) {
               <FormField
                 control={collectionForm.control}
                 name="collector_id"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Collector</FormLabel>
-                    <CollectorSearch
-                      onSelected={field.onChange}
-                      defaultSelected={field.value}
-                      selected={field.value}
-                    />
-                    <FormDescription>
-                      Select a collector to add the collection to.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                render={({ field }) => {
+                  return (
+                    field.value && (
+                      <FormItem>
+                        <FormLabel>Collector</FormLabel>
+                        <CollectorSearch
+                          onSelected={field.onChange}
+                          defaultSelected={field.value}
+                          selected={field.value}
+                          defaultValue={field.value}
+                          value={field.value}
+                        />
+                        <FormDescription>
+                          Select a collector to add the collection to.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )
+                  );
+                }}
               />
 
               <FormField

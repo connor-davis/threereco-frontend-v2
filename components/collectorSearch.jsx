@@ -24,7 +24,7 @@ export default function CollectorSearch({
 
   useEffect(() => {
     const disposeableTimeout = setTimeout(async () => {
-      if (searchValue) {
+      if (searchValue ?? props.selected ?? props.defaultSelected) {
         const response = await fetch(
           `/api/collector/search/${
             searchValue ?? props.selected ?? props.defaultSelected
