@@ -26,6 +26,7 @@ import {
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { Button } from "@/components/ui/button";
+import CollectorSearch from "@/components/collectorSearch";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import LoadingSpinner from "@/components/loadingSpinner";
@@ -314,26 +315,11 @@ export default function EditCollectionPage({ params: { id } }) {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Collector</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
+                    <CollectorSearch
+                      onSelected={field.onChange}
                       defaultValue={field.value}
                       value={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a collector" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {collectors.map((collector) => (
-                          <SelectItem key={collector.id} value={collector.id}>
-                            {[collector.first_name, collector.last_name].join(
-                              " "
-                            )}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    />
                     <FormDescription>
                       Select a collector to add the collection to.
                     </FormDescription>

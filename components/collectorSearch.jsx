@@ -72,10 +72,9 @@ export default function CollectorSearch({
 
       <div className="flex flex-col p-1 space-y-1 border bg-muted">
         {searchResults.map((collector) => (
-          <Button
-            variant="outline"
+          <div
             className={cn(
-              "flex flex-col items-start justify-start h-auto space-y-2",
+              "flex flex-col items-start justify-start h-auto space-y-2 border p-2 cursor-pointer transition-all duration-200 ease-in-out",
               selected === collector.id && "border-primary"
             )}
             key={collector.id}
@@ -97,7 +96,7 @@ export default function CollectorSearch({
                 {collector.phone_number}
               </Label>
             </div>
-          </Button>
+          </div>
         ))}
       </div>
     </div>
