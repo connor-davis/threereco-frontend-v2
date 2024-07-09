@@ -16,7 +16,7 @@ export default function CollectorSearch({
 }) {
   const { token } = useAuthenticationStore();
 
-  const [searchValue, setSearchValue] = useState("");
+  const [searchValue, setSearchValue] = useState(null);
   const [searchResults, setSearchResults] = useState([]);
   const [selected, setSelected] = useState(
     props.selected ?? props.defaultSelected ?? null
@@ -25,13 +25,18 @@ export default function CollectorSearch({
   useEffect(() => {
     const disposeableTimeout = setTimeout(async () => {
       if (searchValue) {
-        const response = await fetch(`/api/collector/search/${searchValue}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await fetch(
+          `/api/collector/search/${
+            searchValue ?? props.selected ?? props.defaultSelected
+          }`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         if (response.ok) {
           const { collectors } = await response.json();
