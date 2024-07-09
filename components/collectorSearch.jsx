@@ -3,18 +3,27 @@
 import { useEffect, useState } from "react";
 
 import { Input } from "./ui/input";
+import useAuthenticationStore from "@/lib/state/authentication";
 
 export default function CollectorSearch({
   className,
   onSelected = (collector_id) => {},
   ...props
 }) {
+  const { token } = useAuthenticationStore();
+
   const [searchValue, setSearchValue] = useState(null);
 
   useEffect(() => {
     const disposeableTimeout = setTimeout(async () => {
       if (searchValue) {
-        const response = await fetch(`/api/collector/search/${searchValue}`);
+        const response = await fetch(`/api/collector/search/${searchValue}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         console.log(await response.text());
       }
