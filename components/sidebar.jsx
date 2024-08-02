@@ -3,7 +3,6 @@
 import {
   BoxIcon,
   BuildingIcon,
-  ExpandIcon,
   HandIcon,
   LayoutDashboardIcon,
   PanelLeftCloseIcon,
@@ -14,6 +13,7 @@ import {
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 import { Button } from "./ui/button";
+import ExportDataDialog from "./dialogs/exportData";
 import Link from "next/link";
 import RoleGuard from "./guards/role";
 import { cn } from "@/lib/utils";
@@ -155,6 +155,9 @@ export default function Sidebar() {
             )}
           </Tooltip>
         </Link>
+      </RoleGuard>
+      <RoleGuard requiredRoles={["System Admin", "Staff"]}>
+        <ExportDataDialog isFullView={isFullView} />
       </RoleGuard>
     </div>
   );
