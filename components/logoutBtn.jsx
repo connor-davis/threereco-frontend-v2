@@ -1,18 +1,26 @@
 "use client";
 
-import useAuthenticationStore from "@/lib/state/authentication";
-import useUserStore from "@/lib/state/user";
-
 import { LogOutIcon } from "lucide-react";
 import { Button } from "./ui/button";
+import { toast } from "sonner";
 
 export default function LogoutBtn() {
-  const { setToken } = useAuthenticationStore();
-  const { setUser } = useUserStore();
+  const logout = async () => {
+    const logoutResponse = await fetch("/api/authentication/logout", {
+      method: "POST",
+    });
 
-  const logout = () => {
-    setToken(null);
-    setUser(null);
+    if (logoutResponse.status !== 200)
+      return toast.error("Unknown Error", {
+        description: "Unknown error occured. Please contact the api developer.",
+        duration: 2000,
+      });
+    else
+      return toast.success("Success", {
+        description: "You have been logged out successfully.",
+        duration: 2000,
+        onAutoClose: () => window.location.reload(),
+      });
   };
 
   return (

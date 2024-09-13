@@ -1,22 +1,22 @@
 "use client";
 
 import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -24,12 +24,10 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { toast } from "sonner";
-import useAuthenticationStore from "@/lib/state/authentication";
 import { useRouter } from "next/navigation";
 
 export default function ViewBusinessPage({ params: { id } }) {
   const router = useRouter();
-  const { token } = useAuthenticationStore();
 
   // Access the client
   const queryClient = useQueryClient();
@@ -39,13 +37,15 @@ export default function ViewBusinessPage({ params: { id } }) {
     queryKey: ["businesses"],
     queryFn: () => {
       return new Promise(async (resolve, reject) => {
-        const businessesResponse = await fetch("/api/business/" + id, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const businessesResponse = await fetch(
+          "/api/businesses?includeUser=1&id=" + id,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
         if (businessesResponse.status !== 200) {
           return reject("Failed to fetch business");
@@ -53,17 +53,16 @@ export default function ViewBusinessPage({ params: { id } }) {
 
         const data = await businessesResponse.json();
 
-        resolve(data.business);
+        resolve(data);
       });
     },
   });
 
   const deleteBusiness = async (id) => {
-    const response = await fetch("/api/business/" + id, {
+    const response = await fetch("/api/businesses?id=" + id, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -109,24 +108,22 @@ export default function ViewBusinessPage({ params: { id } }) {
             <div className="flex flex-col space-y-3">
               <div className="flex flex-col space-y-2">
                 <Label className="font-bold">Name:</Label>
-                <Label className="break-all">{data?.business_name}</Label>
+                <Label className="break-all">{data?.name}</Label>
               </div>
 
               <div className="flex flex-col space-y-2">
                 <Label className="font-bold">Type:</Label>
-                <Label className="break-all">{data?.business_type}</Label>
+                <Label className="break-all">{data?.type}</Label>
               </div>
 
               <div className="flex flex-col space-y-2">
                 <Label className="font-bold">Description:</Label>
-                <Label className="break-all">
-                  {data?.business_description}
-                </Label>
+                <Label className="break-all">{data?.description}</Label>
               </div>
 
               <div className="flex flex-col space-y-2">
                 <Label className="font-bold">Phone Number:</Label>
-                <Label className="break-all">{data?.phone_number}</Label>
+                <Label className="break-all">{data?.phoneNumber}</Label>
               </div>
 
               <div className="flex flex-col space-y-2">
@@ -135,8 +132,8 @@ export default function ViewBusinessPage({ params: { id } }) {
                   {[
                     `${data?.address}`,
                     `${data?.city}`,
-                    `${data?.state}`,
-                    `${data?.zip_code}`,
+                    `${data?.province}`,
+                    `${data?.zipCode}`,
                   ].join(", ")}
                 </Label>
               </div>

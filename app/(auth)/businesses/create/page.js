@@ -34,7 +34,6 @@ import RoleGuard from "@/components/guards/role";
 import SearchSelect from "@/components/searchSelect";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import useAuthenticationStore from "@/lib/state/authentication";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import useUserStore from "@/lib/state/user";
@@ -47,22 +46,21 @@ const businessUserSchema = z.object({
 });
 
 const businessSchema = z.object({
-  business_name: z.string().min(1, "Business name can not be empty."),
-  business_type: z.string().min(1, "Business type can not be empty."),
-  business_description: z
+  name: z.string().min(1, "Business name can not be empty."),
+  type: z.string().min(1, "Business type can not be empty."),
+  description: z
     .string()
     .min(1, "Business description can not be empty.")
     .max(255, "Business description must be less than 255 characters."),
-  phone_number: z.string().min(1, "Business phone number can not be empty."),
+  phoneNumber: z.string().min(1, "Business phone number can not be empty."),
   address: z.string().min(1, "Business address can not be empty."),
   city: z.string().min(1, "Business city can not be empty."),
-  state: z.string().min(1, "Business state can not be empty."),
-  zip_code: z.string().min(1, "Business zip code can not be empty."),
+  province: z.string().min(1, "Business state can not be empty."),
+  zipCode: z.string().min(1, "Business zip code can not be empty."),
 });
 
 export default function CreateBusinessPage() {
   const router = useRouter();
-  const { token } = useAuthenticationStore();
   const { user } = useUserStore();
 
   const [users, setUsers] = useState([]);
@@ -71,14 +69,10 @@ export default function CreateBusinessPage() {
   useEffect(() => {
     const disposeableTimeout = setTimeout(async () => {
       if (user) {
-        const usersResponse = await fetch("/api/users", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const usersResponse = await fetch("/api/users");
 
         if (usersResponse.ok) {
-          const { users } = await usersResponse.json();
+          const users = await usersResponse.json();
 
           setUsers(users);
         }
@@ -101,31 +95,28 @@ export default function CreateBusinessPage() {
   const businessForm = useForm({
     resolver: zodResolver(businessSchema),
     defaultValues: {
-      business_name: "",
-      business_type: "",
-      business_description: "",
-      phone_number: "",
+      name: "",
+      type: "",
+      description: "",
+      phoneNumber: "",
       address: "",
       city: "",
-      state: "",
-      zip_code: "",
+      province: "",
+      zipCode: "",
     },
   });
 
   const onUserSubmit = async (values) => {
-    const userResponse = await fetch("/api/users/add", {
+    const userResponse = await fetch("/api/users", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ ...values, role: "Business" }),
     });
 
     if (userResponse.ok) {
-      const {
-        user: { id },
-      } = await userResponse.json();
+      const { id } = await userResponse.json();
 
       setUserId(id);
 
@@ -160,13 +151,12 @@ export default function CreateBusinessPage() {
       });
     }
 
-    const businessResponse = await fetch("/api/business/add", {
+    const businessResponse = await fetch("/api/businesses", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ ...values, user_id: userId }),
+      body: JSON.stringify({ ...values, userId }),
     });
 
     if (businessResponse.ok) {
@@ -300,7 +290,7 @@ export default function CreateBusinessPage() {
                 >
                   <FormField
                     control={businessForm.control}
-                    name="business_name"
+                    name="name"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Business Name</FormLabel>
@@ -315,7 +305,7 @@ export default function CreateBusinessPage() {
 
                   <FormField
                     control={businessForm.control}
-                    name="business_type"
+                    name="type"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Business Type</FormLabel>
@@ -348,7 +338,7 @@ export default function CreateBusinessPage() {
 
                   <FormField
                     control={businessForm.control}
-                    name="business_description"
+                    name="description"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Business Description</FormLabel>
@@ -368,7 +358,7 @@ export default function CreateBusinessPage() {
 
                   <FormField
                     control={businessForm.control}
-                    name="phone_number"
+                    name="phoneNumber"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Phone Number</FormLabel>
@@ -417,7 +407,7 @@ export default function CreateBusinessPage() {
 
                   <FormField
                     control={businessForm.control}
-                    name="state"
+                    name="province"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Province</FormLabel>
@@ -434,7 +424,7 @@ export default function CreateBusinessPage() {
 
                   <FormField
                     control={businessForm.control}
-                    name="zip_code"
+                    name="zipCode"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Zip Code</FormLabel>

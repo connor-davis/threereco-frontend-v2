@@ -53,7 +53,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import LoadingSpinner from "@/components/loadingSpinner";
-import useAuthenticationStore from "@/lib/state/authentication";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -79,32 +78,29 @@ const columns = [
   },
 ];
 
-export default function StaffPage() {
-  const { token } = useAuthenticationStore();
-
+export default function UsersPage() {
   // Access the client
   const queryClient = useQueryClient();
 
   // Queries
   const { data, status, error, isLoading, isError } = useQuery({
-    queryKey: ["staff"],
+    queryKey: ["users"],
     queryFn: () => {
       return new Promise(async (resolve, reject) => {
-        const usersResponse = await fetch("/api/users?role=Staff", {
+        const usersResponse = await fetch("/api/users", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
           },
         });
 
         if (usersResponse.status !== 200) {
-          return reject("Failed to fetch staff");
+          return reject("Failed to fetch users");
         }
 
         const data = await usersResponse.json();
 
-        resolve(data.users);
+        resolve(data);
       });
     },
   });
@@ -147,7 +143,7 @@ export default function StaffPage() {
       <div className="flex flex-col items-center justify-center w-full h-full">
         <div className="flex items-center space-x-3">
           <LoadingSpinner />
-          <span className="text-muted-foreground">Loading staff</span>
+          <span className="text-muted-foreground">Loading users</span>
         </div>
       </div>
     );
@@ -157,21 +153,20 @@ export default function StaffPage() {
     return null;
   }
 
-  const deleteStaff = async (id) => {
-    const response = await fetch("/api/users/" + id, {
+  const deleteUser = async (id) => {
+    const response = await fetch("/api/users?id=" + id, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
       },
     });
 
     if (response.ok) {
       return toast.success("Success", {
-        description: "You have successfully deleted the staff.",
+        description: "You have successfully deleted the user.",
         duration: 2000,
         onAutoClose: () => {
-          queryClient.invalidateQueries("staff");
+          queryClient.invalidateQueries("users");
         },
       });
     } else {
@@ -205,10 +200,10 @@ export default function StaffPage() {
           />
 
           <div className="flex items-center space-x-3">
-            <Link href="/staff/create">
+            <Link href="/users/create">
               <Button variant="outline">
                 <PlusIcon className="w-4 h-4 mr-2" />
-                Add Staff
+                Add User
               </Button>
             </Link>
             <DropdownMenu>
@@ -278,27 +273,27 @@ export default function StaffPage() {
                       <div className="flex items-center space-x-1">
                         <Tooltip>
                           <TooltipTrigger asChild>
-                            <Link href={`/staff/${row.original.id}`}>
+                            <Link href={`/users/${row.original.id}`}>
                               <Button variant="outline">
                                 <EyeIcon className="w-4 h-4" />
                               </Button>
                             </Link>
                           </TooltipTrigger>
                           <TooltipContent side="south">
-                            View Staff
+                            View User
                           </TooltipContent>
                         </Tooltip>
 
                         <Tooltip>
                           <TooltipTrigger asChild>
-                            <Link href={`/staff/edit/${row.original.id}`}>
+                            <Link href={`/users/edit/${row.original.id}`}>
                               <Button variant="outline">
                                 <PencilIcon className="w-4 h-4" />
                               </Button>
                             </Link>
                           </TooltipTrigger>
                           <TooltipContent side="south">
-                            Edit Staff
+                            Edit User
                           </TooltipContent>
                         </Tooltip>
 
@@ -312,14 +307,14 @@ export default function StaffPage() {
                             <AlertDialogHeader>
                               <AlertDialogTitle>Hold On!</AlertDialogTitle>
                               <AlertDialogDescription>
-                                Are you sure you want to delete this staff? This
+                                Are you sure you want to delete this user? This
                                 action cannot be undone.
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
                               <AlertDialogCancel>Cancel</AlertDialogCancel>
                               <AlertDialogAction
-                                onClick={() => deleteStaff(row.original.id)}
+                                onClick={() => deleteUser(row.original.id)}
                               >
                                 Continue
                               </AlertDialogAction>

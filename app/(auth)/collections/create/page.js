@@ -25,25 +25,25 @@ import {
 } from "@/components/ui/select";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { Button } from "@/components/ui/button";
 import CollectorSearch from "@/components/collectorSearch";
-import { Input } from "@/components/ui/input";
-import Link from "next/link";
-import LoadingSpinner from "@/components/loadingSpinner";
 import RoleGuard from "@/components/guards/role";
-import { toast } from "sonner";
+import LoadingSpinner from "@/components/loadingSpinner";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import useAuthenticationStore from "@/lib/state/authentication";
+import useUserStore from "@/lib/state/user";
+import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
-import useUserStore from "@/lib/state/user";
+import { toast } from "sonner";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 
 const collectionSchema = z.object({
-  business_id: z.string().uuid("Business ID must be a valid UUID"),
-  collector_id: z.string().uuid("Collector ID must be a valid UUID"),
-  product_id: z.string().uuid("Product ID must be a valid UUID"),
+  businessId: z.string().uuid("Business ID must be a valid UUID"),
+  collectorId: z.string().uuid("Collector ID must be a valid UUID"),
+  productId: z.string().uuid("Product ID must be a valid UUID"),
   weight: z.coerce.number().positive().min(0, "Weight must be greater than 0"),
 });
 
@@ -55,9 +55,9 @@ export default function CreateCollectionPage() {
   const collectionForm = useForm({
     resolver: zodResolver(collectionSchema),
     defaultValues: {
-      business_id: "",
-      collector_id: "",
-      product_id: "",
+      businessId: "",
+      collectorId: "",
+      productId: "",
       weight: 0,
     },
   });
@@ -73,10 +73,11 @@ export default function CreateCollectionPage() {
     isLoading: isLoadingBusinesses,
     isError: isBusinessesError,
   } = useQuery({
+    initialData: [],
     queryKey: ["businesses"],
     queryFn: () => {
       return new Promise(async (resolve, reject) => {
-        const businessesResponse = await fetch("/api/business", {
+        const businessesResponse = await fetch("/api/businesses", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -90,7 +91,7 @@ export default function CreateCollectionPage() {
 
         const data = await businessesResponse.json();
 
-        resolve(data.businesses);
+        resolve(data);
       });
     },
   });
@@ -102,10 +103,11 @@ export default function CreateCollectionPage() {
     isLoading: isLoadingCollectors,
     isError: isCollectorsError,
   } = useQuery({
+    initialData: [],
     queryKey: ["collectors"],
     queryFn: () => {
       return new Promise(async (resolve, reject) => {
-        const collectorsResponse = await fetch("/api/collector", {
+        const collectorsResponse = await fetch("/api/collectors", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -119,7 +121,7 @@ export default function CreateCollectionPage() {
 
         const data = await collectorsResponse.json();
 
-        resolve(data.collectors);
+        resolve(data);
       });
     },
   });
@@ -131,10 +133,11 @@ export default function CreateCollectionPage() {
     isLoading: isLoadingProducts,
     isError: isProductsError,
   } = useQuery({
+    initialData: [],
     queryKey: ["products"],
     queryFn: () => {
       return new Promise(async (resolve, reject) => {
-        const productsResponse = await fetch("/api/product", {
+        const productsResponse = await fetch("/api/products", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -148,7 +151,7 @@ export default function CreateCollectionPage() {
 
         const data = await productsResponse.json();
 
-        resolve(data.products);
+        resolve(data);
       });
     },
   });
@@ -158,11 +161,11 @@ export default function CreateCollectionPage() {
       if (user && businesses) {
         if (user.role === "Business") {
           const business = businesses.find(
-            (business) => business.user_id === user.id
+            (business) => business.userId === user.id
           );
 
           if (business) {
-            collectionForm.setValue("business_id", business.id);
+            collectionForm.setValue("businessId", business.id);
           }
         }
       }
@@ -174,7 +177,7 @@ export default function CreateCollectionPage() {
   }, [user, businesses]);
 
   const onCollectionSubmit = async (values) => {
-    const collectionResponse = await fetch("/api/collection/add", {
+    const collectionResponse = await fetch("/api/collections", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -236,7 +239,7 @@ export default function CreateCollectionPage() {
               <RoleGuard requiredRoles={["System Admin", "Staff"]}>
                 <FormField
                   control={collectionForm.control}
-                  name="business_id"
+                  name="businessId"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Business</FormLabel>
@@ -253,7 +256,7 @@ export default function CreateCollectionPage() {
                         <SelectContent>
                           {businesses.map((business) => (
                             <SelectItem key={business.id} value={business.id}>
-                              {business.business_name}
+                              {business.name}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -269,7 +272,7 @@ export default function CreateCollectionPage() {
 
               <FormField
                 control={collectionForm.control}
-                name="collector_id"
+                name="collectorId"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Collector</FormLabel>
@@ -288,7 +291,7 @@ export default function CreateCollectionPage() {
 
               <FormField
                 control={collectionForm.control}
-                name="product_id"
+                name="productId"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Product</FormLabel>

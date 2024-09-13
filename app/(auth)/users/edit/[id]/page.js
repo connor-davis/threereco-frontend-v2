@@ -17,12 +17,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-import RoleGuard from "@/components/guards/role";
-import SearchSelect from "@/components/searchSelect";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import useAuthenticationStore from "@/lib/state/authentication";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -31,37 +27,50 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
+import Roles from "@/lib/roles";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
-const staffSchema = z.object({
+const userSchema = z.object({
   email: z.string().email("Please enter a valid email address."),
+  role: z.enum(Roles),
 });
 
-export default function EditStaffPage({ params: { id } }) {
+export default function EditUserPage({ params: { id } }) {
   const router = useRouter();
-  const { token } = useAuthenticationStore();
 
-  const queryClient = useQueryClient();
+  const userForm = useForm({
+    resolver: zodResolver(userSchema),
+    defaultValues: {
+      email: "",
+      role: "",
+    },
+  });
 
   // Queries
   const { data, status, error, isLoading, isError } = useQuery({
-    queryKey: ["staff", id],
+    queryKey: ["users", id],
     queryFn: () => {
       return new Promise(async (resolve, reject) => {
-        const userResponse = await fetch("/api/users/" + id, {
+        const userResponse = await fetch("/api/users?id=" + id, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
           },
         });
 
         if (userResponse.status !== 200) {
-          return reject("Failed to fetch staff");
+          return reject("Failed to fetch user");
         }
 
         const data = await userResponse.json();
 
-        resolve(data.user);
+        resolve(data);
       });
     },
   });
@@ -69,39 +78,30 @@ export default function EditStaffPage({ params: { id } }) {
   useEffect(() => {
     const disposeableTimeout = setTimeout(() => {
       if (data) {
-        staffForm.reset(data);
+        userForm.reset(data);
       }
-    }, 100);
+    }, 0);
 
     return () => {
       clearTimeout(disposeableTimeout);
     };
   }, [data]);
 
-  const staffForm = useForm({
-    resolver: zodResolver(staffSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
-  });
-
-  const onStaffSubmit = async (values) => {
-    const userResponse = await fetch("/api/users/" + id, {
-      method: "POST",
+  const onUserSubmit = async (values) => {
+    const userResponse = await fetch("/api/users?id=" + id, {
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(values),
     });
 
     if (userResponse.ok) {
       toast.success("Success", {
-        description: "You have successfully edited a staff.",
+        description: "You have successfully edited a user.",
         duration: 2000,
         onAutoClose: () => {
-          router.replace("/staff");
+          router.replace("/users");
         },
       });
     } else {
@@ -127,19 +127,19 @@ export default function EditStaffPage({ params: { id } }) {
     <div className="flex flex-col items-center justify-center w-full h-full">
       <Card className="w-full shadow-none max-w-96">
         <CardHeader>
-          <CardTitle className="text-center">Create Staff</CardTitle>
+          <CardTitle className="text-center">Edit User</CardTitle>
           <CardDescription className="text-center">
-            Fill in the form below to create a staff.
+            Fill in the form below to create a user.
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col w-full h-full space-y-3 overflow-y-auto max-h-96">
-          <Form {...staffForm}>
+          <Form {...userForm}>
             <form
-              onSubmit={staffForm.handleSubmit(onStaffSubmit)}
+              onSubmit={userForm.handleSubmit(onUserSubmit)}
               className="space-y-8"
             >
               <FormField
-                control={staffForm.control}
+                control={userForm.control}
                 name="email"
                 render={({ field }) => (
                   <FormItem>
@@ -155,13 +155,41 @@ export default function EditStaffPage({ params: { id } }) {
                 )}
               />
 
+              <FormField
+                control={userForm.control}
+                name="role"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Role</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      value={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a user role" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {Roles.map((role) => (
+                          <SelectItem value={role}>{role}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormDescription>Their 3rEco role.</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               <Button type="submit" className="w-full">
-                Update Staff
+                Update User
               </Button>
             </form>
           </Form>
 
-          <Link href="/staff">
+          <Link href="/users">
             <Button variant="outline" className="w-full">
               Cancel
             </Button>

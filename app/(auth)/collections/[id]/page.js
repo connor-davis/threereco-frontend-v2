@@ -44,13 +44,17 @@ export default function ViewCollectionPage({ params: { id } }) {
     queryKey: ["collections", id],
     queryFn: () => {
       return new Promise(async (resolve, reject) => {
-        const collectionResponse = await fetch("/api/collection/" + id, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const collectionResponse = await fetch(
+          "/api/collections?includeBusiness=true&includeCollector=true&includeProduct=true&id=" +
+            id,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         if (collectionResponse.status !== 200) {
           return reject("Failed to fetch collection");
@@ -58,13 +62,13 @@ export default function ViewCollectionPage({ params: { id } }) {
 
         const data = await collectionResponse.json();
 
-        resolve(data.collection);
+        resolve(data);
       });
     },
   });
 
   const deleteCollection = async (id) => {
-    const response = await fetch("/api/collection/" + id, {
+    const response = await fetch("/api/collections?id=" + id, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -123,24 +127,22 @@ export default function ViewCollectionPage({ params: { id } }) {
               <RoleGuard requiredRoles={["System Admin", "Staff"]}>
                 <div className="flex flex-col space-y-2">
                   <Label>Business</Label>
-                  {data?.business_id && (
-                    <BusinessHoverCard business_id={data?.business_id} />
+                  {data?.business && (
+                    <BusinessHoverCard business={data?.business} />
                   )}
                 </div>
               </RoleGuard>
 
               <div className="flex flex-col space-y-2">
                 <Label>Collector</Label>
-                {data?.collector_id && (
-                  <CollectorHoverCard collector_id={data?.collector_id} />
+                {data?.collector && (
+                  <CollectorHoverCard collector={data?.collector} />
                 )}
               </div>
 
               <div className="flex flex-col space-y-2">
                 <Label className="font-bold">Product</Label>
-                {data?.product_id && (
-                  <ProductHoverCard product_id={data?.product_id} />
-                )}
+                {data?.product && <ProductHoverCard product={data?.product} />}
               </div>
 
               <div className="flex flex-col space-y-2">

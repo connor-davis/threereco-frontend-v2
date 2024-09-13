@@ -46,11 +46,12 @@ const productSchema = z.object({
   name: z.string(),
   description: z.string(),
   price: z.coerce.number().positive().min(0, "Price must be greater than 0"),
+  gwCode: z.coerce.number(),
+  carbonFactor: z.coerce.number(),
 });
 
 export default function CreateProductPage() {
   const router = useRouter();
-  const { token } = useAuthenticationStore();
   const { user } = useUserStore();
 
   const [businessId, setBusinessId] = useState(null);
@@ -61,6 +62,8 @@ export default function CreateProductPage() {
       name: "",
       description: "",
       price: 0,
+      gwCode: 0,
+      carbonFactor: 0,
     },
   });
 
@@ -72,11 +75,10 @@ export default function CreateProductPage() {
     queryKey: ["businesses"],
     queryFn: () => {
       return new Promise(async (resolve, reject) => {
-        const businessesResponse = await fetch("/api/business", {
+        const businessesResponse = await fetch("/api/businesses", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
           },
         });
 
@@ -86,7 +88,7 @@ export default function CreateProductPage() {
 
         const data = await businessesResponse.json();
 
-        resolve(data.businesses);
+        resolve(data);
       });
     },
   });
@@ -95,9 +97,7 @@ export default function CreateProductPage() {
     const disposeableTimeout = setTimeout(() => {
       if (user && data) {
         if (user.role === "Business") {
-          const business = data.find(
-            (business) => business.user_id === user.id
-          );
+          const business = data.find((business) => business.userId === user.id);
 
           if (business) {
             setBusinessId(business.id);
@@ -119,13 +119,12 @@ export default function CreateProductPage() {
       });
     }
 
-    const productResponse = await fetch("/api/product/add", {
+    const productResponse = await fetch("/api/products", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ ...values, business_id: businessId }),
+      body: JSON.stringify({ ...values, businessId }),
     });
 
     if (productResponse.ok) {
@@ -227,7 +226,7 @@ export default function CreateProductPage() {
                   <SearchSelect
                     list={data}
                     valueKey="id"
-                    labelKey="business_name"
+                    labelKey="name"
                     onValueChange={(value) => setBusinessId(value)}
                   />
                   <Label className="text-sm text-muted-foreground">

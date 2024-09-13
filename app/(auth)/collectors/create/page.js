@@ -16,30 +16,22 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useEffect, useState } from "react";
 
+import RoleGuard from "@/components/guards/role";
+import SearchSelect from "@/components/searchSelect";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import Link from "next/link";
-import RoleGuard from "@/components/guards/role";
-import SearchSelect from "@/components/searchSelect";
-import { Textarea } from "@/components/ui/textarea";
-import { toast } from "sonner";
 import useAuthenticationStore from "@/lib/state/authentication";
-import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
 import useUserStore from "@/lib/state/user";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 
 const collectorUserSchema = z.object({
   email: z.string().email("Please enter a valid email address."),
@@ -47,25 +39,25 @@ const collectorUserSchema = z.object({
 });
 
 const collectorSchema = z.object({
-  first_name: z.string().min(1, "Collector first name can not be empty."),
-  last_name: z.string().min(1, "Collector last name can not be empty."),
-  id_number: z
+  firstName: z.string().min(1, "Collector first name can not be empty."),
+  lastName: z.string().min(1, "Collector last name can not be empty."),
+  idNumber: z
     .string()
     .min(13, "Collector Id Number needs to be 13 characters long.")
     .max(13, "Collector Id Number needs to be 13 characters long."),
-  phone_number: z
+  phoneNumber: z
     .string()
     .min(10, "Collector phone number needs to be at least 10 characters long.")
     .max(12, "Collector phone number needs to be at most 12 characters long."),
   address: z.string().min(1, "Collector address can not be empty."),
   city: z.string().min(1, "Collector city can not be empty."),
-  state: z.string().min(1, "Collector state can not be empty."),
-  zip_code: z.string().min(1, "Collector zip code can not be empty."),
-  bank_name: z.string().min(1, "Collector bank name can not be empty."),
-  bank_account_holder: z
+  province: z.string().min(1, "Collector state can not be empty."),
+  zipCode: z.string().min(1, "Collector zip code can not be empty."),
+  bankName: z.string().min(1, "Collector bank name can not be empty."),
+  bankAccountHolder: z
     .string()
     .min(1, "Collector bank account holder can not be empty."),
-  bank_account_number: z
+  bankAccountNumber: z
     .string()
     .min(1, "Collector bank account number can not be empty."),
 });
@@ -81,14 +73,14 @@ export default function CreateCollectorPage() {
   useEffect(() => {
     const disposeableTimeout = setTimeout(async () => {
       if (user) {
-        const usersResponse = await fetch("/api/users", {
+        const usersResponse = await fetch("/api/users?role=Collector", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
 
         if (usersResponse.ok) {
-          const { users } = await usersResponse.json();
+          const users = await usersResponse.json();
 
           setUsers(users);
         }
@@ -111,22 +103,22 @@ export default function CreateCollectorPage() {
   const collectorForm = useForm({
     resolver: zodResolver(collectorSchema),
     defaultValues: {
-      first_name: "",
-      last_name: "",
-      id_number: "",
-      phone_number: "",
+      firstName: "",
+      lastName: "",
+      idNumber: "",
+      phoneNumber: "",
       address: "",
       city: "",
-      state: "",
-      zip_code: "",
-      bank_name: "",
-      bank_account_holder: "",
-      bank_account_number: "",
+      province: "",
+      zipCode: "",
+      bankName: "",
+      bankAccountHolder: "",
+      bankAccountNumber: "",
     },
   });
 
   const onUserSubmit = async (values) => {
-    const userResponse = await fetch("/api/users/add", {
+    const userResponse = await fetch("/api/users", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -136,9 +128,7 @@ export default function CreateCollectorPage() {
     });
 
     if (userResponse.ok) {
-      const {
-        user: { id },
-      } = await userResponse.json();
+      const { id } = await userResponse.json();
 
       setUserId(id);
 
@@ -173,13 +163,13 @@ export default function CreateCollectorPage() {
       });
     }
 
-    const collectorResponse = await fetch("/api/collector/add", {
+    const collectorResponse = await fetch("/api/collectors", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ ...values, user_id: userId }),
+      body: JSON.stringify({ ...values, userId: userId }),
     });
 
     if (collectorResponse.ok) {
@@ -315,7 +305,7 @@ export default function CreateCollectorPage() {
                 >
                   <FormField
                     control={collectorForm.control}
-                    name="first_name"
+                    name="firstName"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>First Name</FormLabel>
@@ -332,7 +322,7 @@ export default function CreateCollectorPage() {
 
                   <FormField
                     control={collectorForm.control}
-                    name="last_name"
+                    name="lastName"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Last Name</FormLabel>
@@ -349,7 +339,7 @@ export default function CreateCollectorPage() {
 
                   <FormField
                     control={collectorForm.control}
-                    name="id_number"
+                    name="idNumber"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>ID Number</FormLabel>
@@ -366,7 +356,7 @@ export default function CreateCollectorPage() {
 
                   <FormField
                     control={collectorForm.control}
-                    name="phone_number"
+                    name="phoneNumber"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Phone Number</FormLabel>
@@ -415,7 +405,7 @@ export default function CreateCollectorPage() {
 
                   <FormField
                     control={collectorForm.control}
-                    name="state"
+                    name="province"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Province</FormLabel>
@@ -432,7 +422,7 @@ export default function CreateCollectorPage() {
 
                   <FormField
                     control={collectorForm.control}
-                    name="zip_code"
+                    name="zipCode"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Zip Code</FormLabel>
@@ -449,7 +439,7 @@ export default function CreateCollectorPage() {
 
                   <FormField
                     control={collectorForm.control}
-                    name="bank_name"
+                    name="bankName"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Bank Name</FormLabel>
@@ -466,7 +456,7 @@ export default function CreateCollectorPage() {
 
                   <FormField
                     control={collectorForm.control}
-                    name="bank_account_holder"
+                    name="bankAccountHolder"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Bank Account Holder</FormLabel>
@@ -483,7 +473,7 @@ export default function CreateCollectorPage() {
 
                   <FormField
                     control={collectorForm.control}
-                    name="bank_account_number"
+                    name="bankAccountNumber"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Bank Account Number</FormLabel>

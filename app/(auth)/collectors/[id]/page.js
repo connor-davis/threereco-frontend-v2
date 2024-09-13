@@ -39,7 +39,7 @@ export default function ViewCollectorPage({ params: { id } }) {
     queryKey: ["collectors", id],
     queryFn: () => {
       return new Promise(async (resolve, reject) => {
-        const collectorResponse = await fetch("/api/collector/" + id, {
+        const collectorResponse = await fetch("/api/collectors?id=" + id, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -53,13 +53,13 @@ export default function ViewCollectorPage({ params: { id } }) {
 
         const data = await collectorResponse.json();
 
-        resolve(data.collector);
+        resolve(data);
       });
     },
   });
 
   const deleteCollector = async (id) => {
-    const response = await fetch("/api/collector/" + id, {
+    const response = await fetch("/api/collectors?id=" + id, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -110,18 +110,18 @@ export default function ViewCollectorPage({ params: { id } }) {
               <div className="flex flex-col space-y-2">
                 <Label className="font-bold">Name:</Label>
                 <Label className="break-all">
-                  {[data?.first_name, data?.last_name].join(" ")}
+                  {[data?.firstName, data?.lastName].join(" ")}
                 </Label>
               </div>
 
               <div className="flex flex-col space-y-2">
                 <Label className="font-bold">Id Number:</Label>
-                <Label className="break-all">{data?.id_number}</Label>
+                <Label className="break-all">{data?.idNumber}</Label>
               </div>
 
               <div className="flex flex-col space-y-2">
                 <Label className="font-bold">Phone Number:</Label>
-                <Label className="break-all">{data?.phone_number}</Label>
+                <Label className="break-all">{data?.phoneNumber}</Label>
               </div>
 
               <div className="flex flex-col space-y-2">
@@ -130,25 +130,25 @@ export default function ViewCollectorPage({ params: { id } }) {
                   {[
                     `${data?.address}`,
                     `${data?.city}`,
-                    `${data?.state}`,
-                    `${data?.zip_code}`,
+                    `${data?.province}`,
+                    `${data?.zipCode}`,
                   ].join(", ")}
                 </Label>
               </div>
 
               <div className="flex flex-col space-y-2">
                 <Label className="font-bold">Bank Name:</Label>
-                <Label className="break-all">{data?.bank_name}</Label>
+                <Label className="break-all">{data?.bankName}</Label>
               </div>
 
               <div className="flex flex-col space-y-2">
                 <Label className="font-bold">Account Holder:</Label>
-                <Label className="break-all">{data?.bank_account_holder}</Label>
+                <Label className="break-all">{data?.bankAccountHolder}</Label>
               </div>
-              
+
               <div className="flex flex-col space-y-2">
                 <Label className="font-bold">Account Number:</Label>
-                <Label className="break-all">{data?.bank_account_number}</Label>
+                <Label className="break-all">{data?.bankAccountNumber}</Label>
               </div>
             </div>
             <div className="flex flex-col space-y-3">

@@ -118,8 +118,6 @@ const columns = [
 ];
 
 export default function ProductsPage() {
-  const { token } = useAuthenticationStore();
-
   // Access the client
   const queryClient = useQueryClient();
 
@@ -128,11 +126,10 @@ export default function ProductsPage() {
     queryKey: ["products"],
     queryFn: () => {
       return new Promise(async (resolve, reject) => {
-        const productsResponse = await fetch("/api/product", {
+        const productsResponse = await fetch("/api/products", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
           },
         });
 
@@ -142,7 +139,7 @@ export default function ProductsPage() {
 
         const data = await productsResponse.json();
 
-        resolve(data.products);
+        resolve(data);
       });
     },
   });
@@ -196,11 +193,10 @@ export default function ProductsPage() {
   }
 
   const deleteProduct = async (id) => {
-    const response = await fetch("/api/product/" + id, {
+    const response = await fetch("/api/products?id=" + id, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
       },
     });
 

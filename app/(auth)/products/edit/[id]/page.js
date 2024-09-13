@@ -16,14 +16,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -34,7 +26,6 @@ import RoleGuard from "@/components/guards/role";
 import SearchSelect from "@/components/searchSelect";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import useAuthenticationStore from "@/lib/state/authentication";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import useUserStore from "@/lib/state/user";
@@ -50,7 +41,6 @@ const productSchema = z.object({
 
 export default function EditProductPage({ params: { id } }) {
   const router = useRouter();
-  const { token } = useAuthenticationStore();
   const { user } = useUserStore();
 
   const [businessId, setBusinessId] = useState(null);
@@ -69,14 +59,14 @@ export default function EditProductPage({ params: { id } }) {
 
   // Queries
   const { data, status, error, isLoading, isError } = useQuery({
+    initialData: {},
     queryKey: ["products", id],
     queryFn: () => {
       return new Promise(async (resolve, reject) => {
-        const productResponse = await fetch("/api/product/" + id, {
+        const productResponse = await fetch("/api/products?id=" + id, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
           },
         });
 
@@ -86,7 +76,7 @@ export default function EditProductPage({ params: { id } }) {
 
         const data = await productResponse.json();
 
-        resolve(data.product);
+        resolve(data);
       });
     },
   });
@@ -98,14 +88,14 @@ export default function EditProductPage({ params: { id } }) {
     isLoading: isLoadingBusinesses,
     isError: isBusinessesError,
   } = useQuery({
+    initalData: [],
     queryKey: ["businesses"],
     queryFn: () => {
       return new Promise(async (resolve, reject) => {
-        const businessesResponse = await fetch("/api/business", {
+        const businessesResponse = await fetch("/api/businesses", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
           },
         });
 
@@ -115,7 +105,7 @@ export default function EditProductPage({ params: { id } }) {
 
         const data = await businessesResponse.json();
 
-        resolve(data.businesses);
+        resolve(data);
       });
     },
   });
@@ -124,7 +114,7 @@ export default function EditProductPage({ params: { id } }) {
     const disposeableTimeout = setTimeout(() => {
       if (data) {
         productForm.reset(data);
-        setBusinessId(data.business_id);
+        setBusinessId(data.businessId);
       }
     }, 100);
 
@@ -138,7 +128,7 @@ export default function EditProductPage({ params: { id } }) {
       if (user && businesses) {
         if (user.role === "Business") {
           const business = businesses.find(
-            (business) => business.user_id === user.id
+            (business) => business.userId === user.id
           );
 
           if (business) {
@@ -161,13 +151,12 @@ export default function EditProductPage({ params: { id } }) {
       });
     }
 
-    const productResponse = await fetch("/api/product/" + id, {
-      method: "POST",
+    const productResponse = await fetch("/api/products?id=" + id, {
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ ...values, business_id: businessId }),
+      body: JSON.stringify({ ...values, businessId }),
     });
 
     if (productResponse.ok) {
@@ -270,7 +259,7 @@ export default function EditProductPage({ params: { id } }) {
                     list={businesses}
                     defaultValue={businessId}
                     valueKey="id"
-                    labelKey="business_name"
+                    labelKey="name"
                     onValueChange={(value) => setBusinessId(value)}
                   />
                   <Label className="text-sm text-muted-foreground">

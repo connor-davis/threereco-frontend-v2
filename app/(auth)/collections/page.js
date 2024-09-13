@@ -12,14 +12,6 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import {
-  ArrowUpDownIcon,
-  ChevronDownIcon,
-  EyeIcon,
-  PencilIcon,
-  PlusIcon,
-  TrashIcon,
-} from "lucide-react";
-import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
@@ -38,6 +30,8 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { fuzzyFilter, fuzzySort } from "@/lib/utils";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   flexRender,
   getCoreRowModel,
@@ -46,21 +40,27 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { fuzzyFilter, fuzzySort } from "@/lib/utils";
-import { useEffect, useState } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  ArrowUpDownIcon,
+  ChevronDownIcon,
+  EyeIcon,
+  PencilIcon,
+  PlusIcon,
+  TrashIcon,
+} from "lucide-react";
+import { useState } from "react";
 
-import BusinessHoverCard from "@/components/hovercards/business/business";
-import { Button } from "@/components/ui/button";
-import CollectorHoverCard from "@/components/hovercards/collector/collector";
-import { Input } from "@/components/ui/input";
-import Link from "next/link";
-import LoadingSpinner from "@/components/loadingSpinner";
-import ProductHoverCard from "@/components/hovercards/product/product";
 import RoleGuard from "@/components/guards/role";
-import { toast } from "sonner";
+import BusinessHoverCard from "@/components/hovercards/business/business";
+import CollectorHoverCard from "@/components/hovercards/collector/collector";
+import ProductHoverCard from "@/components/hovercards/product/product";
+import LoadingSpinner from "@/components/loadingSpinner";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import useAuthenticationStore from "@/lib/state/authentication";
 import useUserStore from "@/lib/state/user";
+import Link from "next/link";
+import { toast } from "sonner";
 
 const columns = [
   {
@@ -77,11 +77,11 @@ const columns = [
         </Button>
       );
     },
-    accessorKey: "business_id",
+    accessorKey: "business",
     cell: ({ row }) => (
       <>
         <RoleGuard requiredRoles={["System Admin", "Staff"]}>
-          <BusinessHoverCard business_id={row.original.business_id} />
+          <BusinessHoverCard business={row.original.business} />
         </RoleGuard>
         <RoleGuard requiredRoles={["Business"]}>--</RoleGuard>
       </>
@@ -103,9 +103,9 @@ const columns = [
         </Button>
       );
     },
-    accessorKey: "collector_id",
+    accessorKey: "collector",
     cell: ({ row }) => (
-      <CollectorHoverCard collector_id={row.original.collector_id} />
+      <CollectorHoverCard collector={row.original.collector} />
     ),
     filterFn: fuzzyFilter,
     sortingFn: fuzzySort,
@@ -124,10 +124,8 @@ const columns = [
         </Button>
       );
     },
-    accessorKey: "product_id",
-    cell: ({ row }) => (
-      <ProductHoverCard product_id={row.original.product_id} />
-    ),
+    accessorKey: "product",
+    cell: ({ row }) => <ProductHoverCard product={row.original.product} />,
     filterFn: fuzzyFilter,
     sortingFn: fuzzySort,
   },
@@ -164,13 +162,16 @@ export default function CollectionsPage() {
     queryKey: ["collections"],
     queryFn: () => {
       return new Promise(async (resolve, reject) => {
-        const collectionsResponse = await fetch("/api/collection", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const collectionsResponse = await fetch(
+          "/api/collections?includeBusiness=true&includeCollector=true&includeProduct=true",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         if (collectionsResponse.status !== 200) {
           return reject("Failed to fetch collections");
@@ -178,7 +179,7 @@ export default function CollectionsPage() {
 
         const data = await collectionsResponse.json();
 
-        resolve(data.collections);
+        resolve(data);
       });
     },
   });

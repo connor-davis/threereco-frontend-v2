@@ -24,12 +24,10 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { toast } from "sonner";
-import useAuthenticationStore from "@/lib/state/authentication";
 import { useRouter } from "next/navigation";
 
 export default function ViewProductPage({ params: { id } }) {
   const router = useRouter();
-  const { token } = useAuthenticationStore();
 
   // Access the client
   const queryClient = useQueryClient();
@@ -39,11 +37,10 @@ export default function ViewProductPage({ params: { id } }) {
     queryKey: ["products", id],
     queryFn: () => {
       return new Promise(async (resolve, reject) => {
-        const productResponse = await fetch("/api/product/" + id, {
+        const productResponse = await fetch("/api/products?id=" + id, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
           },
         });
 
@@ -53,17 +50,16 @@ export default function ViewProductPage({ params: { id } }) {
 
         const data = await productResponse.json();
 
-        resolve(data.product);
+        resolve(data);
       });
     },
   });
 
   const deleteProduct = async (id) => {
-    const response = await fetch("/api/product/" + id, {
+    const response = await fetch("/api/products?id=" + id, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
       },
     });
 

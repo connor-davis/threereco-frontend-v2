@@ -72,9 +72,9 @@ const columns = [
         </Button>
       );
     },
-    accessorKey: "first_name",
+    accessorKey: "firstName",
     cell: ({ row }) => (
-      <div>{[row.original.first_name, row.original.last_name].join(" ")}</div>
+      <div>{[row.original.firstName, row.original.lastName].join(" ")}</div>
     ),
     filterFn: fuzzyFilter,
     sortingFn: fuzzySort,
@@ -93,8 +93,8 @@ const columns = [
         </Button>
       );
     },
-    accessorKey: "id_number",
-    cell: ({ row }) => row.original.id_number,
+    accessorKey: "idNumber",
+    cell: ({ row }) => row.original.idNumber,
     filterFn: fuzzyFilter,
     sortingFn: fuzzySort,
   },
@@ -112,8 +112,8 @@ const columns = [
         </Button>
       );
     },
-    accessorKey: "phone_number",
-    cell: ({ row }) => row.original.phone_number,
+    accessorKey: "phoneNumber",
+    cell: ({ row }) => row.original.phoneNumber,
     filterFn: fuzzyFilter,
     sortingFn: fuzzySort,
   },
@@ -139,8 +139,8 @@ const columns = [
             {[
               `${row.original.address}`,
               `${row.original.city}`,
-              `${row.original.state}`,
-              `${row.original.zip_code}`,
+              `${row.original.province}`,
+              `${row.original.zipCode}`,
             ].join(", ")}
           </div>
         </TooltipTrigger>
@@ -149,8 +149,8 @@ const columns = [
             {[
               `${row.original.address}`,
               `${row.original.city}`,
-              `${row.original.state}`,
-              `${row.original.zip_code}`,
+              `${row.original.province}`,
+              `${row.original.zipCode}`,
             ].join(", ")}
           </div>
         </TooltipContent>
@@ -173,8 +173,8 @@ const columns = [
         </Button>
       );
     },
-    accessorKey: "bank_name",
-    cell: ({ row }) => row.original.bank_name,
+    accessorKey: "bankName",
+    cell: ({ row }) => row.original.bankName,
     filterFn: fuzzyFilter,
     sortingFn: fuzzySort,
   },
@@ -192,8 +192,8 @@ const columns = [
         </Button>
       );
     },
-    accessorKey: "bank_account_holder",
-    cell: ({ row }) => row.original.bank_account_holder,
+    accessorKey: "bankAccountHolder",
+    cell: ({ row }) => row.original.bankAccountHolder,
     filterFn: fuzzyFilter,
     sortingFn: fuzzySort,
   },
@@ -211,8 +211,8 @@ const columns = [
         </Button>
       );
     },
-    accessorKey: "bank_account_number",
-    cell: ({ row }) => row.original.bank_account_number,
+    accessorKey: "bankAccountNumber",
+    cell: ({ row }) => row.original.bankAccountNumber,
     filterFn: fuzzyFilter,
     sortingFn: fuzzySort,
   },
@@ -229,7 +229,7 @@ export default function CollectorsPage() {
     queryKey: ["collectors"],
     queryFn: () => {
       return new Promise(async (resolve, reject) => {
-        const collectorsResponse = await fetch("/api/collector", {
+        const collectorsResponse = await fetch("/api/collectors", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -243,7 +243,7 @@ export default function CollectorsPage() {
 
         const data = await collectorsResponse.json();
 
-        resolve(data.collectors);
+        resolve(data);
       });
     },
   });

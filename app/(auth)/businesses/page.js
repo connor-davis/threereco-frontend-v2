@@ -53,7 +53,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import LoadingSpinner from "@/components/loadingSpinner";
-import useAuthenticationStore from "@/lib/state/authentication";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -72,8 +71,8 @@ const columns = [
         </Button>
       );
     },
-    accessorKey: "business_name",
-    cell: ({ row }) => row.original.business_name,
+    accessorKey: "name",
+    cell: ({ row }) => row.original.name,
     filterFn: fuzzyFilter,
     sortingFn: fuzzySort,
   },
@@ -91,8 +90,8 @@ const columns = [
         </Button>
       );
     },
-    accessorKey: "business_type",
-    cell: ({ row }) => row.original.business_type,
+    accessorKey: "type",
+    cell: ({ row }) => row.original.type,
     filterFn: fuzzyFilter,
     sortingFn: fuzzySort,
   },
@@ -110,17 +109,17 @@ const columns = [
         </Button>
       );
     },
-    accessorKey: "business_description",
+    accessorKey: "description",
     cell: ({ row }) => (
       <Tooltip>
         <TooltipTrigger asChild>
           <div className="truncate text-ellipsis max-w-64">
-            {row.original.business_description}
+            {row.original.description}
           </div>
         </TooltipTrigger>
         <TooltipContent side="south">
           <div className="break-normal max-w-64">
-            {row.original.business_description}
+            {row.original.description}
           </div>
         </TooltipContent>
       </Tooltip>
@@ -142,8 +141,8 @@ const columns = [
         </Button>
       );
     },
-    accessorKey: "phone_number",
-    cell: ({ row }) => row.original.phone_number,
+    accessorKey: "phoneNumber",
+    cell: ({ row }) => row.original.phoneNumber,
     filterFn: fuzzyFilter,
     sortingFn: fuzzySort,
   },
@@ -169,8 +168,8 @@ const columns = [
             {[
               `${row.original.address}`,
               `${row.original.city}`,
-              `${row.original.state}`,
-              `${row.original.zip_code}`,
+              `${row.original.province}`,
+              `${row.original.zipCode}`,
             ].join(", ")}
           </div>
         </TooltipTrigger>
@@ -179,8 +178,8 @@ const columns = [
             {[
               `${row.original.address}`,
               `${row.original.city}`,
-              `${row.original.state}`,
-              `${row.original.zip_code}`,
+              `${row.original.province}`,
+              `${row.original.zipCode}`,
             ].join(", ")}
           </div>
         </TooltipContent>
@@ -192,8 +191,6 @@ const columns = [
 ];
 
 export default function BusinessPage() {
-  const { token } = useAuthenticationStore();
-
   // Access the client
   const queryClient = useQueryClient();
 
@@ -202,11 +199,10 @@ export default function BusinessPage() {
     queryKey: ["businesses"],
     queryFn: () => {
       return new Promise(async (resolve, reject) => {
-        const businessesResponse = await fetch("/api/business", {
+        const businessesResponse = await fetch("/api/businesses", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
           },
         });
 
@@ -216,7 +212,7 @@ export default function BusinessPage() {
 
         const data = await businessesResponse.json();
 
-        resolve(data.businesses);
+        resolve(data);
       });
     },
   });
@@ -270,11 +266,10 @@ export default function BusinessPage() {
   }
 
   const deleteBusiness = async (id) => {
-    const response = await fetch("/api/business/" + id, {
+    const response = await fetch("/api/businesses?id=" + id, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
       },
     });
 

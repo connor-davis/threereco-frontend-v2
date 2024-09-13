@@ -11,22 +11,22 @@ import useAuthenticationStore from "@/lib/state/authentication";
 
 export default function CollectorSearch({
   className,
-  onSelected = (collector_id) => {},
+  value = null,
+  defaultValue = null,
+  onSelected = (collectorId) => {},
   ...props
 }) {
   const { token } = useAuthenticationStore();
 
-  const [searchValue, setSearchValue] = useState(null);
+  const [searchValue, setSearchValue] = useState(defaultValue ?? value ?? null);
   const [searchResults, setSearchResults] = useState([]);
-  const [selected, setSelected] = useState(
-    props.selected ?? props.defaultSelected ?? null
-  );
+  const [selected, setSelected] = useState(defaultValue ?? value ?? null);
 
   useEffect(() => {
     const disposeableTimeout = setTimeout(async () => {
       if (searchValue ?? props.selected ?? props.defaultSelected) {
         const response = await fetch(
-          `/api/collector/search/${
+          `/api/collectors/search?query=${
             searchValue ?? props.selected ?? props.defaultSelected
           }`,
           {
@@ -39,7 +39,7 @@ export default function CollectorSearch({
         );
 
         if (response.ok) {
-          const { collectors } = await response.json();
+          const collectors = await response.json();
           setSearchResults(collectors);
         } else {
           const jsonText = await response.text();
@@ -57,12 +57,12 @@ export default function CollectorSearch({
           }
         }
       }
-    }, 0);
+    }, 500);
 
     return () => {
       clearTimeout(disposeableTimeout);
     };
-  }, [searchValue, props.selected, props.defaultSelected]);
+  }, [searchValue]);
 
   return (
     <div className="flex flex-col space-y-3">
@@ -74,37 +74,40 @@ export default function CollectorSearch({
         onChange={(event) => setSearchValue(event.target.value)}
       />
 
-      {searchResults.length > 0 && (
-        <div className="flex flex-col p-1 space-y-1 overflow-y-auto border bg-muted max-h-64">
-          {searchResults.map((collector) => (
-            <div
-              className={cn(
-                "flex flex-col items-start justify-start h-auto space-y-2 border p-2 cursor-pointer transition-all duration-200 ease-in-out",
-                selected === collector.id && "border-primary"
-              )}
-              key={collector.id}
-              onClick={() => {
-                setSelected(collector.id);
-                onSelected(collector.id);
-              }}
-            >
-              <Label>
-                {[collector.first_name, collector.last_name].join(" ")}
-              </Label>
-              <div className="flex flex-col space-y-1">
-                <Label className="flex items-center text-muted-foreground">
-                  <MailIcon className="w-4 h-4 mr-2" />
-                  {collector.email}
+      {searchResults &&
+        searchValue &&
+        searchValue.length > 0 &&
+        searchResults.length > 0 && (
+          <div className="flex flex-col p-1 space-y-1 overflow-y-auto border bg-muted max-h-64">
+            {searchResults.map((collector) => (
+              <div
+                className={cn(
+                  "flex flex-col items-start justify-start h-auto space-y-2 border p-2 cursor-pointer transition-all bg-background duration-200 ease-in-out",
+                  selected === collector.id && "border-primary"
+                )}
+                key={collector.id}
+                onClick={() => {
+                  setSelected(collector.id);
+                  onSelected(collector.id);
+                }}
+              >
+                <Label>
+                  {[collector.firstName, collector.lastName].join(" ")}
                 </Label>
-                <Label className="flex items-center text-muted-foreground">
-                  <PhoneIcon className="w-4 h-4 mr-2" />
-                  {collector.phone_number}
-                </Label>
+                <div className="flex flex-col space-y-1">
+                  <Label className="flex items-center text-muted-foreground">
+                    <MailIcon className="w-4 h-4 mr-2" />
+                    {collector.user?.email}
+                  </Label>
+                  <Label className="flex items-center text-muted-foreground">
+                    <PhoneIcon className="w-4 h-4 mr-2" />
+                    {collector.phoneNumber}
+                  </Label>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      )}
+            ))}
+          </div>
+        )}
     </div>
   );
 }

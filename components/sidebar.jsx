@@ -61,7 +61,7 @@ export default function Sidebar() {
         </Tooltip>
       </Link>
       <RoleGuard requiredRoles={["System Admin"]}>
-        <Link href="/staff">
+        <Link href="/users">
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
@@ -69,12 +69,12 @@ export default function Sidebar() {
                 className="p-3 transition-all duration-300 hover:bg-transparent hover:text-primary text-muted-foreground"
               >
                 <UsersIcon className={cn("w-4 h-4", isFullView && "mr-2")} />
-                {isFullView && "Staff"}
+                {isFullView && "Users"}
               </Button>
             </TooltipTrigger>
             {!isFullView && (
               <TooltipContent side="right">
-                <span>Staff</span>
+                <span>Users</span>
               </TooltipContent>
             )}
           </Tooltip>

@@ -24,56 +24,52 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { toast } from "sonner";
-import useAuthenticationStore from "@/lib/state/authentication";
 import { useRouter } from "next/navigation";
 
-export default function ViewStaffPage({ params: { id } }) {
+export default function ViewUserPage({ params: { id } }) {
   const router = useRouter();
-  const { token } = useAuthenticationStore();
 
   // Access the client
   const queryClient = useQueryClient();
 
   // Queries
   const { data, status, error, isLoading, isError } = useQuery({
-    queryKey: ["staff", id],
+    queryKey: ["users", id],
     queryFn: () => {
       return new Promise(async (resolve, reject) => {
-        const userResponse = await fetch("/api/users/" + id, {
+        const userResponse = await fetch("/api/users?id=" + id, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
           },
         });
 
         if (userResponse.status !== 200) {
-          return reject("Failed to fetch staff");
+          return reject("Failed to fetch user");
         }
 
         const data = await userResponse.json();
 
-        resolve(data.user);
+        resolve(data);
       });
     },
   });
 
-  const deleteStaff = async (id) => {
-    const response = await fetch("/api/users/" + id, {
+  const deleteUser = async (id) => {
+    const response = await fetch("/api/users?id=" + id, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
       },
     });
 
     if (response.ok) {
       return toast.success("Success", {
-        description: "You have successfully deleted the staff.",
+        description: "You have successfully deleted the user.",
         duration: 2000,
         onAutoClose: () => {
-          queryClient.invalidateQueries("staff");
-          router.replace("/staff");
+          queryClient.invalidateQueries("users");
+          router.replace("/users");
         },
       });
     } else {
@@ -99,9 +95,9 @@ export default function ViewStaffPage({ params: { id } }) {
     <div className="flex flex-col items-center justify-center w-full h-full">
       <Card className="w-full shadow-none max-w-96">
         <CardHeader>
-          <CardTitle className="text-center">Staff Details</CardTitle>
+          <CardTitle className="text-center">User Details</CardTitle>
           <CardDescription className="text-center">
-            View the details of the staff below.
+            View the details of the user below.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -111,10 +107,14 @@ export default function ViewStaffPage({ params: { id } }) {
                 <Label className="font-bold">Email:</Label>
                 <Label className="break-all">{data?.email}</Label>
               </div>
+              <div className="flex flex-col space-y-2">
+                <Label className="font-bold">Role:</Label>
+                <Label className="break-all">{data?.role}</Label>
+              </div>
             </div>
             <div className="flex flex-col space-y-3">
-              <Link href={`/staff/edit/${id}`}>
-                <Button className="w-full">Edit Staff</Button>
+              <Link href={`/users/edit/${id}`}>
+                <Button className="w-full">Edit User</Button>
               </Link>
               <AlertDialog>
                 <AlertDialogTrigger asChild>
@@ -123,28 +123,28 @@ export default function ViewStaffPage({ params: { id } }) {
                     variant="destructive"
                     onClick={() => {}}
                   >
-                    Delete Staff
+                    Delete User
                   </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
                     <AlertDialogTitle>Hold On!</AlertDialogTitle>
                     <AlertDialogDescription>
-                      Are you sure you want to delete this staff? This action
+                      Are you sure you want to delete this user? This action
                       cannot be undone.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={() => deleteStaff(id)}>
+                    <AlertDialogAction onClick={() => deleteUser(id)}>
                       Continue
                     </AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
               </AlertDialog>
-              <Link href={`/staff`}>
+              <Link href={`/users`}>
                 <Button className="w-full" variant="outline">
-                  Back to Staff
+                  Back to Users
                 </Button>
               </Link>
             </div>
