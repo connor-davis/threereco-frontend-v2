@@ -156,9 +156,6 @@ export default function Sidebar() {
           </Tooltip>
         </Link>
       </RoleGuard>
-      <RoleGuard requiredRoles={["System Admin", "Staff"]}>
-        <ExportDataDialog isFullView={isFullView} />
-      </RoleGuard>
     </div>
   );
 }

@@ -233,7 +233,7 @@ export default function CollectionsPage() {
   }
 
   const deleteCollection = async (id) => {
-    const response = await fetch("/api/collection/" + id, {
+    const response = await fetch("/api/collections?id=" + id, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

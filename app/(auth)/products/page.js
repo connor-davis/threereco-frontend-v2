@@ -78,7 +78,7 @@ const columns = [
     sortingFn: fuzzySort,
   },
   {
-    id: "Description",
+    id: "GW Code",
     header: ({ column }) => {
       return (
         <Button
@@ -86,13 +86,32 @@ const columns = [
           className="p-0"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Description
+          GW Code
           <ArrowUpDownIcon className="w-4 h-4 ml-2" />
         </Button>
       );
     },
-    accessorKey: "description",
-    cell: ({ row }) => row.original.description,
+    accessorKey: "gwCode",
+    cell: ({ row }) => row.original.gwCode,
+    filterFn: fuzzyFilter,
+    sortingFn: fuzzySort,
+  },
+  {
+    id: "tCO2/ton Factor",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          className="p-0"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          tCO2/ton Factor
+          <ArrowUpDownIcon className="w-4 h-4 ml-2" />
+        </Button>
+      );
+    },
+    accessorKey: "carbonFactor",
+    cell: ({ row }) => row.original.carbonFactor,
     filterFn: fuzzyFilter,
     sortingFn: fuzzySort,
   },
