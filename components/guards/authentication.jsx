@@ -23,7 +23,7 @@ export default function AuthenticationGuard({ children }) {
         return router.push("/login?redirect=" + currentPath);
       }
 
-      const { data } = await checkResponse.json();
+      const data = await checkResponse.json();
 
       setUser(data);
 
