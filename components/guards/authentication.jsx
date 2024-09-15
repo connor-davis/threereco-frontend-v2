@@ -20,7 +20,7 @@ export default function AuthenticationGuard({ children }) {
       if (!checkResponse.ok) {
         const currentPath = window.location.pathname;
 
-        return router.replace("/login?redirect=" + currentPath);
+        return router.push("/login?redirect=" + currentPath);
       }
 
       const { data } = await checkResponse.json();
