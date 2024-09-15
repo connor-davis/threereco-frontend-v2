@@ -28,7 +28,7 @@ export default function AuthenticationGuard({ children }) {
       setUser(data);
 
       setChecking(false);
-    }, 200);
+    }, 500);
 
     return () => {
       clearTimeout(disposeableTimeout);
