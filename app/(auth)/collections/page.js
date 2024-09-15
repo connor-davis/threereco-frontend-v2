@@ -61,6 +61,7 @@ import useAuthenticationStore from "@/lib/state/authentication";
 import useUserStore from "@/lib/state/user";
 import Link from "next/link";
 import { toast } from "sonner";
+import ExportCollectionsDialog from "@/components/dialogs/exportCollections";
 
 const columns = [
   {
@@ -314,6 +315,10 @@ export default function CollectionsPage() {
                   })}
               </DropdownMenuContent>
             </DropdownMenu>
+
+            <RoleGuard requiredRoles={["System Admin", "Admin"]}>
+              <ExportCollectionsDialog />
+            </RoleGuard>
           </div>
         </div>
         <div className="border rounded-md bg-background">
