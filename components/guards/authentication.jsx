@@ -17,7 +17,9 @@ export default function AuthenticationGuard({ children }) {
         method: "GET",
       });
 
-      if (!checkResponse.ok) {
+      const status = checkResponse.status;
+
+      if (status !== 200) {
         const currentPath = window.location.pathname;
 
         return router.push("/login?redirect=" + currentPath);
