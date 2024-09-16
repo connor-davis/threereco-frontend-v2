@@ -137,8 +137,8 @@ export default function DashboardPage() {
                 <SelectValue placeholder="Select a month" />
               </SelectTrigger>
               <SelectContent>
-                {YEARS.map((year, index) => (
-                  <SelectItem value={index}>{year}</SelectItem>
+                {YEARS.map((year) => (
+                  <SelectItem value={year}>{year}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
