@@ -1,35 +1,12 @@
-import "../globals.css";
-
-import { Inter as FontSans } from "next/font/google";
-import { Suspense } from "react";
 import { Toaster } from "@/components/ui/sonner";
-import { cn } from "@/lib/utils";
-
-const fontSans = FontSans({
-  subsets: ["latin"],
-  variable: "--font-sans",
-});
-
-export const metadata = {
-  title: "3rEco",
-  description: "Empowering the world to make sustainable choices.",
-};
+import { Suspense } from "react";
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body
-        className={cn(
-          "flex flex-col w-screen h-screen bg-muted font-sans antialiased",
-          fontSans.variable
-        )}
-      >
-        <Suspense>
-          {children}
+    <Suspense>
+      {children}
 
-          <Toaster />
-        </Suspense>
-      </body>
-    </html>
+      <Toaster />
+    </Suspense>
   );
 }
