@@ -12,9 +12,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { getRandomFillColor } from "@/lib/utils";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Bar,
   BarChart,
@@ -46,6 +46,8 @@ const YEARS = [2024, 2025, 2026, 2027, 2028];
 export default function DashboardPage() {
   const [selectedMonth, setSelectedMonth] = useState(8);
   const [selectedYear, setSelectedYear] = useState(0);
+
+  const queryClient = useQueryClient();
 
   const {
     data: datedCollectionWeights,
@@ -90,6 +92,19 @@ export default function DashboardPage() {
         ]);
       }),
   });
+
+  useEffect(() => {
+    const disposeableTimeout = setTimeout(
+      () =>
+        queryClient.invalidateQueries([
+          "analytics",
+          "dated-collection-weights",
+        ]),
+      500
+    );
+
+    return () => clearTimeout(disposeableTimeout);
+  }, [selectedMonth, selectedYear]);
 
   if (isFetchingDatedCollectionWeights)
     return (
