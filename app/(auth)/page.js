@@ -49,49 +49,50 @@ export default function DashboardPage() {
 
   const queryClient = useQueryClient();
 
-  const {
-    data: datedCollectionWeights,
-    isFetching: isFetchingDatedCollectionWeights,
-  } = useQuery({
-    initialData: [],
-    queryKey: ["analytics", "dated-collection-weights"],
-    queryFn: () =>
-      new Promise(async (resolve, reject) => {
-        const analyticsResponse = await fetch(
-          "/api/analytics/stock/dated-collection-weights?month=" +
-            selectedMonth +
-            "&year=" +
-            selectedYear,
-          { method: "GET" }
-        );
+  const [datedCollectionWeights, setDatedCollectionWeights] = useState([]);
+  const [isFetchingDatedCollectionWeights, setFetchingDatedCollectionWeights] =
+    useState(true);
 
-        const status = analyticsResponse.status;
+  useEffect(() => {
+    const disposeableTimeout = setTimeout(async () => {
+      const analyticsResponse = await fetch(
+        "/api/analytics/stock/dated-collection-weights?month=" +
+          selectedMonth +
+          "&year=" +
+          selectedYear,
+        { method: "GET" }
+      );
 
-        if (status !== 200)
-          return toast.error("Error", {
-            description: "Failed to fetch dated collection weights analytics.",
-            duration: 2000,
-          });
+      const status = analyticsResponse.status;
 
-        const data = await analyticsResponse.json();
+      if (status !== 200)
+        return toast.error("Error", {
+          description: "Failed to fetch dated collection weights analytics.",
+          duration: 2000,
+        });
 
-        const productNames = [];
-        const mapping = {};
+      const data = await analyticsResponse.json();
 
-        for (const item of data) {
-          productNames.push(item.productName);
+      const productNames = [];
+      const mapping = {};
 
-          if (!mapping[item.collectionDate]) mapping[item.collectionDate] = {};
+      for (const item of data) {
+        productNames.push(item.productName);
 
-          mapping[item.collectionDate][item.productName] = item.totalWeight;
-        }
+        if (!mapping[item.collectionDate]) mapping[item.collectionDate] = {};
 
-        resolve([
-          [...new Set(data.map((item) => item.productName))],
-          Object.keys(mapping).map((key) => ({ ...mapping[key], date: key })),
-        ]);
-      }),
-  });
+        mapping[item.collectionDate][item.productName] = item.totalWeight;
+      }
+
+      setDatedCollectionWeights([
+        [...new Set(data.map((item) => item.productName))],
+        Object.keys(mapping).map((key) => ({ ...mapping[key], date: key })),
+      ]);
+      setFetchingDatedCollectionWeights(false);
+    }, 500);
+
+    return () => clearTimeout(disposeableTimeout);
+  }, [selectedMonth, selectedYear]);
 
   if (isFetchingDatedCollectionWeights)
     return (
