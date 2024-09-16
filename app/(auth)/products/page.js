@@ -337,7 +337,7 @@ export default function ProductsPage() {
                               </Button>
                             </Link>
                           </TooltipTrigger>
-                          <TooltipContent side="south">
+                          <TooltipContent side="bottom">
                             View Product
                           </TooltipContent>
                         </Tooltip>
@@ -350,7 +350,7 @@ export default function ProductsPage() {
                               </Button>
                             </Link>
                           </TooltipTrigger>
-                          <TooltipContent side="south">
+                          <TooltipContent side="bottom">
                             Edit Product
                           </TooltipContent>
                         </Tooltip>

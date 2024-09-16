@@ -298,7 +298,7 @@ export default function UsersPage() {
                               </Button>
                             </Link>
                           </TooltipTrigger>
-                          <TooltipContent side="south">
+                          <TooltipContent side="bottom">
                             View User
                           </TooltipContent>
                         </Tooltip>
@@ -311,7 +311,7 @@ export default function UsersPage() {
                               </Button>
                             </Link>
                           </TooltipTrigger>
-                          <TooltipContent side="south">
+                          <TooltipContent side="bottom">
                             Edit User
                           </TooltipContent>
                         </Tooltip>

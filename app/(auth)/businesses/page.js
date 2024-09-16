@@ -117,7 +117,7 @@ const columns = [
             {row.original.description}
           </div>
         </TooltipTrigger>
-        <TooltipContent side="south">
+        <TooltipContent side="bottom">
           <div className="break-normal max-w-64">
             {row.original.description}
           </div>
@@ -173,7 +173,7 @@ const columns = [
             ].join(", ")}
           </div>
         </TooltipTrigger>
-        <TooltipContent side="south">
+        <TooltipContent side="bottom">
           <div className="break-normal max-w-64">
             {[
               `${row.original.address}`,
@@ -391,7 +391,7 @@ export default function BusinessPage() {
                               </Button>
                             </Link>
                           </TooltipTrigger>
-                          <TooltipContent side="south">
+                          <TooltipContent side="bottom">
                             View Business
                           </TooltipContent>
                         </Tooltip>
@@ -404,7 +404,7 @@ export default function BusinessPage() {
                               </Button>
                             </Link>
                           </TooltipTrigger>
-                          <TooltipContent side="south">
+                          <TooltipContent side="bottom">
                             Edit Business
                           </TooltipContent>
                         </Tooltip>

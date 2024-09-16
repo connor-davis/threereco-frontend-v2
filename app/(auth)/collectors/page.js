@@ -144,7 +144,7 @@ const columns = [
             ].join(", ")}
           </div>
         </TooltipTrigger>
-        <TooltipContent side="south">
+        <TooltipContent side="bottom">
           <div className="break-normal max-w-64">
             {[
               `${row.original.address}`,
@@ -423,7 +423,7 @@ export default function CollectorsPage() {
                               </Button>
                             </Link>
                           </TooltipTrigger>
-                          <TooltipContent side="south">
+                          <TooltipContent side="bottom">
                             View Collector
                           </TooltipContent>
                         </Tooltip>
@@ -436,7 +436,7 @@ export default function CollectorsPage() {
                               </Button>
                             </Link>
                           </TooltipTrigger>
-                          <TooltipContent side="south">
+                          <TooltipContent side="bottom">
                             Edit Collector
                           </TooltipContent>
                         </Tooltip>

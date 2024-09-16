@@ -366,7 +366,7 @@ export default function CollectionsPage() {
                               </Button>
                             </Link>
                           </TooltipTrigger>
-                          <TooltipContent side="south">
+                          <TooltipContent side="bottom">
                             View Collection
                           </TooltipContent>
                         </Tooltip>
@@ -382,7 +382,7 @@ export default function CollectionsPage() {
                                 </Button>
                               </Link>
                             </TooltipTrigger>
-                            <TooltipContent side="south">
+                            <TooltipContent side="bottom">
                               Edit Collection
                             </TooltipContent>
                           </Tooltip>
