@@ -4,9 +4,17 @@ import LoadingSpinner from "@/components/loadingSpinner";
 import { Card, CardContent } from "@/components/ui/card";
 import { ChartContainer } from "@/components/ui/chart";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { getRandomFillColor } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
+import { useState } from "react";
 import {
   Bar,
   BarChart,
@@ -18,7 +26,27 @@ import {
 } from "recharts";
 import { toast } from "sonner";
 
+const MONTHS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
+const YEARS = [2024, 2025, 2026, 2027, 2028];
+
 export default function DashboardPage() {
+  const [selectedMonth, setSelectedMonth] = useState(8);
+  const [selectedYear, setSelectedYear] = useState(0);
+
   const {
     data: datedCollectionWeights,
     isFetching: isFetchingDatedCollectionWeights,
@@ -28,7 +56,10 @@ export default function DashboardPage() {
     queryFn: () =>
       new Promise(async (resolve, reject) => {
         const analyticsResponse = await fetch(
-          "/api/analytics/stock/dated-collection-weights?month=8&year=2024",
+          "/api/analytics/stock/dated-collection-weights?month=" +
+            selectedMonth +
+            "&year=" +
+            selectedYear,
           { method: "GET" }
         );
 
@@ -76,6 +107,38 @@ export default function DashboardPage() {
         <div className="flex w-full items-center h-auto justify-between">
           <div className="flex flex-col h-auto space-y-3">
             <Label>Daily Collection Weights</Label>
+          </div>
+
+          <div className="flex items-center space-x-3">
+            <Select
+              value={selectedMonth ?? 0}
+              defaultValue={selectedMonth ?? 0}
+              onValueChange={(value) => setSelectedMonth(parseInt(value))}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select a month" />
+              </SelectTrigger>
+              <SelectContent>
+                {MONTHS.map((month, index) => (
+                  <SelectItem value={index}>{month}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <Select
+              value={selectedYear ?? 0}
+              defaultValue={selectedYear ?? 0}
+              onValueChange={(value) => selectedYear(parseInt(value))}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select a month" />
+              </SelectTrigger>
+              <SelectContent>
+                {YEARS.map((year, index) => (
+                  <SelectItem value={index}>{year}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
         <ChartContainer config={{}}>
