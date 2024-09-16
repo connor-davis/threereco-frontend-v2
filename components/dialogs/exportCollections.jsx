@@ -111,7 +111,7 @@ export default function ExportCollectionsDialog() {
                 defaultMonth={date?.from}
                 selected={date}
                 onSelect={setDate}
-                numberOfMonths={2}
+                numberOfMonths={3}
               />
             </PopoverContent>
           </Popover>

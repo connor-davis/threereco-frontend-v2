@@ -32,10 +32,16 @@ import useUserStore from "@/lib/state/user";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { PRODUCTS } from "@/lib/constants";
 
 const productSchema = z.object({
-  name: z.string(),
-  description: z.string(),
   price: z.coerce.number().positive().min(0, "Price must be greater than 0"),
 });
 
@@ -43,13 +49,12 @@ export default function EditProductPage({ params: { id } }) {
   const router = useRouter();
   const { user } = useUserStore();
 
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const [businessId, setBusinessId] = useState(null);
 
   const productForm = useForm({
     resolver: zodResolver(productSchema),
     defaultValues: {
-      name: "",
-      description: "",
       price: 0,
     },
   });
@@ -114,6 +119,11 @@ export default function EditProductPage({ params: { id } }) {
     const disposeableTimeout = setTimeout(() => {
       if (data) {
         productForm.reset(data);
+        setSelectedProduct({
+          name: data.name,
+          gwCode: data.gwCode,
+          carbonFactor: data.carbonFactor,
+        });
         setBusinessId(data.businessId);
       }
     }, 100);
@@ -156,7 +166,7 @@ export default function EditProductPage({ params: { id } }) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ ...values, businessId }),
+      body: JSON.stringify({ ...values, ...selectedProduct, businessId }),
     });
 
     if (productResponse.ok) {
@@ -201,39 +211,35 @@ export default function EditProductPage({ params: { id } }) {
               onSubmit={productForm.handleSubmit(onProductSubmit)}
               className="space-y-8"
             >
-              <FormField
-                control={productForm.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Paper" {...field} />
-                    </FormControl>
-                    <FormDescription>The products name.</FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="flex flex-col w-full h-auto space-y-2">
+                <Label>Product</Label>
 
-              <FormField
-                control={productForm.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Description</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="A description of paper"
-                        {...field}
-                      ></Textarea>
-                    </FormControl>
-                    <FormDescription>The products description.</FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                <Select
+                  value={selectedProduct?.name ?? ""}
+                  onValueChange={(value) => {
+                    const product = PRODUCTS.find(
+                      (product) => product.name === value
+                    );
 
+                    setSelectedProduct(product);
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a product type..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {PRODUCTS.map((product) => (
+                      <SelectItem value={product.name}>
+                        {product.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                <Label className="text-sm text-muted-foreground">
+                  Select the type of product you are adding.
+                </Label>
+              </div>
               <FormField
                 control={productForm.control}
                 name="price"

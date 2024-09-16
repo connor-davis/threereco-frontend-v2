@@ -76,6 +76,25 @@ const columns = [
     filterFn: fuzzyFilter,
     sortingFn: fuzzySort,
   },
+  {
+    id: "Role",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          className="p-0"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Role
+          <ArrowUpDownIcon className="w-4 h-4 ml-2" />
+        </Button>
+      );
+    },
+    accessorKey: "role",
+    cell: ({ row }) => row.original.role,
+    filterFn: fuzzyFilter,
+    sortingFn: fuzzySort,
+  },
 ];
 
 export default function UsersPage() {

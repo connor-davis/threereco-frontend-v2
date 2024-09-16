@@ -35,10 +35,20 @@ import useUserStore from "@/lib/state/user";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
+import { CalendarIcon } from "lucide-react";
+import { format } from "date-fns";
+import { Calendar } from "@/components/ui/calendar";
 
 const collectionSchema = z.object({
   businessId: z.string().uuid("Business ID must be a valid UUID"),
@@ -61,6 +71,8 @@ export default function EditCollectionPage({ params: { id } }) {
       weight: 0,
     },
   });
+
+  const [date, setDate] = useState(new Date());
 
   // Access the client
   const queryClient = useQueryClient();
@@ -180,6 +192,7 @@ export default function EditCollectionPage({ params: { id } }) {
     const disposeableTimeout = setTimeout(() => {
       if (data) {
         collectionForm.reset(data);
+        setDate(new Date(data.createdAt));
 
         console.log(collectionForm.getValues());
       }
@@ -217,7 +230,7 @@ export default function EditCollectionPage({ params: { id } }) {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(values),
+      body: JSON.stringify({ ...values, createdAt: date.toISOString() }),
     });
 
     if (collectionResponse.ok) {
@@ -382,6 +395,37 @@ export default function EditCollectionPage({ params: { id } }) {
                   </FormItem>
                 )}
               />
+
+              <div className="flex flex-col w-full h-auto space-y-3">
+                <Label>Collected On</Label>
+
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant={"outline"}
+                      className={cn(
+                        "w-full justify-start text-left font-normal",
+                        !date && "text-muted-foreground"
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {date ? format(date, "PPP") : <span>Pick a date</span>}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0">
+                    <Calendar
+                      mode="single"
+                      selected={date}
+                      onSelect={setDate}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+
+                <Label className="text-sm text-muted-foreground">
+                  When was the collection made?
+                </Label>
+              </div>
 
               <Button type="submit" className="w-full">
                 Update Collection

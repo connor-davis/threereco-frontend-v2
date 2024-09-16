@@ -69,7 +69,7 @@ export default function CreateBusinessPage() {
   useEffect(() => {
     const disposeableTimeout = setTimeout(async () => {
       if (user) {
-        const usersResponse = await fetch("/api/users");
+        const usersResponse = await fetch("/api/users?role=Business");
 
         if (usersResponse.ok) {
           const users = await usersResponse.json();

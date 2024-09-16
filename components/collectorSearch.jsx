@@ -78,11 +78,11 @@ export default function CollectorSearch({
         searchValue &&
         searchValue.length > 0 &&
         searchResults.length > 0 && (
-          <div className="flex flex-col p-1 space-y-1 overflow-y-auto border bg-muted max-h-64">
+          <div className="flex flex-col p-1 space-y-1 overflow-y-auto border bg-muted max-h-64 rounded-md">
             {searchResults.map((collector) => (
               <div
                 className={cn(
-                  "flex flex-col items-start justify-start h-auto space-y-2 border p-2 cursor-pointer transition-all bg-background duration-200 ease-in-out",
+                  "flex flex-col items-start justify-start h-auto rounded-md space-y-2 border p-2 cursor-pointer transition-all bg-background duration-200 ease-in-out",
                   selected === collector.id && "border-primary"
                 )}
                 key={collector.id}
