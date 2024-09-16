@@ -45,7 +45,7 @@ const YEARS = [2024, 2025, 2026, 2027, 2028];
 
 export default function DashboardPage() {
   const [selectedMonth, setSelectedMonth] = useState(8);
-  const [selectedYear, setSelectedYear] = useState(0);
+  const [selectedYear, setSelectedYear] = useState(2024);
 
   const queryClient = useQueryClient();
 
