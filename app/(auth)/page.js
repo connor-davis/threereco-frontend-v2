@@ -131,7 +131,7 @@ export default function DashboardPage() {
             <Select
               value={selectedYear ?? 0}
               defaultValue={selectedYear ?? 0}
-              onValueChange={(value) => selectedYear(parseInt(value))}
+              onValueChange={(value) => setSelectedYear(parseInt(value))}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select a month" />
