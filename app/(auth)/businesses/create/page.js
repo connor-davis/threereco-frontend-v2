@@ -66,6 +66,8 @@ export default function CreateBusinessPage() {
   const [users, setUsers] = useState([]);
   const [userId, setUserId] = useState(null);
 
+  const [openTab, setOpenTab] = useState("account");
+
   useEffect(() => {
     const disposeableTimeout = setTimeout(async () => {
       if (user) {
@@ -196,7 +198,12 @@ export default function CreateBusinessPage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col w-full h-full space-y-3 overflow-y-auto max-h-96">
-          <Tabs defaultValue="account" className="w-full">
+          <Tabs
+            value={openTab}
+            defaultValue={openTab}
+            onValueChange={(value) => setOpenTab(value)}
+            className="w-full"
+          >
             <TabsList className="w-full">
               <TabsTrigger
                 value="account"

@@ -1,48 +1,41 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import LoadingSpinner from "../loadingSpinner";
 import useUserStore from "@/lib/state/user";
-import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import LoadingSpinner from "../loadingSpinner";
 import { Label } from "../ui/label";
 
 export default function AuthenticationGuard({ children }) {
   const router = useRouter();
   const { setUser } = useUserStore();
-
-  const { data: user, isFetching: isFetchingUser } = useQuery({
-    initialData: {},
-    queryKey: ["authentication", "user"],
-    queryFn: () =>
-      new Promise(async (resolve, reject) => {
-        const checkResponse = await fetch("/api/authentication/check", {
-          method: "GET",
-        });
-
-        const status = checkResponse.status;
-
-        if (status !== 200) {
-          const currentPath = window.location.pathname;
-
-          return router.push("/login?redirect=" + currentPath);
-        }
-
-        const { data } = await checkResponse.json();
-
-        resolve(data);
-      }),
-  });
+  const [isAuthenticating, setAuthenticating] = useState(true);
 
   useEffect(() => {
-    const disposeableTimeout = setTimeout(() => setUser(user), 0);
+    const disposeableTimeout = setTimeout(async () => {
+      const checkResponse = await fetch("/api/authentication/check", {
+        method: "GET",
+      });
 
-    return () => {
-      clearTimeout(disposeableTimeout);
-    };
-  }, [user]);
+      const status = checkResponse.status;
 
-  if (isFetchingUser) {
+      if (status !== 200) {
+        const currentPath = window.location.pathname;
+
+        return router.push("/login?redirect=" + currentPath);
+      }
+
+      const { data } = await checkResponse.json();
+
+      setUser(data);
+
+      setAuthenticating(false);
+    }, 500);
+
+    return () => clearTimeout(disposeableTimeout);
+  }, []);
+
+  if (isAuthenticating) {
     return (
       <div className="flex flex-col items-center justify-center w-full h-full">
         <div className="flex items-center space-x-3">

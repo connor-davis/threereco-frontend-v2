@@ -63,6 +63,8 @@ export default function EditBusinessPage({ params: { id } }) {
   // Access the client
   const queryClient = useQueryClient();
 
+  const [openTab, setOpenTab] = useState("account");
+
   // Queries
   const { data, status, error, isLoading, isError } = useQuery({
     queryKey: ["businesses", id],
@@ -223,7 +225,12 @@ export default function EditBusinessPage({ params: { id } }) {
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col w-full h-full space-y-3 overflow-y-auto max-h-96">
-          <Tabs defaultValue="account" className="w-full">
+          <Tabs
+            defaultValue={openTab}
+            value={openTab}
+            onValueChange={setOpenTab}
+            className="w-full"
+          >
             <TabsList className="w-full">
               <TabsTrigger
                 value="account"
