@@ -25,14 +25,14 @@ export default function Sidebar() {
   return (
     <div
       className={cn(
-        "flex flex-col border-r bg-white h-full w-auto",
+        "flex flex-col border-r bg-white h-full w-auto p-3 space-y-3",
         isFullView && "w-48"
       )}
     >
       <Button
         onClick={() => setIsFullView(!isFullView)}
         variant="ghost"
-        className="p-3 ml-auto transition-all duration-300 hover:bg-transparent hover:text-primary text-muted-foreground"
+        className="p-3 ml-auto transition-all duration-300 hover:bg-primary/20 hover:text-primary text-muted-foreground w-full justify-end"
       >
         {isFullView ? (
           <PanelLeftCloseIcon className="w-4 h-4" />
@@ -45,7 +45,7 @@ export default function Sidebar() {
           <TooltipTrigger asChild>
             <Button
               variant="ghost"
-              className="p-3 transition-all duration-300 hover:bg-transparent hover:text-primary text-muted-foreground"
+              className="p-3 transition-all duration-300 hover:bg-primary/20 hover:text-primary text-muted-foreground w-full justify-start"
             >
               <LayoutDashboardIcon
                 className={cn("w-4 h-4", isFullView && "mr-2")}
@@ -66,7 +66,7 @@ export default function Sidebar() {
             <TooltipTrigger asChild>
               <Button
                 variant="ghost"
-                className="p-3 transition-all duration-300 hover:bg-transparent hover:text-primary text-muted-foreground"
+                className="p-3 transition-all duration-300 hover:bg-primary/20 hover:text-primary text-muted-foreground w-full justify-start"
               >
                 <UsersIcon className={cn("w-4 h-4", isFullView && "mr-2")} />
                 {isFullView && "Users"}
@@ -86,7 +86,7 @@ export default function Sidebar() {
             <TooltipTrigger asChild>
               <Button
                 variant="ghost"
-                className="p-3 transition-all duration-300 hover:bg-transparent hover:text-primary text-muted-foreground"
+                className="p-3 transition-all duration-300 hover:bg-primary/20 hover:text-primary text-muted-foreground w-full justify-start"
               >
                 <BuildingIcon className={cn("w-4 h-4", isFullView && "mr-2")} />
                 {isFullView && "Businesses"}
@@ -106,7 +106,7 @@ export default function Sidebar() {
             <TooltipTrigger asChild>
               <Button
                 variant="ghost"
-                className="p-3 transition-all duration-300 hover:bg-transparent hover:text-primary text-muted-foreground"
+                className="p-3 transition-all duration-300 hover:bg-primary/20 hover:text-primary text-muted-foreground w-full justify-start"
               >
                 <HandIcon className={cn("w-4 h-4", isFullView && "mr-2")} />
                 {isFullView && "Collectors"}
@@ -124,7 +124,7 @@ export default function Sidebar() {
             <TooltipTrigger asChild>
               <Button
                 variant="ghost"
-                className="p-3 transition-all duration-300 hover:bg-transparent hover:text-primary text-muted-foreground"
+                className="p-3 transition-all duration-300 hover:bg-primary/20 hover:text-primary text-muted-foreground w-full justify-start"
               >
                 <BoxIcon className={cn("w-4 h-4", isFullView && "mr-2")} />
                 {isFullView && "Products"}
@@ -142,7 +142,7 @@ export default function Sidebar() {
             <TooltipTrigger asChild>
               <Button
                 variant="ghost"
-                className="p-3 transition-all duration-300 hover:bg-transparent hover:text-primary text-muted-foreground"
+                className="p-3 transition-all duration-300 hover:bg-primary/20 hover:text-primary text-muted-foreground w-full justify-start"
               >
                 <TruckIcon className={cn("w-4 h-4", isFullView && "mr-2")} />
                 {isFullView && "Collections"}
