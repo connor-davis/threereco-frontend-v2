@@ -10,9 +10,12 @@ export default function AuthenticationGuard({ children }) {
   const router = useRouter();
   const { setUser } = useUserStore();
   const [isAuthenticating, setAuthenticating] = useState(true);
+  const [isMfaVerified, setMfaVerified] = useState(false);
 
   useEffect(() => {
     const disposeableTimeout = setTimeout(async () => {
+      const currentPath = window.location.pathname;
+
       const checkResponse = await fetch("/api/authentication/check", {
         method: "GET",
       });
@@ -20,9 +23,7 @@ export default function AuthenticationGuard({ children }) {
       const status = checkResponse.status;
 
       if (status !== 200) {
-        const currentPath = window.location.pathname;
-
-        return router.push("/login?redirect=" + currentPath);
+        return router.replace("/login?redirect=" + currentPath);
       }
 
       const { data } = await checkResponse.json();
@@ -30,6 +31,16 @@ export default function AuthenticationGuard({ children }) {
       setUser(data);
 
       setAuthenticating(false);
+
+      if (!data.mfaEnabled) {
+        return router.replace("/mfa/enable?redirect=" + currentPath);
+      }
+
+      if (!data.mfaVerified) {
+        return router.replace("/mfa/verify?redirect=" + currentPath);
+      }
+
+      setMfaVerified(true);
     }, 500);
 
     return () => clearTimeout(disposeableTimeout);
@@ -43,6 +54,17 @@ export default function AuthenticationGuard({ children }) {
           <Label className="text-muted-foreground">
             Checking Authentication
           </Label>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isMfaVerified) {
+    return (
+      <div className="flex flex-col items-center justify-center w-full h-full">
+        <div className="flex items-center space-x-3">
+          <LoadingSpinner />
+          <Label className="text-muted-foreground">Checking MFA Status</Label>
         </div>
       </div>
     );

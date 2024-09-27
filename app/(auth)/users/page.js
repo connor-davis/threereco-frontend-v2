@@ -12,14 +12,6 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import {
-  ArrowUpDownIcon,
-  ChevronDownIcon,
-  EyeIcon,
-  PencilIcon,
-  PlusIcon,
-  TrashIcon,
-} from "lucide-react";
-import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
@@ -38,6 +30,8 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { fuzzyFilter, fuzzySort } from "@/lib/utils";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   flexRender,
   getCoreRowModel,
@@ -46,13 +40,20 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { fuzzyFilter, fuzzySort } from "@/lib/utils";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  ArrowUpDownIcon,
+  ChevronDownIcon,
+  EyeIcon,
+  PencilIcon,
+  PlusIcon,
+  TrashIcon,
+} from "lucide-react";
 
+import ResetUserPasswordModal from "@/components/dialogs/resetUserPassword";
+import LoadingSpinner from "@/components/loadingSpinner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import LoadingSpinner from "@/components/loadingSpinner";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -315,6 +316,8 @@ export default function UsersPage() {
                             Edit User
                           </TooltipContent>
                         </Tooltip>
+
+                        <ResetUserPasswordModal userId={row.original.id} />
 
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
