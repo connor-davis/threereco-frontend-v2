@@ -116,7 +116,7 @@ export default function Page() {
       {loading && <LoadingSpinner />}
 
       {!loading && mfaData && (
-        <div className="flex flex-col w-auto h-auto p-3 space-y-5 border rounded-md bg-background lg:max-w-96">
+        <div className="flex flex-col w-auto h-auto p-3 space-y-5 bg-muted lg:max-w-96">
           <div className="flex flex-col space-y-3 text-center">
             <div className="text-lg font-bold text-center">3rEco MFA</div>
             <div className="text-sm text-neutral-500">

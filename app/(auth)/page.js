@@ -1,7 +1,13 @@
 "use client";
 
 import LoadingSpinner from "@/components/loadingSpinner";
-import { Card, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { ChartContainer } from "@/components/ui/chart";
 import { Label } from "@/components/ui/label";
 import {
@@ -105,11 +111,14 @@ export default function DashboardPage() {
     );
 
   return (
-    <div className="grid lg:grid-cols-12 md:grid-cols-6 grid-cols-1 w-full h-full overflow-hidden gap-3">
-      <div className="flex flex-col w-full h-full p-3 space-y-3 overflow-y-auto bg-background border rounded-md lg:col-span-12 md:col-span-6 col-span-1">
-        <div className="flex w-full items-center h-auto justify-between">
-          <div className="flex flex-col h-auto space-y-3">
-            <Label>Daily Collection Weights</Label>
+    <div className="grid lg:grid-cols-6 md:grid-cols-2 w-full h-full grid-cols-1 gap-3 p-3">
+      <Card className="lg:col-span-6 md:col-span-2 col-span-1">
+        <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
+          <div className="grid flex-1 gap-1 text-center sm:text-left">
+            <CardTitle>Daily Collection Weights</CardTitle>
+            <CardDescription>
+              Showing the daily total of collection weights.
+            </CardDescription>
           </div>
 
           <div className="flex items-center space-x-3">
@@ -143,30 +152,32 @@ export default function DashboardPage() {
               </SelectContent>
             </Select>
           </div>
-        </div>
-        <ChartContainer config={{}}>
-          <BarChart accessibilityLayer data={datedCollectionWeights[1]}>
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="date"
-              tickLine={false}
-              tickMargin={10}
-              axisLine={false}
-            />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-
-            {datedCollectionWeights[0].map((productName) => (
-              <Bar
-                dataKey={productName}
-                fill={getRandomFillColor()}
-                radius={4}
+        </CardHeader>
+        <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
+          <ChartContainer config={{}} className="aspect-auto">
+            <BarChart accessibilityLayer data={datedCollectionWeights[1]}>
+              <CartesianGrid vertical={false} />
+              <XAxis
+                dataKey="date"
+                tickLine={false}
+                tickMargin={10}
+                axisLine={false}
               />
-            ))}
-          </BarChart>
-        </ChartContainer>
-      </div>
+              <YAxis />
+              <Tooltip />
+              <Legend />
+
+              {datedCollectionWeights[0].map((productName) => (
+                <Bar
+                  dataKey={productName}
+                  fill={getRandomFillColor()}
+                  radius={4}
+                />
+              ))}
+            </BarChart>
+          </ChartContainer>
+        </CardContent>
+      </Card>
     </div>
   );
 }

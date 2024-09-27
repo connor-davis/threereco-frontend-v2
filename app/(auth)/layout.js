@@ -18,10 +18,8 @@ export default function RootLayout({ children }) {
           <div className="flex w-full h-full overflow-hidden">
             <Sidebar />
             <div className="relative flex flex-col w-full h-full overflow-hidden">
-              <div className="z-10 flex flex-col w-full h-full p-3 overflow-y-auto">
-                {children}
-              </div>
-              <div className="absolute top-0 left-0 w-full h-full pattern-dots pattern-black pattern-bg-white pattern-size-2 pattern-opacity-5"></div>
+              {children}
+              {/* <div className="absolute top-0 left-0 w-full h-full pattern-dots pattern-black pattern-bg-white pattern-size-2 pattern-opacity-5"></div> */}
             </div>
           </div>
         </TooltipProvider>

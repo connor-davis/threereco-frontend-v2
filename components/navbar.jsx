@@ -20,7 +20,7 @@ export default function Navbar({}) {
   const { user } = useUserStore();
 
   return (
-    <nav className="flex items-center justify-between w-full h-auto px-3 bg-white border-b">
+    <nav className="flex items-center justify-between w-full h-auto px-3 bg-background border-b">
       <div>
         <Label className="py-4 playwright text-primary">3rEco</Label>
       </div>
