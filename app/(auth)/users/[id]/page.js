@@ -55,6 +55,42 @@ export default function ViewUserPage({ params: { id } }) {
     },
   });
 
+  const disableMFA = async (id) => {
+    const response = await fetch("/api/authentication/mfa/disable?id=" + id, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.ok) {
+      return toast.success("Success", {
+        description: "You have successfully disabled the user's MFA.",
+        duration: 2000,
+        onAutoClose: () => {
+          queryClient.invalidateQueries("users");
+          router.replace("/users");
+        },
+      });
+    } else {
+      const errorText = await response.text();
+
+      try {
+        const { error, reason } = JSON.parse(errorText);
+
+        toast.error(error, {
+          description: reason,
+          duration: 2000,
+        });
+      } catch {
+        toast.error("An error occurred", {
+          description: "Please try again later.",
+          duration: 2000,
+        });
+      }
+    }
+  };
+
   const deleteUser = async (id) => {
     const response = await fetch("/api/users?id=" + id, {
       method: "DELETE",
@@ -116,6 +152,32 @@ export default function ViewUserPage({ params: { id } }) {
               <Link href={`/users/edit/${id}`}>
                 <Button className="w-full">Edit User</Button>
               </Link>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    className="w-full"
+                    variant="destructive"
+                    onClick={() => {}}
+                  >
+                    Disable MFA
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Hold On!</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Are you sure you want to disable this user's MFA? This
+                      will require them to re-enable their MFA.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={() => disableMFA(id)}>
+                      Continue
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <Button

@@ -111,7 +111,7 @@ export default function DashboardPage() {
     );
 
   return (
-    <div className="grid lg:grid-cols-6 md:grid-cols-2 w-full h-full grid-cols-1 gap-3 p-3">
+    <div className="flex flex-col w-full h-full overflow-y-auto p-3">
       <Card className="lg:col-span-6 md:col-span-2 col-span-1">
         <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
           <div className="grid flex-1 gap-1 text-center sm:text-left">
@@ -154,7 +154,10 @@ export default function DashboardPage() {
           </div>
         </CardHeader>
         <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
-          <ChartContainer config={{}} className="aspect-auto">
+          <ChartContainer
+            config={{}}
+            className="aspect-auto lg:h-[400px] md:h-[300px] h-[250px] w-full"
+          >
             <BarChart accessibilityLayer data={datedCollectionWeights[1]}>
               <CartesianGrid vertical={false} />
               <XAxis
