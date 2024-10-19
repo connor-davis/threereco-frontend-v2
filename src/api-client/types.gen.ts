@@ -115,7 +115,9 @@ export type PutApiAuthenticationPasswordResetError = {
 
 export type GetApiUsersData = {
   query?: {
+    count?: number | null;
     id?: string | null;
+    page?: number | null;
   };
 };
 
@@ -213,8 +215,10 @@ export type DeleteApiUsersByIdError = {
 
 export type GetApiBusinessesData = {
   query?: {
+    count?: number | null;
     id?: string | null;
     includeUser?: "true" | "false" | "1" | "0";
+    page?: number | null;
   };
 };
 
@@ -381,8 +385,10 @@ export type DeleteApiBusinessesError = {
 
 export type GetApiCollectorsData = {
   query?: {
+    count?: number | null;
     id?: string | null;
     includeUser?: "true" | "false" | "1" | "0";
+    page?: number | null;
   };
 };
 
@@ -575,9 +581,11 @@ export type PutApiCollectorsError =
 
 export type GetApiProductsData = {
   query?: {
+    count?: number | null;
     id?: string | null;
     includeBusiness?: "true" | "false" | "1" | "0";
     includeBusinessUser?: "true" | "false" | "1" | "0";
+    page?: number | null;
   };
 };
 
@@ -776,6 +784,7 @@ export type PutApiProductsError = {
 
 export type GetApiCollectionsData = {
   query?: {
+    count?: number | null;
     id?: string | null;
     includeBusiness?: "true" | "false" | "1" | "0";
     includeBusinessUser?: "true" | "false" | "1" | "0";
@@ -784,6 +793,7 @@ export type GetApiCollectionsData = {
     includeProduct?: "true" | "false" | "1" | "0";
     includeProductBusiness?: "true" | "false" | "1" | "0";
     includeProductBusinessUser?: "true" | "false" | "1" | "0";
+    page?: number | null;
   };
 };
 
