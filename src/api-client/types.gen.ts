@@ -116,32 +116,20 @@ export type PutApiAuthenticationPasswordResetError = {
 export type GetApiUsersData = {
   query?: {
     count?: number | null;
-    id?: string | null;
     page?: number | null;
   };
 };
 
-export type GetApiUsersResponse =
-  | {
-      id: string;
-      email: string;
-      active: boolean;
-      role: "system_admin" | "admin" | "staff" | "business" | "collector";
-      mfaEnabled: boolean;
-      mfaVerified: boolean;
-      createdAt: string;
-      updatedAt: string;
-    }
-  | Array<{
-      id: string;
-      email: string;
-      active: boolean;
-      role: "system_admin" | "admin" | "staff" | "business" | "collector";
-      mfaEnabled: boolean;
-      mfaVerified: boolean;
-      createdAt: string;
-      updatedAt: string;
-    }>;
+export type GetApiUsersResponse = Array<{
+  id: string;
+  email: string;
+  active: boolean;
+  role: "system_admin" | "admin" | "staff" | "business" | "collector";
+  mfaEnabled: boolean;
+  mfaVerified: boolean;
+  createdAt: string;
+  updatedAt: string;
+}>;
 
 export type GetApiUsersError = {
   message: string;
@@ -170,6 +158,27 @@ export type PostApiUsersResponse = {
 };
 
 export type PostApiUsersError = {
+  message: string;
+};
+
+export type GetApiUsersByIdData = {
+  path: {
+    id: string;
+  };
+};
+
+export type GetApiUsersByIdResponse = {
+  id: string;
+  email: string;
+  active: boolean;
+  role: "system_admin" | "admin" | "staff" | "business" | "collector";
+  mfaEnabled: boolean;
+  mfaVerified: boolean;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type GetApiUsersByIdError = {
   message: string;
 };
 
@@ -210,6 +219,21 @@ export type DeleteApiUsersByIdData = {
 export type DeleteApiUsersByIdResponse = string;
 
 export type DeleteApiUsersByIdError = {
+  message: string;
+};
+
+export type GetApiUsersPagingData = {
+  query?: {
+    count?: number | null;
+  };
+};
+
+export type GetApiUsersPagingResponse = {
+  totalUsers: number | null;
+  totalPages: number | null;
+};
+
+export type GetApiUsersPagingError = {
   message: string;
 };
 

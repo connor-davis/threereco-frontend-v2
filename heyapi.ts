@@ -5,4 +5,5 @@ export default {
     lint: "eslint",
     path: "src/api-client",
   },
+  plugins: ["@tanstack/react-query"],
 };

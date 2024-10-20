@@ -1,7 +1,12 @@
+import UsersTable from "@/components/tables/users-table";
 import { createFileRoute } from "@tanstack/react-router";
 
 function Users() {
-  return <div>Hello /_auth/users/!</div>;
+  return (
+    <div className="flex flex-col w-full h-full overflow-hidden">
+      <UsersTable />
+    </div>
+  );
 }
 
 export const Route = createFileRoute("/_auth/users/")({

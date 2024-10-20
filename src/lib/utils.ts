@@ -1,8 +1,7 @@
 import { QueryClient } from "@tanstack/react-query";
 import { clsx, type ClassValue } from "clsx";
-import { Fetcher } from "openapi-typescript-fetch";
+import { useEffect } from "react";
 import { twMerge } from "tailwind-merge";
-import { paths } from "./api-spec";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -10,10 +9,10 @@ export function cn(...inputs: ClassValue[]) {
 
 export const queryClient = new QueryClient();
 
-const fetcher = Fetcher.for<paths>();
+export const useDisposeable = (callback = () => {}, time = 0) => {
+  useEffect(() => {
+    const disposeable = setTimeout(callback, time);
 
-fetcher.configure({
-  baseUrl: "/api",
-});
-
-export const apiClient = fetcher;
+    return () => clearTimeout(disposeable)
+  }, [])
+}

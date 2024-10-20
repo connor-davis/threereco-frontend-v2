@@ -11,14 +11,23 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as MfaImport } from './routes/_mfa'
 import { Route as AuthImport } from './routes/_auth'
 import { Route as AuthIndexImport } from './routes/_auth/index'
 import { Route as AuthenticationLoginImport } from './routes/authentication/login'
 import { Route as AuthUsersIndexImport } from './routes/_auth/users/index'
-import { Route as AuthenticationMfaVerifyImport } from './routes/authentication/mfa/verify'
-import { Route as AuthenticationMfaEnableImport } from './routes/authentication/mfa/enable'
+import { Route as MfaMfaVerifyImport } from './routes/_mfa/mfa/verify'
+import { Route as MfaMfaEnableImport } from './routes/_mfa/mfa/enable'
+import { Route as AuthUsersCreateImport } from './routes/_auth/users/create'
+import { Route as AuthUsersIdImport } from './routes/_auth/users/$id'
+import { Route as AuthUsersEditIdImport } from './routes/_auth/users/edit/$id'
 
 // Create/Update Routes
+
+const MfaRoute = MfaImport.update({
+  id: '/_mfa',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const AuthRoute = AuthImport.update({
   id: '/_auth',
@@ -43,16 +52,34 @@ const AuthUsersIndexRoute = AuthUsersIndexImport.update({
   getParentRoute: () => AuthRoute,
 } as any)
 
-const AuthenticationMfaVerifyRoute = AuthenticationMfaVerifyImport.update({
-  id: '/authentication/mfa/verify',
-  path: '/authentication/mfa/verify',
-  getParentRoute: () => rootRoute,
+const MfaMfaVerifyRoute = MfaMfaVerifyImport.update({
+  id: '/mfa/verify',
+  path: '/mfa/verify',
+  getParentRoute: () => MfaRoute,
 } as any)
 
-const AuthenticationMfaEnableRoute = AuthenticationMfaEnableImport.update({
-  id: '/authentication/mfa/enable',
-  path: '/authentication/mfa/enable',
-  getParentRoute: () => rootRoute,
+const MfaMfaEnableRoute = MfaMfaEnableImport.update({
+  id: '/mfa/enable',
+  path: '/mfa/enable',
+  getParentRoute: () => MfaRoute,
+} as any)
+
+const AuthUsersCreateRoute = AuthUsersCreateImport.update({
+  id: '/users/create',
+  path: '/users/create',
+  getParentRoute: () => AuthRoute,
+} as any)
+
+const AuthUsersIdRoute = AuthUsersIdImport.update({
+  id: '/users/$id',
+  path: '/users/$id',
+  getParentRoute: () => AuthRoute,
+} as any)
+
+const AuthUsersEditIdRoute = AuthUsersEditIdImport.update({
+  id: '/users/edit/$id',
+  path: '/users/edit/$id',
+  getParentRoute: () => AuthRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -64,6 +91,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: ''
       preLoaderRoute: typeof AuthImport
+      parentRoute: typeof rootRoute
+    }
+    '/_mfa': {
+      id: '/_mfa'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof MfaImport
       parentRoute: typeof rootRoute
     }
     '/authentication/login': {
@@ -80,25 +114,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthIndexImport
       parentRoute: typeof AuthImport
     }
-    '/authentication/mfa/enable': {
-      id: '/authentication/mfa/enable'
-      path: '/authentication/mfa/enable'
-      fullPath: '/authentication/mfa/enable'
-      preLoaderRoute: typeof AuthenticationMfaEnableImport
-      parentRoute: typeof rootRoute
+    '/_auth/users/$id': {
+      id: '/_auth/users/$id'
+      path: '/users/$id'
+      fullPath: '/users/$id'
+      preLoaderRoute: typeof AuthUsersIdImport
+      parentRoute: typeof AuthImport
     }
-    '/authentication/mfa/verify': {
-      id: '/authentication/mfa/verify'
-      path: '/authentication/mfa/verify'
-      fullPath: '/authentication/mfa/verify'
-      preLoaderRoute: typeof AuthenticationMfaVerifyImport
-      parentRoute: typeof rootRoute
+    '/_auth/users/create': {
+      id: '/_auth/users/create'
+      path: '/users/create'
+      fullPath: '/users/create'
+      preLoaderRoute: typeof AuthUsersCreateImport
+      parentRoute: typeof AuthImport
+    }
+    '/_mfa/mfa/enable': {
+      id: '/_mfa/mfa/enable'
+      path: '/mfa/enable'
+      fullPath: '/mfa/enable'
+      preLoaderRoute: typeof MfaMfaEnableImport
+      parentRoute: typeof MfaImport
+    }
+    '/_mfa/mfa/verify': {
+      id: '/_mfa/mfa/verify'
+      path: '/mfa/verify'
+      fullPath: '/mfa/verify'
+      preLoaderRoute: typeof MfaMfaVerifyImport
+      parentRoute: typeof MfaImport
     }
     '/_auth/users/': {
       id: '/_auth/users/'
       path: '/users'
       fullPath: '/users'
       preLoaderRoute: typeof AuthUsersIndexImport
+      parentRoute: typeof AuthImport
+    }
+    '/_auth/users/edit/$id': {
+      id: '/_auth/users/edit/$id'
+      path: '/users/edit/$id'
+      fullPath: '/users/edit/$id'
+      preLoaderRoute: typeof AuthUsersEditIdImport
       parentRoute: typeof AuthImport
     }
   }
@@ -108,41 +163,70 @@ declare module '@tanstack/react-router' {
 
 interface AuthRouteChildren {
   AuthIndexRoute: typeof AuthIndexRoute
+  AuthUsersIdRoute: typeof AuthUsersIdRoute
+  AuthUsersCreateRoute: typeof AuthUsersCreateRoute
   AuthUsersIndexRoute: typeof AuthUsersIndexRoute
+  AuthUsersEditIdRoute: typeof AuthUsersEditIdRoute
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
   AuthIndexRoute: AuthIndexRoute,
+  AuthUsersIdRoute: AuthUsersIdRoute,
+  AuthUsersCreateRoute: AuthUsersCreateRoute,
   AuthUsersIndexRoute: AuthUsersIndexRoute,
+  AuthUsersEditIdRoute: AuthUsersEditIdRoute,
 }
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
+interface MfaRouteChildren {
+  MfaMfaEnableRoute: typeof MfaMfaEnableRoute
+  MfaMfaVerifyRoute: typeof MfaMfaVerifyRoute
+}
+
+const MfaRouteChildren: MfaRouteChildren = {
+  MfaMfaEnableRoute: MfaMfaEnableRoute,
+  MfaMfaVerifyRoute: MfaMfaVerifyRoute,
+}
+
+const MfaRouteWithChildren = MfaRoute._addFileChildren(MfaRouteChildren)
+
 export interface FileRoutesByFullPath {
-  '': typeof AuthRouteWithChildren
+  '': typeof MfaRouteWithChildren
   '/authentication/login': typeof AuthenticationLoginRoute
   '/': typeof AuthIndexRoute
-  '/authentication/mfa/enable': typeof AuthenticationMfaEnableRoute
-  '/authentication/mfa/verify': typeof AuthenticationMfaVerifyRoute
+  '/users/$id': typeof AuthUsersIdRoute
+  '/users/create': typeof AuthUsersCreateRoute
+  '/mfa/enable': typeof MfaMfaEnableRoute
+  '/mfa/verify': typeof MfaMfaVerifyRoute
   '/users': typeof AuthUsersIndexRoute
+  '/users/edit/$id': typeof AuthUsersEditIdRoute
 }
 
 export interface FileRoutesByTo {
+  '': typeof MfaRouteWithChildren
   '/authentication/login': typeof AuthenticationLoginRoute
   '/': typeof AuthIndexRoute
-  '/authentication/mfa/enable': typeof AuthenticationMfaEnableRoute
-  '/authentication/mfa/verify': typeof AuthenticationMfaVerifyRoute
+  '/users/$id': typeof AuthUsersIdRoute
+  '/users/create': typeof AuthUsersCreateRoute
+  '/mfa/enable': typeof MfaMfaEnableRoute
+  '/mfa/verify': typeof MfaMfaVerifyRoute
   '/users': typeof AuthUsersIndexRoute
+  '/users/edit/$id': typeof AuthUsersEditIdRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/_auth': typeof AuthRouteWithChildren
+  '/_mfa': typeof MfaRouteWithChildren
   '/authentication/login': typeof AuthenticationLoginRoute
   '/_auth/': typeof AuthIndexRoute
-  '/authentication/mfa/enable': typeof AuthenticationMfaEnableRoute
-  '/authentication/mfa/verify': typeof AuthenticationMfaVerifyRoute
+  '/_auth/users/$id': typeof AuthUsersIdRoute
+  '/_auth/users/create': typeof AuthUsersCreateRoute
+  '/_mfa/mfa/enable': typeof MfaMfaEnableRoute
+  '/_mfa/mfa/verify': typeof MfaMfaVerifyRoute
   '/_auth/users/': typeof AuthUsersIndexRoute
+  '/_auth/users/edit/$id': typeof AuthUsersEditIdRoute
 }
 
 export interface FileRouteTypes {
@@ -151,39 +235,48 @@ export interface FileRouteTypes {
     | ''
     | '/authentication/login'
     | '/'
-    | '/authentication/mfa/enable'
-    | '/authentication/mfa/verify'
+    | '/users/$id'
+    | '/users/create'
+    | '/mfa/enable'
+    | '/mfa/verify'
     | '/users'
+    | '/users/edit/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | ''
     | '/authentication/login'
     | '/'
-    | '/authentication/mfa/enable'
-    | '/authentication/mfa/verify'
+    | '/users/$id'
+    | '/users/create'
+    | '/mfa/enable'
+    | '/mfa/verify'
     | '/users'
+    | '/users/edit/$id'
   id:
     | '__root__'
     | '/_auth'
+    | '/_mfa'
     | '/authentication/login'
     | '/_auth/'
-    | '/authentication/mfa/enable'
-    | '/authentication/mfa/verify'
+    | '/_auth/users/$id'
+    | '/_auth/users/create'
+    | '/_mfa/mfa/enable'
+    | '/_mfa/mfa/verify'
     | '/_auth/users/'
+    | '/_auth/users/edit/$id'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   AuthRoute: typeof AuthRouteWithChildren
+  MfaRoute: typeof MfaRouteWithChildren
   AuthenticationLoginRoute: typeof AuthenticationLoginRoute
-  AuthenticationMfaEnableRoute: typeof AuthenticationMfaEnableRoute
-  AuthenticationMfaVerifyRoute: typeof AuthenticationMfaVerifyRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
+  MfaRoute: MfaRouteWithChildren,
   AuthenticationLoginRoute: AuthenticationLoginRoute,
-  AuthenticationMfaEnableRoute: AuthenticationMfaEnableRoute,
-  AuthenticationMfaVerifyRoute: AuthenticationMfaVerifyRoute,
 }
 
 export const routeTree = rootRoute
@@ -199,16 +292,25 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/_auth",
-        "/authentication/login",
-        "/authentication/mfa/enable",
-        "/authentication/mfa/verify"
+        "/_mfa",
+        "/authentication/login"
       ]
     },
     "/_auth": {
       "filePath": "_auth.tsx",
       "children": [
         "/_auth/",
-        "/_auth/users/"
+        "/_auth/users/$id",
+        "/_auth/users/create",
+        "/_auth/users/",
+        "/_auth/users/edit/$id"
+      ]
+    },
+    "/_mfa": {
+      "filePath": "_mfa.tsx",
+      "children": [
+        "/_mfa/mfa/enable",
+        "/_mfa/mfa/verify"
       ]
     },
     "/authentication/login": {
@@ -218,14 +320,28 @@ export const routeTree = rootRoute
       "filePath": "_auth/index.tsx",
       "parent": "/_auth"
     },
-    "/authentication/mfa/enable": {
-      "filePath": "authentication/mfa/enable.tsx"
+    "/_auth/users/$id": {
+      "filePath": "_auth/users/$id.tsx",
+      "parent": "/_auth"
     },
-    "/authentication/mfa/verify": {
-      "filePath": "authentication/mfa/verify.tsx"
+    "/_auth/users/create": {
+      "filePath": "_auth/users/create.tsx",
+      "parent": "/_auth"
+    },
+    "/_mfa/mfa/enable": {
+      "filePath": "_mfa/mfa/enable.tsx",
+      "parent": "/_mfa"
+    },
+    "/_mfa/mfa/verify": {
+      "filePath": "_mfa/mfa/verify.tsx",
+      "parent": "/_mfa"
     },
     "/_auth/users/": {
       "filePath": "_auth/users/index.tsx",
+      "parent": "/_auth"
+    },
+    "/_auth/users/edit/$id": {
+      "filePath": "_auth/users/edit/$id.tsx",
       "parent": "/_auth"
     }
   }

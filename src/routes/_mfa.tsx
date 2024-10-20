@@ -1,6 +1,4 @@
 import { getApiAuthenticationCheckOptions } from "@/api-client/@tanstack/react-query.gen";
-import SideBar from "@/components/sidebar";
-import SideBarTrigger from "@/components/sidebar-trigger";
 import Spinner from "@/components/spinners/spinner";
 import { Label } from "@/components/ui/label";
 import { useQuery } from "@tanstack/react-query";
@@ -30,24 +28,9 @@ const Auth = () => {
       <Navigate to="/authentication/login" search={{ to: location.pathname }} />
     );
 
-  if (!user?.mfaEnabled)
-    return <Navigate to="/mfa/enable" search={{ to: location.pathname }} />;
-
-  if (!user?.mfaVerified)
-    return <Navigate to="/mfa/verify" search={{ to: location.pathname }} />;
-
-  return (
-    <div className="flex w-full h-full bg-muted overflow-hidden">
-      <SideBar />
-
-      <div className="flex flex-col w-full h-full bg-muted overflow-y-auto p-2 space-y-2">
-        <SideBarTrigger />
-        <Outlet />
-      </div>
-    </div>
-  );
+  return <Outlet />;
 };
 
-export const Route = createFileRoute("/_auth")({
+export const Route = createFileRoute("/_mfa")({
   component: Auth,
 });
