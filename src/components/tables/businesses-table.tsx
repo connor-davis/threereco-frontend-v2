@@ -152,6 +152,12 @@ export default function BusinessesTable({ caption = undefined }) {
         <Table>
           {caption && <TableCaption>{caption}</TableCaption>}
 
+          {businesses?.length === 0 && (
+            <TableCaption className="py-4">
+              There are no businesses.
+            </TableCaption>
+          )}
+
           <TableHeader>
             <TableRow>
               <TableCell>Name</TableCell>
@@ -253,6 +259,12 @@ export default function BusinessesTable({ caption = undefined }) {
             {(isLoadingPaging || isLoadingBusinesses) &&
               new Array(count).fill(0).map((_, index) => (
                 <TableRow>
+                  <TableCell>
+                    <Skeleton className="h-8 w-full" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-8 w-full" />
+                  </TableCell>
                   <TableCell>
                     <Skeleton className="h-8 w-full" />
                   </TableCell>

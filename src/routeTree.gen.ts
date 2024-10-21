@@ -16,14 +16,18 @@ import { Route as AuthImport } from './routes/_auth'
 import { Route as AuthIndexImport } from './routes/_auth/index'
 import { Route as AuthenticationLoginImport } from './routes/authentication/login'
 import { Route as AuthUsersIndexImport } from './routes/_auth/users/index'
+import { Route as AuthCollectorsIndexImport } from './routes/_auth/collectors/index'
 import { Route as AuthBusinessesIndexImport } from './routes/_auth/businesses/index'
 import { Route as MfaMfaVerifyImport } from './routes/_mfa/mfa/verify'
 import { Route as MfaMfaEnableImport } from './routes/_mfa/mfa/enable'
 import { Route as AuthUsersCreateImport } from './routes/_auth/users/create'
 import { Route as AuthUsersIdImport } from './routes/_auth/users/$id'
+import { Route as AuthCollectorsCreateImport } from './routes/_auth/collectors/create'
+import { Route as AuthCollectorsIdImport } from './routes/_auth/collectors/$id'
 import { Route as AuthBusinessesCreateImport } from './routes/_auth/businesses/create'
 import { Route as AuthBusinessesIdImport } from './routes/_auth/businesses/$id'
 import { Route as AuthUsersEditIdImport } from './routes/_auth/users/edit/$id'
+import { Route as AuthCollectorsEditIdImport } from './routes/_auth/collectors/edit/$id'
 import { Route as AuthBusinessesEditIdImport } from './routes/_auth/businesses/edit/$id'
 
 // Create/Update Routes
@@ -53,6 +57,12 @@ const AuthenticationLoginRoute = AuthenticationLoginImport.update({
 const AuthUsersIndexRoute = AuthUsersIndexImport.update({
   id: '/users/',
   path: '/users/',
+  getParentRoute: () => AuthRoute,
+} as any)
+
+const AuthCollectorsIndexRoute = AuthCollectorsIndexImport.update({
+  id: '/collectors/',
+  path: '/collectors/',
   getParentRoute: () => AuthRoute,
 } as any)
 
@@ -86,6 +96,18 @@ const AuthUsersIdRoute = AuthUsersIdImport.update({
   getParentRoute: () => AuthRoute,
 } as any)
 
+const AuthCollectorsCreateRoute = AuthCollectorsCreateImport.update({
+  id: '/collectors/create',
+  path: '/collectors/create',
+  getParentRoute: () => AuthRoute,
+} as any)
+
+const AuthCollectorsIdRoute = AuthCollectorsIdImport.update({
+  id: '/collectors/$id',
+  path: '/collectors/$id',
+  getParentRoute: () => AuthRoute,
+} as any)
+
 const AuthBusinessesCreateRoute = AuthBusinessesCreateImport.update({
   id: '/businesses/create',
   path: '/businesses/create',
@@ -101,6 +123,12 @@ const AuthBusinessesIdRoute = AuthBusinessesIdImport.update({
 const AuthUsersEditIdRoute = AuthUsersEditIdImport.update({
   id: '/users/edit/$id',
   path: '/users/edit/$id',
+  getParentRoute: () => AuthRoute,
+} as any)
+
+const AuthCollectorsEditIdRoute = AuthCollectorsEditIdImport.update({
+  id: '/collectors/edit/$id',
+  path: '/collectors/edit/$id',
   getParentRoute: () => AuthRoute,
 } as any)
 
@@ -156,6 +184,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthBusinessesCreateImport
       parentRoute: typeof AuthImport
     }
+    '/_auth/collectors/$id': {
+      id: '/_auth/collectors/$id'
+      path: '/collectors/$id'
+      fullPath: '/collectors/$id'
+      preLoaderRoute: typeof AuthCollectorsIdImport
+      parentRoute: typeof AuthImport
+    }
+    '/_auth/collectors/create': {
+      id: '/_auth/collectors/create'
+      path: '/collectors/create'
+      fullPath: '/collectors/create'
+      preLoaderRoute: typeof AuthCollectorsCreateImport
+      parentRoute: typeof AuthImport
+    }
     '/_auth/users/$id': {
       id: '/_auth/users/$id'
       path: '/users/$id'
@@ -191,6 +233,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthBusinessesIndexImport
       parentRoute: typeof AuthImport
     }
+    '/_auth/collectors/': {
+      id: '/_auth/collectors/'
+      path: '/collectors'
+      fullPath: '/collectors'
+      preLoaderRoute: typeof AuthCollectorsIndexImport
+      parentRoute: typeof AuthImport
+    }
     '/_auth/users/': {
       id: '/_auth/users/'
       path: '/users'
@@ -203,6 +252,13 @@ declare module '@tanstack/react-router' {
       path: '/businesses/edit/$id'
       fullPath: '/businesses/edit/$id'
       preLoaderRoute: typeof AuthBusinessesEditIdImport
+      parentRoute: typeof AuthImport
+    }
+    '/_auth/collectors/edit/$id': {
+      id: '/_auth/collectors/edit/$id'
+      path: '/collectors/edit/$id'
+      fullPath: '/collectors/edit/$id'
+      preLoaderRoute: typeof AuthCollectorsEditIdImport
       parentRoute: typeof AuthImport
     }
     '/_auth/users/edit/$id': {
@@ -221,11 +277,15 @@ interface AuthRouteChildren {
   AuthIndexRoute: typeof AuthIndexRoute
   AuthBusinessesIdRoute: typeof AuthBusinessesIdRoute
   AuthBusinessesCreateRoute: typeof AuthBusinessesCreateRoute
+  AuthCollectorsIdRoute: typeof AuthCollectorsIdRoute
+  AuthCollectorsCreateRoute: typeof AuthCollectorsCreateRoute
   AuthUsersIdRoute: typeof AuthUsersIdRoute
   AuthUsersCreateRoute: typeof AuthUsersCreateRoute
   AuthBusinessesIndexRoute: typeof AuthBusinessesIndexRoute
+  AuthCollectorsIndexRoute: typeof AuthCollectorsIndexRoute
   AuthUsersIndexRoute: typeof AuthUsersIndexRoute
   AuthBusinessesEditIdRoute: typeof AuthBusinessesEditIdRoute
+  AuthCollectorsEditIdRoute: typeof AuthCollectorsEditIdRoute
   AuthUsersEditIdRoute: typeof AuthUsersEditIdRoute
 }
 
@@ -233,11 +293,15 @@ const AuthRouteChildren: AuthRouteChildren = {
   AuthIndexRoute: AuthIndexRoute,
   AuthBusinessesIdRoute: AuthBusinessesIdRoute,
   AuthBusinessesCreateRoute: AuthBusinessesCreateRoute,
+  AuthCollectorsIdRoute: AuthCollectorsIdRoute,
+  AuthCollectorsCreateRoute: AuthCollectorsCreateRoute,
   AuthUsersIdRoute: AuthUsersIdRoute,
   AuthUsersCreateRoute: AuthUsersCreateRoute,
   AuthBusinessesIndexRoute: AuthBusinessesIndexRoute,
+  AuthCollectorsIndexRoute: AuthCollectorsIndexRoute,
   AuthUsersIndexRoute: AuthUsersIndexRoute,
   AuthBusinessesEditIdRoute: AuthBusinessesEditIdRoute,
+  AuthCollectorsEditIdRoute: AuthCollectorsEditIdRoute,
   AuthUsersEditIdRoute: AuthUsersEditIdRoute,
 }
 
@@ -261,13 +325,17 @@ export interface FileRoutesByFullPath {
   '/': typeof AuthIndexRoute
   '/businesses/$id': typeof AuthBusinessesIdRoute
   '/businesses/create': typeof AuthBusinessesCreateRoute
+  '/collectors/$id': typeof AuthCollectorsIdRoute
+  '/collectors/create': typeof AuthCollectorsCreateRoute
   '/users/$id': typeof AuthUsersIdRoute
   '/users/create': typeof AuthUsersCreateRoute
   '/mfa/enable': typeof MfaMfaEnableRoute
   '/mfa/verify': typeof MfaMfaVerifyRoute
   '/businesses': typeof AuthBusinessesIndexRoute
+  '/collectors': typeof AuthCollectorsIndexRoute
   '/users': typeof AuthUsersIndexRoute
   '/businesses/edit/$id': typeof AuthBusinessesEditIdRoute
+  '/collectors/edit/$id': typeof AuthCollectorsEditIdRoute
   '/users/edit/$id': typeof AuthUsersEditIdRoute
 }
 
@@ -277,13 +345,17 @@ export interface FileRoutesByTo {
   '/': typeof AuthIndexRoute
   '/businesses/$id': typeof AuthBusinessesIdRoute
   '/businesses/create': typeof AuthBusinessesCreateRoute
+  '/collectors/$id': typeof AuthCollectorsIdRoute
+  '/collectors/create': typeof AuthCollectorsCreateRoute
   '/users/$id': typeof AuthUsersIdRoute
   '/users/create': typeof AuthUsersCreateRoute
   '/mfa/enable': typeof MfaMfaEnableRoute
   '/mfa/verify': typeof MfaMfaVerifyRoute
   '/businesses': typeof AuthBusinessesIndexRoute
+  '/collectors': typeof AuthCollectorsIndexRoute
   '/users': typeof AuthUsersIndexRoute
   '/businesses/edit/$id': typeof AuthBusinessesEditIdRoute
+  '/collectors/edit/$id': typeof AuthCollectorsEditIdRoute
   '/users/edit/$id': typeof AuthUsersEditIdRoute
 }
 
@@ -295,13 +367,17 @@ export interface FileRoutesById {
   '/_auth/': typeof AuthIndexRoute
   '/_auth/businesses/$id': typeof AuthBusinessesIdRoute
   '/_auth/businesses/create': typeof AuthBusinessesCreateRoute
+  '/_auth/collectors/$id': typeof AuthCollectorsIdRoute
+  '/_auth/collectors/create': typeof AuthCollectorsCreateRoute
   '/_auth/users/$id': typeof AuthUsersIdRoute
   '/_auth/users/create': typeof AuthUsersCreateRoute
   '/_mfa/mfa/enable': typeof MfaMfaEnableRoute
   '/_mfa/mfa/verify': typeof MfaMfaVerifyRoute
   '/_auth/businesses/': typeof AuthBusinessesIndexRoute
+  '/_auth/collectors/': typeof AuthCollectorsIndexRoute
   '/_auth/users/': typeof AuthUsersIndexRoute
   '/_auth/businesses/edit/$id': typeof AuthBusinessesEditIdRoute
+  '/_auth/collectors/edit/$id': typeof AuthCollectorsEditIdRoute
   '/_auth/users/edit/$id': typeof AuthUsersEditIdRoute
 }
 
@@ -313,13 +389,17 @@ export interface FileRouteTypes {
     | '/'
     | '/businesses/$id'
     | '/businesses/create'
+    | '/collectors/$id'
+    | '/collectors/create'
     | '/users/$id'
     | '/users/create'
     | '/mfa/enable'
     | '/mfa/verify'
     | '/businesses'
+    | '/collectors'
     | '/users'
     | '/businesses/edit/$id'
+    | '/collectors/edit/$id'
     | '/users/edit/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -328,13 +408,17 @@ export interface FileRouteTypes {
     | '/'
     | '/businesses/$id'
     | '/businesses/create'
+    | '/collectors/$id'
+    | '/collectors/create'
     | '/users/$id'
     | '/users/create'
     | '/mfa/enable'
     | '/mfa/verify'
     | '/businesses'
+    | '/collectors'
     | '/users'
     | '/businesses/edit/$id'
+    | '/collectors/edit/$id'
     | '/users/edit/$id'
   id:
     | '__root__'
@@ -344,13 +428,17 @@ export interface FileRouteTypes {
     | '/_auth/'
     | '/_auth/businesses/$id'
     | '/_auth/businesses/create'
+    | '/_auth/collectors/$id'
+    | '/_auth/collectors/create'
     | '/_auth/users/$id'
     | '/_auth/users/create'
     | '/_mfa/mfa/enable'
     | '/_mfa/mfa/verify'
     | '/_auth/businesses/'
+    | '/_auth/collectors/'
     | '/_auth/users/'
     | '/_auth/businesses/edit/$id'
+    | '/_auth/collectors/edit/$id'
     | '/_auth/users/edit/$id'
   fileRoutesById: FileRoutesById
 }
@@ -390,11 +478,15 @@ export const routeTree = rootRoute
         "/_auth/",
         "/_auth/businesses/$id",
         "/_auth/businesses/create",
+        "/_auth/collectors/$id",
+        "/_auth/collectors/create",
         "/_auth/users/$id",
         "/_auth/users/create",
         "/_auth/businesses/",
+        "/_auth/collectors/",
         "/_auth/users/",
         "/_auth/businesses/edit/$id",
+        "/_auth/collectors/edit/$id",
         "/_auth/users/edit/$id"
       ]
     },
@@ -420,6 +512,14 @@ export const routeTree = rootRoute
       "filePath": "_auth/businesses/create.tsx",
       "parent": "/_auth"
     },
+    "/_auth/collectors/$id": {
+      "filePath": "_auth/collectors/$id.tsx",
+      "parent": "/_auth"
+    },
+    "/_auth/collectors/create": {
+      "filePath": "_auth/collectors/create.tsx",
+      "parent": "/_auth"
+    },
     "/_auth/users/$id": {
       "filePath": "_auth/users/$id.tsx",
       "parent": "/_auth"
@@ -440,12 +540,20 @@ export const routeTree = rootRoute
       "filePath": "_auth/businesses/index.tsx",
       "parent": "/_auth"
     },
+    "/_auth/collectors/": {
+      "filePath": "_auth/collectors/index.tsx",
+      "parent": "/_auth"
+    },
     "/_auth/users/": {
       "filePath": "_auth/users/index.tsx",
       "parent": "/_auth"
     },
     "/_auth/businesses/edit/$id": {
       "filePath": "_auth/businesses/edit/$id.tsx",
+      "parent": "/_auth"
+    },
+    "/_auth/collectors/edit/$id": {
+      "filePath": "_auth/collectors/edit/$id.tsx",
       "parent": "/_auth"
     },
     "/_auth/users/edit/$id": {

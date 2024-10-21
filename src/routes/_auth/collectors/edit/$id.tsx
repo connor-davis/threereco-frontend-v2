@@ -1,9 +1,11 @@
 import {
+  getApiCollectorsByIdOptions,
   getApiUsersOptions,
   getApiUsersQueryKey,
-  postApiBusinessesMutation,
+  putApiCollectorsByIdMutation,
 } from "@/api-client/@tanstack/react-query.gen";
 import CreateUserForm from "@/components/forms/create-user";
+import Spinner from "@/components/spinners/spinner";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -24,53 +26,72 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import {
+  createFileRoute,
+  Link,
+  useNavigate,
+  useParams,
+} from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-const createSchema = z.object({
-  name: z.string(),
-  type: z.enum(["Recycler", "Waste Collector", "Buy Back Centre"]),
-  description: z.string(),
+const editSchema = z.object({
+  firstName: z.string(),
+  lastName: z.string(),
   phoneNumber: z.string(),
+  idNumber: z.string(),
   address: z.string(),
   city: z.string(),
   province: z.string(),
   zipCode: z.string(),
+  bankName: z.string(),
+  bankAccountHolder: z.string(),
+  bankAccountNumber: z.string(),
   userId: z.string().uuid(),
 });
 
-function Create() {
+function Edit() {
+  const params = useParams({ from: "/_auth/collectors/edit/$id" });
   const navigate = useNavigate();
 
   const queryClient = useQueryClient();
 
   const [newUser, setNewUser] = useState<boolean>(false);
 
-  const createForm = useForm<z.infer<typeof createSchema>>({
-    resolver: zodResolver(createSchema),
-    defaultValues: {},
-  });
-
   const {
-    data: businessUsers,
-    isLoading: isLoadingBusinessUsers,
-    isError: isBusinessUsersError,
+    data: collectorUsers,
+    isLoading: isLoadingCollectorUsers,
+    isError: isCollectorUsersError,
   } = useQuery({
     ...getApiUsersOptions({
       query: {
-        role: "business",
+        role: "collector",
       },
     }),
   });
 
-  const createBusiness = useMutation({
-    ...postApiBusinessesMutation(),
+  const {
+    data: collector,
+    isLoading: isLoadingCollector,
+    isError: isCollectorError,
+  } = useQuery({
+    ...getApiCollectorsByIdOptions({
+      path: {
+        id: params.id,
+      },
+    }),
+  });
+
+  const editForm = useForm<z.infer<typeof editSchema>>({
+    resolver: zodResolver(editSchema),
+  });
+
+  const editCollector = useMutation({
+    ...putApiCollectorsByIdMutation(),
     onError: (error) => {
       return toast.error("Failed", {
         description: error.message,
@@ -78,24 +99,43 @@ function Create() {
       });
     },
     onSuccess: () => {
-      return navigate({ to: "/businesses" });
+      return navigate({ to: "/collectors" });
     },
   });
+
+  useEffect(() => {
+    const disposeable = setTimeout(() => editForm.reset(collector), 0);
+
+    return () => clearTimeout(disposeable);
+  }, [collector]);
+
+  if (isLoadingCollector)
+    return (
+      <div className="flex flex-col w-full h-full items-center justify-center">
+        <div className="flex items-center space-x-2">
+          <Spinner className="size-4" />
+          <Label>Loading user.</Label>
+        </div>
+      </div>
+    );
 
   return (
     <div className="flex flex-col items-center justify-center w-full h-full bg-muted p-3 overflow-hidden">
       <div className="flex flex-col w-full h-auto p-4 space-y-2 lg:max-w-96 bg-background rounded-md border overflow-y-auto">
-        <Form {...createForm}>
+        <Form {...editForm}>
           <form
-            onSubmit={createForm.handleSubmit((values) =>
-              createBusiness.mutate({
+            onSubmit={editForm.handleSubmit((values) =>
+              editCollector.mutate({
                 body: values,
+                path: {
+                  id: params.id,
+                },
               })
             )}
             className="space-y-2"
           >
             <FormField
-              control={createForm.control}
+              control={editForm.control}
               name="userId"
               render={({ field }) => (
                 <FormItem>
@@ -113,12 +153,12 @@ function Create() {
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select a business user" />
+                          <SelectValue placeholder="Select a collector user" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
                         <SelectItem value={"--"}>None</SelectItem>
-                        {businessUsers?.map((user) => (
+                        {collectorUsers?.map((user) => (
                           <SelectItem value={user.id}>{user.email}</SelectItem>
                         ))}
                       </SelectContent>
@@ -127,12 +167,12 @@ function Create() {
 
                   {newUser && (
                     <CreateUserForm
-                      role="business"
+                      role="collector"
                       onChanged={(userId) => {
                         queryClient.invalidateQueries({
                           queryKey: getApiUsersQueryKey({
                             query: {
-                              role: "business",
+                              role: "collector",
                             },
                           }),
                         });
@@ -155,60 +195,16 @@ function Create() {
             />
 
             <FormField
-              control={createForm.control}
-              name="name"
+              control={editForm.control}
+              name="firstName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>First Name</FormLabel>
                   <FormControl>
-                    <Input type="text" placeholder="Name" {...field} />
-                  </FormControl>
-                  <FormDescription>This is the business name</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={createForm.control}
-              name="type"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Type</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a business type" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {["Recycler", "Waste Collector", "Buy Back Centre"].map(
-                        (type) => (
-                          <SelectItem value={type}>{type}</SelectItem>
-                        )
-                      )}
-                    </SelectContent>
-                  </Select>
-                  <FormDescription>This is their role.</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={createForm.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Description</FormLabel>
-                  <FormControl>
-                    <Textarea placeholder="Description" {...field} />
+                    <Input type="text" placeholder="First Name" {...field} />
                   </FormControl>
                   <FormDescription>
-                    This is the business description
+                    This is the collector first name
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -216,7 +212,24 @@ function Create() {
             />
 
             <FormField
-              control={createForm.control}
+              control={editForm.control}
+              name="lastName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Last Name</FormLabel>
+                  <FormControl>
+                    <Input type="text" placeholder="Last Name" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    This is the collector last name
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={editForm.control}
               name="phoneNumber"
               render={({ field }) => (
                 <FormItem>
@@ -225,7 +238,7 @@ function Create() {
                     <Input type="text" placeholder="Phone Number" {...field} />
                   </FormControl>
                   <FormDescription>
-                    This is the business phone number
+                    This is the collector phone number
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -233,7 +246,24 @@ function Create() {
             />
 
             <FormField
-              control={createForm.control}
+              control={editForm.control}
+              name="idNumber"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>ID Number</FormLabel>
+                  <FormControl>
+                    <Input type="text" placeholder="ID Number" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    This is the collector id number
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={editForm.control}
               name="address"
               render={({ field }) => (
                 <FormItem>
@@ -242,7 +272,7 @@ function Create() {
                     <Input type="text" placeholder="Address" {...field} />
                   </FormControl>
                   <FormDescription>
-                    This is the business address
+                    This is the collector address
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -250,7 +280,7 @@ function Create() {
             />
 
             <FormField
-              control={createForm.control}
+              control={editForm.control}
               name="city"
               render={({ field }) => (
                 <FormItem>
@@ -258,14 +288,14 @@ function Create() {
                   <FormControl>
                     <Input type="text" placeholder="City" {...field} />
                   </FormControl>
-                  <FormDescription>This is the business city</FormDescription>
+                  <FormDescription>This is the collector city</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
             <FormField
-              control={createForm.control}
+              control={editForm.control}
               name="province"
               render={({ field }) => (
                 <FormItem>
@@ -274,7 +304,7 @@ function Create() {
                     <Input type="text" placeholder="Province" {...field} />
                   </FormControl>
                   <FormDescription>
-                    This is the business province
+                    This is the collector province
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -282,7 +312,7 @@ function Create() {
             />
 
             <FormField
-              control={createForm.control}
+              control={editForm.control}
               name="zipCode"
               render={({ field }) => (
                 <FormItem>
@@ -291,7 +321,7 @@ function Create() {
                     <Input type="text" placeholder="Zip Code" {...field} />
                   </FormControl>
                   <FormDescription>
-                    This is the business zip code
+                    This is the collector zip code
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -299,21 +329,20 @@ function Create() {
             />
 
             <Button type="submit" className="w-full">
-              Create Business
+              Edit Collector
             </Button>
           </form>
         </Form>
 
-        <Link to="/businesses">
+        <Link to="/collectors">
           <Button variant="outline" className="w-full">
-            Back To Businesses
+            Back To Collectors
           </Button>
         </Link>
       </div>
     </div>
   );
 }
-
-export const Route = createFileRoute("/_auth/businesses/create")({
-  component: Create,
+export const Route = createFileRoute("/_auth/collectors/edit/$id")({
+  component: Edit,
 });

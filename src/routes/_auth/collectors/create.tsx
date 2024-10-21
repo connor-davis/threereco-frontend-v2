@@ -1,7 +1,7 @@
 import {
   getApiUsersOptions,
   getApiUsersQueryKey,
-  postApiBusinessesMutation,
+  postApiCollectorsMutation,
 } from "@/api-client/@tanstack/react-query.gen";
 import CreateUserForm from "@/components/forms/create-user";
 import { Button } from "@/components/ui/button";
@@ -24,7 +24,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
@@ -34,14 +33,17 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 const createSchema = z.object({
-  name: z.string(),
-  type: z.enum(["Recycler", "Waste Collector", "Buy Back Centre"]),
-  description: z.string(),
+  firstName: z.string(),
+  lastName: z.string(),
   phoneNumber: z.string(),
+  idNumber: z.string(),
   address: z.string(),
   city: z.string(),
   province: z.string(),
   zipCode: z.string(),
+  bankName: z.string(),
+  bankAccountHolder: z.string(),
+  bankAccountNumber: z.string(),
   userId: z.string().uuid(),
 });
 
@@ -58,19 +60,19 @@ function Create() {
   });
 
   const {
-    data: businessUsers,
-    isLoading: isLoadingBusinessUsers,
-    isError: isBusinessUsersError,
+    data: collectorUsers,
+    isLoading: isLoadingCollectorUsers,
+    isError: isCollectorUsersError,
   } = useQuery({
     ...getApiUsersOptions({
       query: {
-        role: "business",
+        role: "collector",
       },
     }),
   });
 
-  const createBusiness = useMutation({
-    ...postApiBusinessesMutation(),
+  const createCollector = useMutation({
+    ...postApiCollectorsMutation(),
     onError: (error) => {
       return toast.error("Failed", {
         description: error.message,
@@ -78,7 +80,7 @@ function Create() {
       });
     },
     onSuccess: () => {
-      return navigate({ to: "/businesses" });
+      return navigate({ to: "/collectors" });
     },
   });
 
@@ -88,7 +90,7 @@ function Create() {
         <Form {...createForm}>
           <form
             onSubmit={createForm.handleSubmit((values) =>
-              createBusiness.mutate({
+              createCollector.mutate({
                 body: values,
               })
             )}
@@ -113,12 +115,12 @@ function Create() {
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select a business user" />
+                          <SelectValue placeholder="Select a collector user" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
                         <SelectItem value={"--"}>None</SelectItem>
-                        {businessUsers?.map((user) => (
+                        {collectorUsers?.map((user) => (
                           <SelectItem value={user.id}>{user.email}</SelectItem>
                         ))}
                       </SelectContent>
@@ -127,12 +129,12 @@ function Create() {
 
                   {newUser && (
                     <CreateUserForm
-                      role="business"
+                      role="collector"
                       onChanged={(userId) => {
                         queryClient.invalidateQueries({
                           queryKey: getApiUsersQueryKey({
                             query: {
-                              role: "business",
+                              role: "collector",
                             },
                           }),
                         });
@@ -156,59 +158,32 @@ function Create() {
 
             <FormField
               control={createForm.control}
-              name="name"
+              name="firstName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>First Name</FormLabel>
                   <FormControl>
-                    <Input type="text" placeholder="Name" {...field} />
-                  </FormControl>
-                  <FormDescription>This is the business name</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={createForm.control}
-              name="type"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Type</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a business type" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {["Recycler", "Waste Collector", "Buy Back Centre"].map(
-                        (type) => (
-                          <SelectItem value={type}>{type}</SelectItem>
-                        )
-                      )}
-                    </SelectContent>
-                  </Select>
-                  <FormDescription>This is their role.</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={createForm.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Description</FormLabel>
-                  <FormControl>
-                    <Textarea placeholder="Description" {...field} />
+                    <Input type="text" placeholder="First Name" {...field} />
                   </FormControl>
                   <FormDescription>
-                    This is the business description
+                    This is the collector first name
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={createForm.control}
+              name="lastName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Last Name</FormLabel>
+                  <FormControl>
+                    <Input type="text" placeholder="Last Name" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    This is the collector last name
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -225,7 +200,24 @@ function Create() {
                     <Input type="text" placeholder="Phone Number" {...field} />
                   </FormControl>
                   <FormDescription>
-                    This is the business phone number
+                    This is the collector phone number
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={createForm.control}
+              name="idNumber"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>ID Number</FormLabel>
+                  <FormControl>
+                    <Input type="text" placeholder="ID Number" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    This is the collector id number
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -242,7 +234,7 @@ function Create() {
                     <Input type="text" placeholder="Address" {...field} />
                   </FormControl>
                   <FormDescription>
-                    This is the business address
+                    This is the collector address
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -258,7 +250,7 @@ function Create() {
                   <FormControl>
                     <Input type="text" placeholder="City" {...field} />
                   </FormControl>
-                  <FormDescription>This is the business city</FormDescription>
+                  <FormDescription>This is the collector city</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -274,7 +266,7 @@ function Create() {
                     <Input type="text" placeholder="Province" {...field} />
                   </FormControl>
                   <FormDescription>
-                    This is the business province
+                    This is the collector province
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -291,7 +283,66 @@ function Create() {
                     <Input type="text" placeholder="Zip Code" {...field} />
                   </FormControl>
                   <FormDescription>
-                    This is the business zip code
+                    This is the collector zip code
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={createForm.control}
+              name="bankName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Bank Name</FormLabel>
+                  <FormControl>
+                    <Input type="text" placeholder="Bank Name" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    This is the collector bank name
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={createForm.control}
+              name="bankAccountHolder"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Bank Account Holder</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="text"
+                      placeholder="Bank Account Holder"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    This is the collector bank account holder
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={createForm.control}
+              name="bankAccountNumber"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Bank Account Number</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="text"
+                      placeholder="Bank Account Number"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    This is the collector bank account number
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -299,14 +350,14 @@ function Create() {
             />
 
             <Button type="submit" className="w-full">
-              Create Business
+              Create Collector
             </Button>
           </form>
         </Form>
 
-        <Link to="/businesses">
+        <Link to="/collectors">
           <Button variant="outline" className="w-full">
-            Back To Businesses
+            Back To Collectors
           </Button>
         </Link>
       </div>
@@ -314,6 +365,6 @@ function Create() {
   );
 }
 
-export const Route = createFileRoute("/_auth/businesses/create")({
+export const Route = createFileRoute("/_auth/collectors/create")({
   component: Create,
 });

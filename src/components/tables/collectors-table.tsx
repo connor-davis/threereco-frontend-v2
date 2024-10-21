@@ -1,9 +1,9 @@
 import {
-  deleteApiUsersByIdMutation,
-  getApiUsersOptions,
-  getApiUsersPagingOptions,
-  getApiUsersPagingQueryKey,
-  getApiUsersQueryKey,
+  deleteApiCollectorsByIdMutation,
+  getApiCollectorsOptions,
+  getApiCollectorsPagingOptions,
+  getApiCollectorsPagingQueryKey,
+  getApiCollectorsQueryKey,
 } from "@/api-client/@tanstack/react-query.gen";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -57,7 +57,7 @@ import {
 } from "../ui/table";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
-export default function UsersTable({ caption = undefined }) {
+export default function CollectorsTable({ caption = undefined }) {
   const [page, setPage] = useState<number>(1);
   const [count, setCount] = useState<number>(10);
 
@@ -68,24 +68,25 @@ export default function UsersTable({ caption = undefined }) {
     isLoading: isLoadingPaging,
     isError: isPagingError,
   } = useQuery({
-    ...getApiUsersPagingOptions({ query: { count } }),
+    ...getApiCollectorsPagingOptions({ query: { count } }),
   });
 
   const {
-    data: users,
-    isLoading: isLoadingUsers,
-    isError: isUsersError,
+    data: collectors,
+    isLoading: isLoadingCollectors,
+    isError: isCollectorsError,
   } = useQuery({
-    ...getApiUsersOptions({
+    ...getApiCollectorsOptions({
       query: {
         count,
         page,
+        includeUser: "true",
       },
     }),
   });
 
-  const deleteUser = useMutation({
-    ...deleteApiUsersByIdMutation(),
+  const deleteCollector = useMutation({
+    ...deleteApiCollectorsByIdMutation(),
     onError: (error, variables) => {
       toast.error("Failed", {
         description: error.message,
@@ -94,7 +95,7 @@ export default function UsersTable({ caption = undefined }) {
     },
     onSuccess: () =>
       queryClient.invalidateQueries({
-        queryKey: getApiUsersQueryKey({
+        queryKey: getApiCollectorsQueryKey({
           query: {
             count,
             page,
@@ -106,7 +107,7 @@ export default function UsersTable({ caption = undefined }) {
   useEffect(() => {
     const disposeable = setTimeout(() => {
       queryClient.invalidateQueries({
-        queryKey: getApiUsersPagingQueryKey({
+        queryKey: getApiCollectorsPagingQueryKey({
           query: {
             count,
           },
@@ -114,7 +115,7 @@ export default function UsersTable({ caption = undefined }) {
       });
 
       queryClient.invalidateQueries({
-        queryKey: getApiUsersQueryKey({
+        queryKey: getApiCollectorsQueryKey({
           query: {
             count,
             page,
@@ -132,16 +133,16 @@ export default function UsersTable({ caption = undefined }) {
         <div className="flex flex-col w-full lg:flex-row items-center space-y-2 lg:space-y-0 lg:space-x-2">
           <Input
             type="text"
-            className="lg:max-w-[200px] w-full"
-            placeholder="Search for business..."
+            className="w-full lg:max-w-[200px]"
+            placeholder="Search for collector..."
           />
         </div>
 
-        <div className="flex flex-col w-full lg:flex-row items-center space-y-2 lg:space-y-0 lg:justify-end lg:space-x-2">
-          <Link to="/users/create" className="lg:max-w-[200px] w-full">
+        <div className="flex flex-col w-full lg:flex-row items-center lg:justify-end space-y-2 lg:space-y-0 lg:space-x-2">
+          <Link to="/collectors/create" className="w-full lg:max-w-[200px]">
             <Button variant="outline" className="w-full">
               <PlusIcon className="size-4 mr-2" />
-              Create User
+              Create Collector
             </Button>
           </Link>
         </div>
@@ -151,24 +152,39 @@ export default function UsersTable({ caption = undefined }) {
         <Table>
           {caption && <TableCaption>{caption}</TableCaption>}
 
-          {users?.length === 0 && (
-            <TableCaption className="py-4">There are no users.</TableCaption>
+          {collectors?.length === 0 && (
+            <TableCaption className="py-4">
+              There are no collectors.
+            </TableCaption>
           )}
 
           <TableHeader>
             <TableRow>
-              <TableCell>Email</TableCell>
-              <TableCell>Role</TableCell>
+              <TableCell>Full Name</TableCell>
+              <TableCell>ID Number</TableCell>
+              <TableCell>User</TableCell>
             </TableRow>
           </TableHeader>
 
           <TableBody>
-            {users?.map((user, index) => (
+            {collectors?.map((collector, index) => (
               <TableRow key={index}>
-                <TableCell>{user.email}</TableCell>
-                <TableCell className="capitalize">
-                  {user.role.replace("_", " ")}
+                <TableCell>
+                  {[collector.firstName, collector.lastName].join(" ")}
                 </TableCell>
+                <TableCell>{collector.idNumber}</TableCell>
+                <TableCell>
+                  {collector.userId ? (
+                    <Link to="/users/$id" params={{ id: collector.userId }}>
+                      <Label className="font-normalh-auto text-primary underline cursor-pointer">
+                        {collector.user?.email}
+                      </Label>
+                    </Link>
+                  ) : (
+                    "--"
+                  )}
+                </TableCell>
+
                 <TableCell>
                   <AlertDialog>
                     <DropdownMenu>
@@ -179,14 +195,20 @@ export default function UsersTable({ caption = undefined }) {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>
                         <DropdownMenuGroup>
-                          <Link to={"/users/$id"} params={{ id: user.id }}>
+                          <Link
+                            to={"/collectors/$id"}
+                            params={{ id: collector.id }}
+                          >
                             <DropdownMenuItem>
                               <EyeIcon className="size-4 mr-2" />
                               <Label>View</Label>
                             </DropdownMenuItem>
                           </Link>
 
-                          <Link to={"/users/edit/$id"} params={{ id: user.id }}>
+                          <Link
+                            to={"/collectors/edit/$id"}
+                            params={{ id: collector.id }}
+                          >
                             <DropdownMenuItem>
                               <PencilIcon className="size-4 mr-2" />
                               <Label>Edit</Label>
@@ -209,7 +231,7 @@ export default function UsersTable({ caption = undefined }) {
                           Are you absolutely sure?
                         </AlertDialogTitle>
                         <AlertDialogDescription>
-                          This action can not be undone. The user will be
+                          This action can not be undone. The collector will be
                           permanently removed from the server a long with all
                           their data.
                         </AlertDialogDescription>
@@ -218,9 +240,9 @@ export default function UsersTable({ caption = undefined }) {
                         <AlertDialogCancel>Cancel</AlertDialogCancel>
                         <AlertDialogAction
                           onClick={() =>
-                            deleteUser.mutate({
+                            deleteCollector.mutate({
                               path: {
-                                id: user.id,
+                                id: collector.id,
                               },
                             })
                           }
@@ -234,9 +256,12 @@ export default function UsersTable({ caption = undefined }) {
               </TableRow>
             ))}
 
-            {(isLoadingPaging || isLoadingUsers) &&
+            {(isLoadingPaging || isLoadingCollectors) &&
               new Array(count).fill(0).map((_, index) => (
                 <TableRow>
+                  <TableCell>
+                    <Skeleton className="h-8 w-full" />
+                  </TableCell>
                   <TableCell>
                     <Skeleton className="h-8 w-full" />
                   </TableCell>
@@ -257,7 +282,7 @@ export default function UsersTable({ caption = undefined }) {
           defaultValue="10"
           onValueChange={(value) => setCount(parseInt(value))}
         >
-          <SelectTrigger className="lg:max-w-[200px] w-full">
+          <SelectTrigger className="w-full lg:max-w-[200px]">
             <SelectValue placeholder="Number of users to display?" />
           </SelectTrigger>
           <SelectContent>

@@ -151,7 +151,7 @@ function Edit() {
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select a business type" />
+                          <SelectValue placeholder="Select a business user" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>

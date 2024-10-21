@@ -1,7 +1,7 @@
 import { postApiAuthenticationLogout } from "@/api-client";
 import { DashboardIcon } from "@radix-ui/react-icons";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { BuildingIcon, LogOutIcon, UsersIcon } from "lucide-react";
+import { BuildingIcon, HandIcon, LogOutIcon, UsersIcon } from "lucide-react";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -94,6 +94,22 @@ export default function SideBar() {
                 </TooltipTrigger>
                 {!open && (
                   <TooltipContent side="right">Businesses</TooltipContent>
+                )}
+              </Tooltip>
+            </SidebarMenuItem>
+
+            <SidebarMenuItem>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <SidebarMenuButton asChild>
+                    <Link to="/collectors">
+                      <HandIcon className="size-4" />
+                      <Label className="cursor-pointer">Collectors</Label>
+                    </Link>
+                  </SidebarMenuButton>
+                </TooltipTrigger>
+                {!open && (
+                  <TooltipContent side="right">Collectors</TooltipContent>
                 )}
               </Tooltip>
             </SidebarMenuItem>
