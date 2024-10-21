@@ -16,11 +16,15 @@ import { Route as AuthImport } from './routes/_auth'
 import { Route as AuthIndexImport } from './routes/_auth/index'
 import { Route as AuthenticationLoginImport } from './routes/authentication/login'
 import { Route as AuthUsersIndexImport } from './routes/_auth/users/index'
+import { Route as AuthBusinessesIndexImport } from './routes/_auth/businesses/index'
 import { Route as MfaMfaVerifyImport } from './routes/_mfa/mfa/verify'
 import { Route as MfaMfaEnableImport } from './routes/_mfa/mfa/enable'
 import { Route as AuthUsersCreateImport } from './routes/_auth/users/create'
 import { Route as AuthUsersIdImport } from './routes/_auth/users/$id'
+import { Route as AuthBusinessesCreateImport } from './routes/_auth/businesses/create'
+import { Route as AuthBusinessesIdImport } from './routes/_auth/businesses/$id'
 import { Route as AuthUsersEditIdImport } from './routes/_auth/users/edit/$id'
+import { Route as AuthBusinessesEditIdImport } from './routes/_auth/businesses/edit/$id'
 
 // Create/Update Routes
 
@@ -52,6 +56,12 @@ const AuthUsersIndexRoute = AuthUsersIndexImport.update({
   getParentRoute: () => AuthRoute,
 } as any)
 
+const AuthBusinessesIndexRoute = AuthBusinessesIndexImport.update({
+  id: '/businesses/',
+  path: '/businesses/',
+  getParentRoute: () => AuthRoute,
+} as any)
+
 const MfaMfaVerifyRoute = MfaMfaVerifyImport.update({
   id: '/mfa/verify',
   path: '/mfa/verify',
@@ -76,9 +86,27 @@ const AuthUsersIdRoute = AuthUsersIdImport.update({
   getParentRoute: () => AuthRoute,
 } as any)
 
+const AuthBusinessesCreateRoute = AuthBusinessesCreateImport.update({
+  id: '/businesses/create',
+  path: '/businesses/create',
+  getParentRoute: () => AuthRoute,
+} as any)
+
+const AuthBusinessesIdRoute = AuthBusinessesIdImport.update({
+  id: '/businesses/$id',
+  path: '/businesses/$id',
+  getParentRoute: () => AuthRoute,
+} as any)
+
 const AuthUsersEditIdRoute = AuthUsersEditIdImport.update({
   id: '/users/edit/$id',
   path: '/users/edit/$id',
+  getParentRoute: () => AuthRoute,
+} as any)
+
+const AuthBusinessesEditIdRoute = AuthBusinessesEditIdImport.update({
+  id: '/businesses/edit/$id',
+  path: '/businesses/edit/$id',
   getParentRoute: () => AuthRoute,
 } as any)
 
@@ -114,6 +142,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthIndexImport
       parentRoute: typeof AuthImport
     }
+    '/_auth/businesses/$id': {
+      id: '/_auth/businesses/$id'
+      path: '/businesses/$id'
+      fullPath: '/businesses/$id'
+      preLoaderRoute: typeof AuthBusinessesIdImport
+      parentRoute: typeof AuthImport
+    }
+    '/_auth/businesses/create': {
+      id: '/_auth/businesses/create'
+      path: '/businesses/create'
+      fullPath: '/businesses/create'
+      preLoaderRoute: typeof AuthBusinessesCreateImport
+      parentRoute: typeof AuthImport
+    }
     '/_auth/users/$id': {
       id: '/_auth/users/$id'
       path: '/users/$id'
@@ -142,11 +184,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MfaMfaVerifyImport
       parentRoute: typeof MfaImport
     }
+    '/_auth/businesses/': {
+      id: '/_auth/businesses/'
+      path: '/businesses'
+      fullPath: '/businesses'
+      preLoaderRoute: typeof AuthBusinessesIndexImport
+      parentRoute: typeof AuthImport
+    }
     '/_auth/users/': {
       id: '/_auth/users/'
       path: '/users'
       fullPath: '/users'
       preLoaderRoute: typeof AuthUsersIndexImport
+      parentRoute: typeof AuthImport
+    }
+    '/_auth/businesses/edit/$id': {
+      id: '/_auth/businesses/edit/$id'
+      path: '/businesses/edit/$id'
+      fullPath: '/businesses/edit/$id'
+      preLoaderRoute: typeof AuthBusinessesEditIdImport
       parentRoute: typeof AuthImport
     }
     '/_auth/users/edit/$id': {
@@ -163,17 +219,25 @@ declare module '@tanstack/react-router' {
 
 interface AuthRouteChildren {
   AuthIndexRoute: typeof AuthIndexRoute
+  AuthBusinessesIdRoute: typeof AuthBusinessesIdRoute
+  AuthBusinessesCreateRoute: typeof AuthBusinessesCreateRoute
   AuthUsersIdRoute: typeof AuthUsersIdRoute
   AuthUsersCreateRoute: typeof AuthUsersCreateRoute
+  AuthBusinessesIndexRoute: typeof AuthBusinessesIndexRoute
   AuthUsersIndexRoute: typeof AuthUsersIndexRoute
+  AuthBusinessesEditIdRoute: typeof AuthBusinessesEditIdRoute
   AuthUsersEditIdRoute: typeof AuthUsersEditIdRoute
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
   AuthIndexRoute: AuthIndexRoute,
+  AuthBusinessesIdRoute: AuthBusinessesIdRoute,
+  AuthBusinessesCreateRoute: AuthBusinessesCreateRoute,
   AuthUsersIdRoute: AuthUsersIdRoute,
   AuthUsersCreateRoute: AuthUsersCreateRoute,
+  AuthBusinessesIndexRoute: AuthBusinessesIndexRoute,
   AuthUsersIndexRoute: AuthUsersIndexRoute,
+  AuthBusinessesEditIdRoute: AuthBusinessesEditIdRoute,
   AuthUsersEditIdRoute: AuthUsersEditIdRoute,
 }
 
@@ -195,11 +259,15 @@ export interface FileRoutesByFullPath {
   '': typeof MfaRouteWithChildren
   '/authentication/login': typeof AuthenticationLoginRoute
   '/': typeof AuthIndexRoute
+  '/businesses/$id': typeof AuthBusinessesIdRoute
+  '/businesses/create': typeof AuthBusinessesCreateRoute
   '/users/$id': typeof AuthUsersIdRoute
   '/users/create': typeof AuthUsersCreateRoute
   '/mfa/enable': typeof MfaMfaEnableRoute
   '/mfa/verify': typeof MfaMfaVerifyRoute
+  '/businesses': typeof AuthBusinessesIndexRoute
   '/users': typeof AuthUsersIndexRoute
+  '/businesses/edit/$id': typeof AuthBusinessesEditIdRoute
   '/users/edit/$id': typeof AuthUsersEditIdRoute
 }
 
@@ -207,11 +275,15 @@ export interface FileRoutesByTo {
   '': typeof MfaRouteWithChildren
   '/authentication/login': typeof AuthenticationLoginRoute
   '/': typeof AuthIndexRoute
+  '/businesses/$id': typeof AuthBusinessesIdRoute
+  '/businesses/create': typeof AuthBusinessesCreateRoute
   '/users/$id': typeof AuthUsersIdRoute
   '/users/create': typeof AuthUsersCreateRoute
   '/mfa/enable': typeof MfaMfaEnableRoute
   '/mfa/verify': typeof MfaMfaVerifyRoute
+  '/businesses': typeof AuthBusinessesIndexRoute
   '/users': typeof AuthUsersIndexRoute
+  '/businesses/edit/$id': typeof AuthBusinessesEditIdRoute
   '/users/edit/$id': typeof AuthUsersEditIdRoute
 }
 
@@ -221,11 +293,15 @@ export interface FileRoutesById {
   '/_mfa': typeof MfaRouteWithChildren
   '/authentication/login': typeof AuthenticationLoginRoute
   '/_auth/': typeof AuthIndexRoute
+  '/_auth/businesses/$id': typeof AuthBusinessesIdRoute
+  '/_auth/businesses/create': typeof AuthBusinessesCreateRoute
   '/_auth/users/$id': typeof AuthUsersIdRoute
   '/_auth/users/create': typeof AuthUsersCreateRoute
   '/_mfa/mfa/enable': typeof MfaMfaEnableRoute
   '/_mfa/mfa/verify': typeof MfaMfaVerifyRoute
+  '/_auth/businesses/': typeof AuthBusinessesIndexRoute
   '/_auth/users/': typeof AuthUsersIndexRoute
+  '/_auth/businesses/edit/$id': typeof AuthBusinessesEditIdRoute
   '/_auth/users/edit/$id': typeof AuthUsersEditIdRoute
 }
 
@@ -235,22 +311,30 @@ export interface FileRouteTypes {
     | ''
     | '/authentication/login'
     | '/'
+    | '/businesses/$id'
+    | '/businesses/create'
     | '/users/$id'
     | '/users/create'
     | '/mfa/enable'
     | '/mfa/verify'
+    | '/businesses'
     | '/users'
+    | '/businesses/edit/$id'
     | '/users/edit/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | ''
     | '/authentication/login'
     | '/'
+    | '/businesses/$id'
+    | '/businesses/create'
     | '/users/$id'
     | '/users/create'
     | '/mfa/enable'
     | '/mfa/verify'
+    | '/businesses'
     | '/users'
+    | '/businesses/edit/$id'
     | '/users/edit/$id'
   id:
     | '__root__'
@@ -258,11 +342,15 @@ export interface FileRouteTypes {
     | '/_mfa'
     | '/authentication/login'
     | '/_auth/'
+    | '/_auth/businesses/$id'
+    | '/_auth/businesses/create'
     | '/_auth/users/$id'
     | '/_auth/users/create'
     | '/_mfa/mfa/enable'
     | '/_mfa/mfa/verify'
+    | '/_auth/businesses/'
     | '/_auth/users/'
+    | '/_auth/businesses/edit/$id'
     | '/_auth/users/edit/$id'
   fileRoutesById: FileRoutesById
 }
@@ -300,9 +388,13 @@ export const routeTree = rootRoute
       "filePath": "_auth.tsx",
       "children": [
         "/_auth/",
+        "/_auth/businesses/$id",
+        "/_auth/businesses/create",
         "/_auth/users/$id",
         "/_auth/users/create",
+        "/_auth/businesses/",
         "/_auth/users/",
+        "/_auth/businesses/edit/$id",
         "/_auth/users/edit/$id"
       ]
     },
@@ -318,6 +410,14 @@ export const routeTree = rootRoute
     },
     "/_auth/": {
       "filePath": "_auth/index.tsx",
+      "parent": "/_auth"
+    },
+    "/_auth/businesses/$id": {
+      "filePath": "_auth/businesses/$id.tsx",
+      "parent": "/_auth"
+    },
+    "/_auth/businesses/create": {
+      "filePath": "_auth/businesses/create.tsx",
       "parent": "/_auth"
     },
     "/_auth/users/$id": {
@@ -336,8 +436,16 @@ export const routeTree = rootRoute
       "filePath": "_mfa/mfa/verify.tsx",
       "parent": "/_mfa"
     },
+    "/_auth/businesses/": {
+      "filePath": "_auth/businesses/index.tsx",
+      "parent": "/_auth"
+    },
     "/_auth/users/": {
       "filePath": "_auth/users/index.tsx",
+      "parent": "/_auth"
+    },
+    "/_auth/businesses/edit/$id": {
+      "filePath": "_auth/businesses/edit/$id.tsx",
       "parent": "/_auth"
     },
     "/_auth/users/edit/$id": {

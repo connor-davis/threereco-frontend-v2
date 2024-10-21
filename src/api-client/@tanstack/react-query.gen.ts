@@ -2,8 +2,8 @@
 
 import type { Options } from '@hey-api/client-fetch';
 import { queryOptions, type UseMutationOptions, infiniteQueryOptions, type InfiniteData } from '@tanstack/react-query';
-import { client, getApi, postApiAuthenticationLogin, postApiAuthenticationLogout, postApiAuthenticationRegister, getApiAuthenticationCheck, getApiAuthenticationMfaEnable, postApiAuthenticationMfaVerify, putApiAuthenticationPasswordReset, getApiUsers, postApiUsers, getApiUsersById, putApiUsersById, deleteApiUsersById, getApiUsersPaging, getApiBusinesses, postApiBusinesses, putApiBusinesses, deleteApiBusinesses, getApiCollectors, postApiCollectors, deleteApiCollectors, putApiCollectors, getApiProducts, postApiProducts, deleteApiProducts, putApiProducts, getApiCollections, postApiCollections, deleteApiCollections, putApiCollections, getApiCollectionsExport } from '../services.gen';
-import type { PostApiAuthenticationLoginData, PostApiAuthenticationLoginError, PostApiAuthenticationLoginResponse, PostApiAuthenticationLogoutError, PostApiAuthenticationLogoutResponse, PostApiAuthenticationRegisterData, PostApiAuthenticationRegisterError, PostApiAuthenticationRegisterResponse, PostApiAuthenticationMfaVerifyData, PostApiAuthenticationMfaVerifyError, PostApiAuthenticationMfaVerifyResponse, PutApiAuthenticationPasswordResetData, PutApiAuthenticationPasswordResetError, PutApiAuthenticationPasswordResetResponse, GetApiUsersData, GetApiUsersError, GetApiUsersResponse, PostApiUsersData, PostApiUsersError, PostApiUsersResponse, GetApiUsersByIdData, PutApiUsersByIdData, PutApiUsersByIdError, PutApiUsersByIdResponse, DeleteApiUsersByIdData, DeleteApiUsersByIdError, DeleteApiUsersByIdResponse, GetApiUsersPagingData, GetApiBusinessesData, GetApiBusinessesError, GetApiBusinessesResponse, PostApiBusinessesData, PostApiBusinessesError, PostApiBusinessesResponse, PutApiBusinessesData, PutApiBusinessesError, PutApiBusinessesResponse, DeleteApiBusinessesData, DeleteApiBusinessesError, DeleteApiBusinessesResponse, GetApiCollectorsData, GetApiCollectorsError, GetApiCollectorsResponse, PostApiCollectorsData, PostApiCollectorsError, PostApiCollectorsResponse, DeleteApiCollectorsData, DeleteApiCollectorsError, DeleteApiCollectorsResponse, PutApiCollectorsData, PutApiCollectorsError, PutApiCollectorsResponse, GetApiProductsData, GetApiProductsError, GetApiProductsResponse, PostApiProductsData, PostApiProductsError, PostApiProductsResponse, DeleteApiProductsData, DeleteApiProductsError, DeleteApiProductsResponse, PutApiProductsData, PutApiProductsError, PutApiProductsResponse, GetApiCollectionsData, GetApiCollectionsError, GetApiCollectionsResponse, PostApiCollectionsData, PostApiCollectionsError, PostApiCollectionsResponse, DeleteApiCollectionsData, DeleteApiCollectionsError, DeleteApiCollectionsResponse, PutApiCollectionsData, PutApiCollectionsError, PutApiCollectionsResponse, GetApiCollectionsExportData, GetApiCollectionsExportError, GetApiCollectionsExportResponse } from '../types.gen';
+import { client, getApi, postApiAuthenticationLogin, postApiAuthenticationLogout, postApiAuthenticationRegister, getApiAuthenticationCheck, getApiAuthenticationMfaEnable, postApiAuthenticationMfaVerify, putApiAuthenticationPasswordReset, getApiUsersPaging, getApiUsers, postApiUsers, getApiUsersById, putApiUsersById, deleteApiUsersById, getApiBusinessesPaging, getApiBusinesses, postApiBusinesses, getApiBusinessesById, putApiBusinessesById, deleteApiBusinessesById, getApiCollectorsPaging, getApiCollectors, postApiCollectors, getApiCollectorsById, deleteApiCollectorsById, putApiCollectorsById, getApiProductsPaging, getApiProducts, postApiProducts, getApiProductsById, deleteApiProductsById, putApiProductsById, getApiCollectionsPaging, getApiCollections, postApiCollections, getApiCollectionsById, deleteApiCollectionsById, putApiCollectionsById, getApiCollectionsExport } from '../services.gen';
+import type { PostApiAuthenticationLoginData, PostApiAuthenticationLoginError, PostApiAuthenticationLoginResponse, PostApiAuthenticationLogoutError, PostApiAuthenticationLogoutResponse, PostApiAuthenticationRegisterData, PostApiAuthenticationRegisterError, PostApiAuthenticationRegisterResponse, PostApiAuthenticationMfaVerifyData, PostApiAuthenticationMfaVerifyError, PostApiAuthenticationMfaVerifyResponse, PutApiAuthenticationPasswordResetData, PutApiAuthenticationPasswordResetError, PutApiAuthenticationPasswordResetResponse, GetApiUsersPagingData, GetApiUsersData, GetApiUsersError, GetApiUsersResponse, PostApiUsersData, PostApiUsersError, PostApiUsersResponse, GetApiUsersByIdData, PutApiUsersByIdData, PutApiUsersByIdError, PutApiUsersByIdResponse, DeleteApiUsersByIdData, DeleteApiUsersByIdError, DeleteApiUsersByIdResponse, GetApiBusinessesPagingData, GetApiBusinessesData, GetApiBusinessesError, GetApiBusinessesResponse, PostApiBusinessesData, PostApiBusinessesError, PostApiBusinessesResponse, GetApiBusinessesByIdData, PutApiBusinessesByIdData, PutApiBusinessesByIdError, PutApiBusinessesByIdResponse, DeleteApiBusinessesByIdData, DeleteApiBusinessesByIdError, DeleteApiBusinessesByIdResponse, GetApiCollectorsPagingData, GetApiCollectorsData, GetApiCollectorsError, GetApiCollectorsResponse, PostApiCollectorsData, PostApiCollectorsError, PostApiCollectorsResponse, GetApiCollectorsByIdData, DeleteApiCollectorsByIdData, DeleteApiCollectorsByIdError, DeleteApiCollectorsByIdResponse, PutApiCollectorsByIdData, PutApiCollectorsByIdError, PutApiCollectorsByIdResponse, GetApiProductsPagingData, GetApiProductsData, GetApiProductsError, GetApiProductsResponse, PostApiProductsData, PostApiProductsError, PostApiProductsResponse, GetApiProductsByIdData, DeleteApiProductsByIdData, DeleteApiProductsByIdError, DeleteApiProductsByIdResponse, PutApiProductsByIdData, PutApiProductsByIdError, PutApiProductsByIdResponse, GetApiCollectionsPagingData, GetApiCollectionsData, GetApiCollectionsError, GetApiCollectionsResponse, PostApiCollectionsData, PostApiCollectionsError, PostApiCollectionsResponse, GetApiCollectionsByIdData, DeleteApiCollectionsByIdData, DeleteApiCollectionsByIdError, DeleteApiCollectionsByIdResponse, PutApiCollectionsByIdData, PutApiCollectionsByIdError, PutApiCollectionsByIdResponse, GetApiCollectionsExportData, GetApiCollectionsExportError, GetApiCollectionsExportResponse } from '../types.gen';
 
 type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
@@ -199,6 +199,22 @@ export const putApiAuthenticationPasswordResetMutation = (options?: Partial<Opti
     }
 }; return mutationOptions; };
 
+export const getApiUsersPagingQueryKey = (options?: Options<GetApiUsersPagingData>) => [
+    createQueryKey("getApiUsersPaging", options)
+];
+
+export const getApiUsersPagingOptions = (options?: Options<GetApiUsersPagingData>) => { return queryOptions({
+    queryFn: async ({ queryKey }) => {
+        const { data } = await getApiUsersPaging({
+            ...options,
+            ...queryKey[0],
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getApiUsersPagingQueryKey(options)
+}); };
+
 export const getApiUsersQueryKey = (options?: Options<GetApiUsersData>) => [
     createQueryKey("getApiUsers", options)
 ];
@@ -334,20 +350,20 @@ export const deleteApiUsersByIdMutation = (options?: Partial<Options<DeleteApiUs
     }
 }; return mutationOptions; };
 
-export const getApiUsersPagingQueryKey = (options?: Options<GetApiUsersPagingData>) => [
-    createQueryKey("getApiUsersPaging", options)
+export const getApiBusinessesPagingQueryKey = (options?: Options<GetApiBusinessesPagingData>) => [
+    createQueryKey("getApiBusinessesPaging", options)
 ];
 
-export const getApiUsersPagingOptions = (options?: Options<GetApiUsersPagingData>) => { return queryOptions({
+export const getApiBusinessesPagingOptions = (options?: Options<GetApiBusinessesPagingData>) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
-        const { data } = await getApiUsersPaging({
+        const { data } = await getApiBusinessesPaging({
             ...options,
             ...queryKey[0],
             throwOnError: true
         });
         return data;
     },
-    queryKey: getApiUsersPagingQueryKey(options)
+    queryKey: getApiBusinessesPagingQueryKey(options)
 }); };
 
 export const getApiBusinessesQueryKey = (options?: Options<GetApiBusinessesData>) => [
@@ -418,9 +434,25 @@ export const postApiBusinessesMutation = (options?: Partial<Options<PostApiBusin
     }
 }; return mutationOptions; };
 
-export const putApiBusinessesMutation = (options?: Partial<Options<PutApiBusinessesData>>) => { const mutationOptions: UseMutationOptions<PutApiBusinessesResponse, PutApiBusinessesError, Options<PutApiBusinessesData>> = {
+export const getApiBusinessesByIdQueryKey = (options: Options<GetApiBusinessesByIdData>) => [
+    createQueryKey("getApiBusinessesById", options)
+];
+
+export const getApiBusinessesByIdOptions = (options: Options<GetApiBusinessesByIdData>) => { return queryOptions({
+    queryFn: async ({ queryKey }) => {
+        const { data } = await getApiBusinessesById({
+            ...options,
+            ...queryKey[0],
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getApiBusinessesByIdQueryKey(options)
+}); };
+
+export const putApiBusinessesByIdMutation = (options?: Partial<Options<PutApiBusinessesByIdData>>) => { const mutationOptions: UseMutationOptions<PutApiBusinessesByIdResponse, PutApiBusinessesByIdError, Options<PutApiBusinessesByIdData>> = {
     mutationFn: async (localOptions) => {
-        const { data } = await putApiBusinesses({
+        const { data } = await putApiBusinessesById({
             ...options,
             ...localOptions,
             throwOnError: true
@@ -429,9 +461,9 @@ export const putApiBusinessesMutation = (options?: Partial<Options<PutApiBusines
     }
 }; return mutationOptions; };
 
-export const deleteApiBusinessesMutation = (options?: Partial<Options<DeleteApiBusinessesData>>) => { const mutationOptions: UseMutationOptions<DeleteApiBusinessesResponse, DeleteApiBusinessesError, Options<DeleteApiBusinessesData>> = {
+export const deleteApiBusinessesByIdMutation = (options?: Partial<Options<DeleteApiBusinessesByIdData>>) => { const mutationOptions: UseMutationOptions<DeleteApiBusinessesByIdResponse, DeleteApiBusinessesByIdError, Options<DeleteApiBusinessesByIdData>> = {
     mutationFn: async (localOptions) => {
-        const { data } = await deleteApiBusinesses({
+        const { data } = await deleteApiBusinessesById({
             ...options,
             ...localOptions,
             throwOnError: true
@@ -439,6 +471,22 @@ export const deleteApiBusinessesMutation = (options?: Partial<Options<DeleteApiB
         return data;
     }
 }; return mutationOptions; };
+
+export const getApiCollectorsPagingQueryKey = (options?: Options<GetApiCollectorsPagingData>) => [
+    createQueryKey("getApiCollectorsPaging", options)
+];
+
+export const getApiCollectorsPagingOptions = (options?: Options<GetApiCollectorsPagingData>) => { return queryOptions({
+    queryFn: async ({ queryKey }) => {
+        const { data } = await getApiCollectorsPaging({
+            ...options,
+            ...queryKey[0],
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getApiCollectorsPagingQueryKey(options)
+}); };
 
 export const getApiCollectorsQueryKey = (options?: Options<GetApiCollectorsData>) => [
     createQueryKey("getApiCollectors", options)
@@ -508,9 +556,25 @@ export const postApiCollectorsMutation = (options?: Partial<Options<PostApiColle
     }
 }; return mutationOptions; };
 
-export const deleteApiCollectorsMutation = (options?: Partial<Options<DeleteApiCollectorsData>>) => { const mutationOptions: UseMutationOptions<DeleteApiCollectorsResponse, DeleteApiCollectorsError, Options<DeleteApiCollectorsData>> = {
+export const getApiCollectorsByIdQueryKey = (options?: Options<GetApiCollectorsByIdData>) => [
+    createQueryKey("getApiCollectorsById", options)
+];
+
+export const getApiCollectorsByIdOptions = (options?: Options<GetApiCollectorsByIdData>) => { return queryOptions({
+    queryFn: async ({ queryKey }) => {
+        const { data } = await getApiCollectorsById({
+            ...options,
+            ...queryKey[0],
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getApiCollectorsByIdQueryKey(options)
+}); };
+
+export const deleteApiCollectorsByIdMutation = (options?: Partial<Options<DeleteApiCollectorsByIdData>>) => { const mutationOptions: UseMutationOptions<DeleteApiCollectorsByIdResponse, DeleteApiCollectorsByIdError, Options<DeleteApiCollectorsByIdData>> = {
     mutationFn: async (localOptions) => {
-        const { data } = await deleteApiCollectors({
+        const { data } = await deleteApiCollectorsById({
             ...options,
             ...localOptions,
             throwOnError: true
@@ -519,9 +583,9 @@ export const deleteApiCollectorsMutation = (options?: Partial<Options<DeleteApiC
     }
 }; return mutationOptions; };
 
-export const putApiCollectorsMutation = (options?: Partial<Options<PutApiCollectorsData>>) => { const mutationOptions: UseMutationOptions<PutApiCollectorsResponse, PutApiCollectorsError, Options<PutApiCollectorsData>> = {
+export const putApiCollectorsByIdMutation = (options?: Partial<Options<PutApiCollectorsByIdData>>) => { const mutationOptions: UseMutationOptions<PutApiCollectorsByIdResponse, PutApiCollectorsByIdError, Options<PutApiCollectorsByIdData>> = {
     mutationFn: async (localOptions) => {
-        const { data } = await putApiCollectors({
+        const { data } = await putApiCollectorsById({
             ...options,
             ...localOptions,
             throwOnError: true
@@ -529,6 +593,22 @@ export const putApiCollectorsMutation = (options?: Partial<Options<PutApiCollect
         return data;
     }
 }; return mutationOptions; };
+
+export const getApiProductsPagingQueryKey = (options?: Options<GetApiProductsPagingData>) => [
+    createQueryKey("getApiProductsPaging", options)
+];
+
+export const getApiProductsPagingOptions = (options?: Options<GetApiProductsPagingData>) => { return queryOptions({
+    queryFn: async ({ queryKey }) => {
+        const { data } = await getApiProductsPaging({
+            ...options,
+            ...queryKey[0],
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getApiProductsPagingQueryKey(options)
+}); };
 
 export const getApiProductsQueryKey = (options?: Options<GetApiProductsData>) => [
     createQueryKey("getApiProducts", options)
@@ -598,9 +678,25 @@ export const postApiProductsMutation = (options?: Partial<Options<PostApiProduct
     }
 }; return mutationOptions; };
 
-export const deleteApiProductsMutation = (options?: Partial<Options<DeleteApiProductsData>>) => { const mutationOptions: UseMutationOptions<DeleteApiProductsResponse, DeleteApiProductsError, Options<DeleteApiProductsData>> = {
+export const getApiProductsByIdQueryKey = (options: Options<GetApiProductsByIdData>) => [
+    createQueryKey("getApiProductsById", options)
+];
+
+export const getApiProductsByIdOptions = (options: Options<GetApiProductsByIdData>) => { return queryOptions({
+    queryFn: async ({ queryKey }) => {
+        const { data } = await getApiProductsById({
+            ...options,
+            ...queryKey[0],
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getApiProductsByIdQueryKey(options)
+}); };
+
+export const deleteApiProductsByIdMutation = (options?: Partial<Options<DeleteApiProductsByIdData>>) => { const mutationOptions: UseMutationOptions<DeleteApiProductsByIdResponse, DeleteApiProductsByIdError, Options<DeleteApiProductsByIdData>> = {
     mutationFn: async (localOptions) => {
-        const { data } = await deleteApiProducts({
+        const { data } = await deleteApiProductsById({
             ...options,
             ...localOptions,
             throwOnError: true
@@ -609,9 +705,9 @@ export const deleteApiProductsMutation = (options?: Partial<Options<DeleteApiPro
     }
 }; return mutationOptions; };
 
-export const putApiProductsMutation = (options?: Partial<Options<PutApiProductsData>>) => { const mutationOptions: UseMutationOptions<PutApiProductsResponse, PutApiProductsError, Options<PutApiProductsData>> = {
+export const putApiProductsByIdMutation = (options?: Partial<Options<PutApiProductsByIdData>>) => { const mutationOptions: UseMutationOptions<PutApiProductsByIdResponse, PutApiProductsByIdError, Options<PutApiProductsByIdData>> = {
     mutationFn: async (localOptions) => {
-        const { data } = await putApiProducts({
+        const { data } = await putApiProductsById({
             ...options,
             ...localOptions,
             throwOnError: true
@@ -619,6 +715,22 @@ export const putApiProductsMutation = (options?: Partial<Options<PutApiProductsD
         return data;
     }
 }; return mutationOptions; };
+
+export const getApiCollectionsPagingQueryKey = (options?: Options<GetApiCollectionsPagingData>) => [
+    createQueryKey("getApiCollectionsPaging", options)
+];
+
+export const getApiCollectionsPagingOptions = (options?: Options<GetApiCollectionsPagingData>) => { return queryOptions({
+    queryFn: async ({ queryKey }) => {
+        const { data } = await getApiCollectionsPaging({
+            ...options,
+            ...queryKey[0],
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getApiCollectionsPagingQueryKey(options)
+}); };
 
 export const getApiCollectionsQueryKey = (options?: Options<GetApiCollectionsData>) => [
     createQueryKey("getApiCollections", options)
@@ -688,9 +800,25 @@ export const postApiCollectionsMutation = (options?: Partial<Options<PostApiColl
     }
 }; return mutationOptions; };
 
-export const deleteApiCollectionsMutation = (options?: Partial<Options<DeleteApiCollectionsData>>) => { const mutationOptions: UseMutationOptions<DeleteApiCollectionsResponse, DeleteApiCollectionsError, Options<DeleteApiCollectionsData>> = {
+export const getApiCollectionsByIdQueryKey = (options: Options<GetApiCollectionsByIdData>) => [
+    createQueryKey("getApiCollectionsById", options)
+];
+
+export const getApiCollectionsByIdOptions = (options: Options<GetApiCollectionsByIdData>) => { return queryOptions({
+    queryFn: async ({ queryKey }) => {
+        const { data } = await getApiCollectionsById({
+            ...options,
+            ...queryKey[0],
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getApiCollectionsByIdQueryKey(options)
+}); };
+
+export const deleteApiCollectionsByIdMutation = (options?: Partial<Options<DeleteApiCollectionsByIdData>>) => { const mutationOptions: UseMutationOptions<DeleteApiCollectionsByIdResponse, DeleteApiCollectionsByIdError, Options<DeleteApiCollectionsByIdData>> = {
     mutationFn: async (localOptions) => {
-        const { data } = await deleteApiCollections({
+        const { data } = await deleteApiCollectionsById({
             ...options,
             ...localOptions,
             throwOnError: true
@@ -699,9 +827,9 @@ export const deleteApiCollectionsMutation = (options?: Partial<Options<DeleteApi
     }
 }; return mutationOptions; };
 
-export const putApiCollectionsMutation = (options?: Partial<Options<PutApiCollectionsData>>) => { const mutationOptions: UseMutationOptions<PutApiCollectionsResponse, PutApiCollectionsError, Options<PutApiCollectionsData>> = {
+export const putApiCollectionsByIdMutation = (options?: Partial<Options<PutApiCollectionsByIdData>>) => { const mutationOptions: UseMutationOptions<PutApiCollectionsByIdResponse, PutApiCollectionsByIdError, Options<PutApiCollectionsByIdData>> = {
     mutationFn: async (localOptions) => {
-        const { data } = await putApiCollections({
+        const { data } = await putApiCollectionsById({
             ...options,
             ...localOptions,
             throwOnError: true

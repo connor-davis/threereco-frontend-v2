@@ -80,8 +80,8 @@ function Create() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center w-screen h-screen bg-muted p-3">
-      <div className="flex flex-col w-full h-auto p-4 space-y-2 lg:max-w-96 bg-background rounded-md border">
+    <div className="flex flex-col items-center justify-center w-full h-full bg-muted p-3 overflow-hidden">
+      <div className="flex flex-col w-full h-auto p-4 space-y-2 lg:max-w-96 bg-background rounded-md border overflow-y-auto">
         <Form {...createForm}>
           <form
             onSubmit={createForm.handleSubmit(onSubmit)}

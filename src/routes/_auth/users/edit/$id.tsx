@@ -28,6 +28,7 @@ import {
   useNavigate,
   useParams,
 } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -66,8 +67,15 @@ function Edit() {
 
   const editForm = useForm<z.infer<typeof editSchema>>({
     resolver: zodResolver(editSchema),
-    values: user,
   });
+
+  useEffect(() => {
+    const disposeable = setTimeout(() => {
+      editForm.reset(user);
+    }, 0);
+
+    return () => clearTimeout(disposeable);
+  }, [user]);
 
   const onSubmit = async (values: z.infer<typeof editSchema>) => {
     const { error } = await putApiUsersById({
@@ -96,8 +104,8 @@ function Edit() {
     );
 
   return (
-    <div className="flex flex-col items-center justify-center w-screen h-screen bg-muted p-3">
-      <div className="flex flex-col w-full h-auto p-4 space-y-2 lg:max-w-96 bg-background rounded-md border">
+    <div className="flex flex-col items-center justify-center w-full h-full bg-muted p-3 overflow-hidden">
+      <div className="flex flex-col w-full h-auto p-4 space-y-2 lg:max-w-96 bg-background rounded-md border overflow-y-auto">
         <Form {...editForm}>
           <form
             onSubmit={editForm.handleSubmit(onSubmit)}
@@ -126,6 +134,7 @@ function Edit() {
                   <FormLabel>Email</FormLabel>
                   <Select
                     onValueChange={field.onChange}
+                    value={field.value}
                     defaultValue={field.value}
                   >
                     <FormControl>

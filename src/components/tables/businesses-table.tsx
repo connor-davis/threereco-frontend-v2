@@ -1,9 +1,9 @@
 import {
-  deleteApiUsersByIdMutation,
-  getApiUsersOptions,
-  getApiUsersPagingOptions,
-  getApiUsersPagingQueryKey,
-  getApiUsersQueryKey,
+  deleteApiBusinessesByIdMutation,
+  getApiBusinessesOptions,
+  getApiBusinessesPagingOptions,
+  getApiBusinessesPagingQueryKey,
+  getApiBusinessesQueryKey,
 } from "@/api-client/@tanstack/react-query.gen";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -57,7 +57,7 @@ import {
 } from "../ui/table";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
-export default function UsersTable({ caption = undefined }) {
+export default function BusinessesTable({ caption = undefined }) {
   const [page, setPage] = useState<number>(1);
   const [count, setCount] = useState<number>(10);
 
@@ -68,24 +68,25 @@ export default function UsersTable({ caption = undefined }) {
     isLoading: isLoadingPaging,
     isError: isPagingError,
   } = useQuery({
-    ...getApiUsersPagingOptions({ query: { count } }),
+    ...getApiBusinessesPagingOptions({ query: { count } }),
   });
 
   const {
-    data: users,
-    isLoading: isLoadingUsers,
-    isError: isUsersError,
+    data: businesses,
+    isLoading: isLoadingBusinesses,
+    isError: isBusinessesError,
   } = useQuery({
-    ...getApiUsersOptions({
+    ...getApiBusinessesOptions({
       query: {
         count,
         page,
+        includeUser: "true",
       },
     }),
   });
 
-  const deleteUser = useMutation({
-    ...deleteApiUsersByIdMutation(),
+  const deleteBusiness = useMutation({
+    ...deleteApiBusinessesByIdMutation(),
     onError: (error, variables) => {
       toast.error("Failed", {
         description: error.message,
@@ -94,7 +95,7 @@ export default function UsersTable({ caption = undefined }) {
     },
     onSuccess: () =>
       queryClient.invalidateQueries({
-        queryKey: getApiUsersQueryKey({
+        queryKey: getApiBusinessesQueryKey({
           query: {
             count,
             page,
@@ -106,7 +107,7 @@ export default function UsersTable({ caption = undefined }) {
   useEffect(() => {
     const disposeable = setTimeout(() => {
       queryClient.invalidateQueries({
-        queryKey: getApiUsersPagingQueryKey({
+        queryKey: getApiBusinessesPagingQueryKey({
           query: {
             count,
           },
@@ -114,7 +115,7 @@ export default function UsersTable({ caption = undefined }) {
       });
 
       queryClient.invalidateQueries({
-        queryKey: getApiUsersQueryKey({
+        queryKey: getApiBusinessesQueryKey({
           query: {
             count,
             page,
@@ -132,16 +133,16 @@ export default function UsersTable({ caption = undefined }) {
         <div className="flex flex-col w-full lg:flex-row items-center space-y-2 lg:space-y-0 lg:space-x-2">
           <Input
             type="text"
-            className="lg:max-w-[200px] w-full"
+            className="w-full lg:max-w-[200px]"
             placeholder="Search for business..."
           />
         </div>
 
-        <div className="flex flex-col w-full lg:flex-row items-center space-y-2 lg:space-y-0 lg:justify-end lg:space-x-2">
-          <Link to="/users/create" className="lg:max-w-[200px] w-full">
+        <div className="flex flex-col w-full lg:flex-row items-center lg:justify-end space-y-2 lg:space-y-0 lg:space-x-2">
+          <Link to="/businesses/create" className="w-full lg:max-w-[200px]">
             <Button variant="outline" className="w-full">
               <PlusIcon className="size-4 mr-2" />
-              Create User
+              Create Business
             </Button>
           </Link>
         </div>
@@ -153,18 +154,31 @@ export default function UsersTable({ caption = undefined }) {
 
           <TableHeader>
             <TableRow>
-              <TableCell>Email</TableCell>
-              <TableCell>Role</TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell>Type</TableCell>
+              <TableCell>Description</TableCell>
+              <TableCell>User</TableCell>
             </TableRow>
           </TableHeader>
 
           <TableBody>
-            {users?.map((user, index) => (
+            {businesses?.map((business, index) => (
               <TableRow key={index}>
-                <TableCell>{user.email}</TableCell>
-                <TableCell className="capitalize">
-                  {user.role.replace("_", " ")}
+                <TableCell>{business.name}</TableCell>
+                <TableCell>{business.type}</TableCell>
+                <TableCell>{business.description}</TableCell>
+                <TableCell>
+                  {business.userId ? (
+                    <Link to="/users/$id" params={{ id: business.userId }}>
+                      <Label className="font-normalh-auto text-primary underline cursor-pointer">
+                        {business.user?.email}
+                      </Label>
+                    </Link>
+                  ) : (
+                    "--"
+                  )}
                 </TableCell>
+
                 <TableCell>
                   <AlertDialog>
                     <DropdownMenu>
@@ -175,14 +189,20 @@ export default function UsersTable({ caption = undefined }) {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>
                         <DropdownMenuGroup>
-                          <Link to={"/users/$id"} params={{ id: user.id }}>
+                          <Link
+                            to={"/businesses/$id"}
+                            params={{ id: business.id }}
+                          >
                             <DropdownMenuItem>
                               <EyeIcon className="size-4 mr-2" />
                               <Label>View</Label>
                             </DropdownMenuItem>
                           </Link>
 
-                          <Link to={"/users/edit/$id"} params={{ id: user.id }}>
+                          <Link
+                            to={"/businesses/edit/$id"}
+                            params={{ id: business.id }}
+                          >
                             <DropdownMenuItem>
                               <PencilIcon className="size-4 mr-2" />
                               <Label>Edit</Label>
@@ -205,7 +225,7 @@ export default function UsersTable({ caption = undefined }) {
                           Are you absolutely sure?
                         </AlertDialogTitle>
                         <AlertDialogDescription>
-                          This action can not be undone. The user will be
+                          This action can not be undone. The business will be
                           permanently removed from the server a long with all
                           their data.
                         </AlertDialogDescription>
@@ -214,9 +234,9 @@ export default function UsersTable({ caption = undefined }) {
                         <AlertDialogCancel>Cancel</AlertDialogCancel>
                         <AlertDialogAction
                           onClick={() =>
-                            deleteUser.mutate({
+                            deleteBusiness.mutate({
                               path: {
-                                id: user.id,
+                                id: business.id,
                               },
                             })
                           }
@@ -230,7 +250,7 @@ export default function UsersTable({ caption = undefined }) {
               </TableRow>
             ))}
 
-            {(isLoadingPaging || isLoadingUsers) &&
+            {(isLoadingPaging || isLoadingBusinesses) &&
               new Array(count).fill(0).map((_, index) => (
                 <TableRow>
                   <TableCell>
@@ -253,7 +273,7 @@ export default function UsersTable({ caption = undefined }) {
           defaultValue="10"
           onValueChange={(value) => setCount(parseInt(value))}
         >
-          <SelectTrigger className="lg:max-w-[200px] w-full">
+          <SelectTrigger className="w-full lg:max-w-[200px]">
             <SelectValue placeholder="Number of users to display?" />
           </SelectTrigger>
           <SelectContent>

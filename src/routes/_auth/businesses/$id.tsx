@@ -1,6 +1,6 @@
 import {
-  deleteApiUsersByIdMutation,
-  getApiUsersByIdOptions,
+  deleteApiBusinessesByIdMutation,
+  getApiBusinessesByIdOptions,
 } from "@/api-client/@tanstack/react-query.gen";
 import Spinner from "@/components/spinners/spinner";
 import {
@@ -33,40 +33,43 @@ import {
 } from "@tanstack/react-router";
 import { toast } from "sonner";
 
-function User() {
-  const params = useParams({ from: "/_auth/users/$id" });
+function Business() {
+  const params = useParams({ from: "/_auth/businesses/$id" });
 
   const navigate = useNavigate();
 
   const {
-    data: user,
-    isLoading: isLoadingUser,
-    isError: isUserError,
+    data: business,
+    isLoading: isLoadingBusiness,
+    isError: isBusinessError,
   } = useQuery({
-    ...getApiUsersByIdOptions({
+    ...getApiBusinessesByIdOptions({
       path: {
         id: params.id,
+      },
+      query: {
+        includeUser: "true",
       },
     }),
   });
 
-  const deleteUser = useMutation({
-    ...deleteApiUsersByIdMutation(),
+  const deleteBusiness = useMutation({
+    ...deleteApiBusinessesByIdMutation(),
     onError: (error, variables) => {
       toast.error("Failed", {
         description: error.message,
         duration: 2000,
       });
     },
-    onSuccess: () => navigate({ to: "/users" }),
+    onSuccess: () => navigate({ to: "/businesses" }),
   });
 
-  if (isLoadingUser)
+  if (isLoadingBusiness)
     return (
       <div className="flex flex-col w-full h-full items-center justify-center">
         <div className="flex items-center space-x-2">
           <Spinner className="size-4" />
-          <Label>Loading user.</Label>
+          <Label>Loading business.</Label>
         </div>
       </div>
     );
@@ -75,49 +78,85 @@ function User() {
     <div className="flex flex-col w-full h-full items-center lg:justify-center">
       <Card className="lg:max-w-96 w-full">
         <CardHeader className="text-center">
-          <CardTitle>User Details</CardTitle>
-          <CardDescription>Below are the user's details.</CardDescription>
+          <CardTitle>Business Details</CardTitle>
+          <CardDescription>Below are the business's details.</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col w-full h-auto space-y-2">
-            <div className="grid lg:grid-cols-2 gap-2">
-              <Label className="font-bold">Email</Label>
-              <Label className="font-normal">{user?.email ?? "N/F"}</Label>
+            <div className="grid lg:grid-cols-2">
+              <Label className="font-bold">Name</Label>
+              <Label className="font-normal">{business?.name ?? "N/F"}</Label>
             </div>
 
-            <div className="grid lg:grid-cols-2 gap-2">
-              <Label className="font-bold">Role</Label>
-              <Label className="font-normal capitalize">
-                {user?.role.replace("_", " ") ?? "N/F"}
+            <div className="grid lg:grid-cols-2">
+              <Label className="font-bold">Type</Label>
+              <Label className="font-normal">{business?.type ?? "N/F"}</Label>
+            </div>
+
+            <div className="grid lg:grid-cols-2">
+              <Label className="font-bold">Description</Label>
+              <Label className="font-normal">
+                {business?.description ?? "N/F"}
               </Label>
             </div>
+
+            <div className="grid lg:grid-cols-2">
+              <Label className="font-bold">Phone Number</Label>
+              <Label className="font-normal">
+                {business?.phoneNumber ?? "N/F"}
+              </Label>
+            </div>
+
+            <div className="grid lg:grid-cols-2">
+              <Label className="font-bold">Address</Label>
+              <Label className="font-normal">
+                {[
+                  business?.address,
+                  business?.city,
+                  business?.province,
+                  business?.zipCode,
+                ].join(", ")}
+              </Label>
+            </div>
+
+            {business?.userId && (
+              <div className="grid lg:grid-cols-2">
+                <Label className="font-bold">User</Label>
+                <Link to="/users/$id" params={{ id: business?.userId }}>
+                  <Label className="font-normalh-auto text-primary underline cursor-pointer">
+                    {business?.user?.email}
+                  </Label>
+                </Link>
+              </div>
+            )}
           </div>
         </CardContent>
         <CardFooter>
           <div className="flex flex-col w-full h-auto space-y-2">
-            <Link to="/users/edit/$id" params={{ id: params.id }}>
-              <Button className="w-full">Edit User</Button>
+            <Link to="/businesses/edit/$id" params={{ id: params.id }}>
+              <Button className="w-full">Edit Business</Button>
             </Link>
 
             <AlertDialog>
               <AlertDialogTrigger>
                 <Button variant="destructive" className="w-full">
-                  Delete User
+                  Delete Business
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
                   <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                   <AlertDialogDescription>
-                    This action can not be undone. The user will be permanently
-                    removed from the server a long with all their data.
+                    This action can not be undone. The business will be
+                    permanently removed from the server a long with all their
+                    data.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel>Cancel</AlertDialogCancel>
                   <AlertDialogAction
                     onClick={() =>
-                      deleteUser.mutate({
+                      deleteBusiness.mutate({
                         path: {
                           id: params.id,
                         },
@@ -130,9 +169,9 @@ function User() {
               </AlertDialogContent>
             </AlertDialog>
 
-            <Link to="/users">
+            <Link to="/businesses">
               <Button className="w-full" variant="outline">
-                Back To Users
+                Back To Businesses
               </Button>
             </Link>
           </div>
@@ -142,6 +181,6 @@ function User() {
   );
 }
 
-export const Route = createFileRoute("/_auth/users/$id")({
-  component: User,
+export const Route = createFileRoute("/_auth/businesses/$id")({
+  component: Business,
 });
