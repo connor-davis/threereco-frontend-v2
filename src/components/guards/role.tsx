@@ -10,8 +10,5 @@ export default function RoleGuard({
 }) {
   const { role } = useRole();
 
-  if (!role) return null;
-  if (!requiredRoles.includes(role)) return null;
-
-  return children;
+  return role;
 }
