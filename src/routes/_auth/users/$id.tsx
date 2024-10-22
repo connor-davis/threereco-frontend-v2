@@ -1,7 +1,7 @@
 import {
   deleteApiUsersByIdMutation,
   getApiUsersByIdOptions,
-  putApiAuthenticationMfaDisableMutation,
+  putApiAuthenticationDisableMfaMutation,
 } from "@/api-client/@tanstack/react-query.gen";
 import Spinner from "@/components/spinners/spinner";
 import {
@@ -63,7 +63,7 @@ function User() {
   });
 
   const disableMfa = useMutation({
-    ...putApiAuthenticationMfaDisableMutation(),
+    ...putApiAuthenticationDisableMfaMutation(),
     onError: (error) =>
       toast.error("Failed", {
         description: error.message,
