@@ -42,6 +42,12 @@ export default function ExportCollectionsDialog() {
         duration: 2000,
       });
     else {
+      if (data.length === 0)
+        return toast.error("Failed", {
+          description: "There are no collections for that date range.",
+          duration: 2000,
+        });
+
       const blob = new Blob([data], { type: "text/csv" });
 
       // Create a URL for the Blob
