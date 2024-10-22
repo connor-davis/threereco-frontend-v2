@@ -20,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -47,7 +48,7 @@ const editSchema = z.object({
   role: z
     .enum(["system_admin", "admin", "staff", "business", "collector"])
     .default("collector"),
-  mfaEnabled: z.coerce.boolean().default(false),
+  mfaEnabled: z.boolean(),
 });
 
 function Edit() {
@@ -170,25 +171,19 @@ function Edit() {
               control={editForm.control}
               name="mfaEnabled"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>MFA</FormLabel>
-                  <Select
-                    onValueChange={(value) => field.onChange(value === "true")}
-                    value={field.value ? "true" : "false"}
-                    defaultValue={field.value ? "true" : "false"}
-                  >
-                    <FormControl>
-                      <SelectTrigger className="capitalize">
-                        <SelectValue placeholder="Select a mfa status" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="true">Enabled</SelectItem>
-                      <SelectItem value="true">Disabled</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormDescription>This is their role.</FormDescription>
-                  <FormMessage />
+                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                  <div className="space-y-0.5">
+                    <FormLabel className="text-base">Enable MFA</FormLabel>
+                    <FormDescription>
+                      Set whether this user has MFA enabled.
+                    </FormDescription>
+                  </div>
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
                 </FormItem>
               )}
             />

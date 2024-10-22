@@ -218,6 +218,7 @@ export type PutApiUsersByIdData = {
     body?: {
         email: string;
         role?: 'system_admin' | 'admin' | 'staff' | 'business' | 'collector';
+        mfaEnabled?: boolean;
     };
     path: {
         id: string;
