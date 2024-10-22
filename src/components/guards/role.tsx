@@ -18,6 +18,7 @@ export default function RoleGuard({
     queryHash: crypto.randomUUID(),
   });
 
+  if (!user) return null;
   if (!requiredRoles.includes(user!.role)) return null;
 
   return children;
