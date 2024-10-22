@@ -14,8 +14,9 @@ export default function RoleGuard({
     isFetching: isFetchingAuthentication,
     isError: isAuthenticationError,
   } = useQuery({
-    ...getApiAuthenticationCheckOptions(),
-    queryHash: crypto.randomUUID(),
+    ...getApiAuthenticationCheckOptions({
+      keepalive: true,
+    }),
   });
 
   if (!user) return null;
