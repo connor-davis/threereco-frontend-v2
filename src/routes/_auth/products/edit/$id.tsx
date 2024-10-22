@@ -184,7 +184,9 @@ function Edit() {
 
                   setSelectedProduct(product);
 
-                  editForm.reset(product);
+                  editForm.setValue("name", product.name);
+                  editForm.setValue("gwCode", product.gwCode);
+                  editForm.setValue("carbonFactor", product.carbonFactor);
                 }}
                 value={selectedProduct?.name ?? ""}
                 defaultValue={selectedProduct?.name ?? ""}

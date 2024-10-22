@@ -143,7 +143,9 @@ function Create() {
 
                   setSelectedProduct(product);
 
-                  createForm.reset(product);
+                  createForm.setValue("name", product.name);
+                  createForm.setValue("gwCode", product.gwCode);
+                  createForm.setValue("carbonFactor", product.carbonFactor);
                 }}
                 value={selectedProduct?.name ?? ""}
                 defaultValue={selectedProduct?.name ?? ""}
