@@ -1,5 +1,6 @@
 import { putApiUsersById } from "@/api-client";
 import { getApiUsersByIdOptions } from "@/api-client/@tanstack/react-query.gen";
+import RoleGuard from "@/components/guards/role";
 import Spinner from "@/components/spinners/spinner";
 import { Button } from "@/components/ui/button";
 import {
@@ -167,26 +168,28 @@ function Edit() {
               )}
             />
 
-            <FormField
-              control={editForm.control}
-              name="mfaEnabled"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                  <div className="space-y-0.5">
-                    <FormLabel className="text-base">Enable MFA</FormLabel>
-                    <FormDescription>
-                      Set whether this user has MFA enabled.
-                    </FormDescription>
-                  </div>
-                  <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
+            <RoleGuard requiredRoles={["system_admin", "admin"]}>
+              <FormField
+                control={editForm.control}
+                name="mfaEnabled"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                    <div className="space-y-0.5">
+                      <FormLabel className="text-base">Enable MFA</FormLabel>
+                      <FormDescription>
+                        Set whether this user has MFA enabled.
+                      </FormDescription>
+                    </div>
+                    <FormControl>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            </RoleGuard>
 
             <Button type="submit" className="w-full">
               Edit User
