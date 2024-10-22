@@ -47,6 +47,7 @@ const editSchema = z.object({
   role: z
     .enum(["system_admin", "admin", "staff", "business", "collector"])
     .default("collector"),
+  mfaEnabled: z.coerce.boolean().default(false),
 });
 
 function Edit() {
@@ -157,6 +158,33 @@ function Edit() {
                           {role.replace("_", " ")}
                         </SelectItem>
                       ))}
+                    </SelectContent>
+                  </Select>
+                  <FormDescription>This is their role.</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={editForm.control}
+              name="mfaEnabled"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>MFA</FormLabel>
+                  <Select
+                    onValueChange={(value) => field.onChange(value === "true")}
+                    value={field.value ? "true" : "false"}
+                    defaultValue={field.value ? "true" : "false"}
+                  >
+                    <FormControl>
+                      <SelectTrigger className="capitalize">
+                        <SelectValue placeholder="Select a mfa status" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="true">Enabled</SelectItem>
+                      <SelectItem value="true">Disabled</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormDescription>This is their role.</FormDescription>
