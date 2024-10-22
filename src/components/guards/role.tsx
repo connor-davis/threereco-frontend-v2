@@ -1,5 +1,4 @@
-import { getApiAuthenticationCheckOptions } from "@/api-client/@tanstack/react-query.gen";
-import { useQuery } from "@tanstack/react-query";
+import useRole from "@/lib/state/role";
 import { ReactNode } from "react";
 
 export default function RoleGuard({
@@ -9,18 +8,10 @@ export default function RoleGuard({
   requiredRoles: string[];
   children: ReactNode;
 }) {
-  const {
-    data: user,
-    isFetching: isFetchingAuthentication,
-    isError: isAuthenticationError,
-  } = useQuery({
-    ...getApiAuthenticationCheckOptions({
-      priority: "high",
-    }),
-  });
+  const { role } = useRole();
 
-  if (!user) return null;
-  if (!requiredRoles.includes(user!.role)) return null;
+  if (!role) return null;
+  if (!requiredRoles.includes(role)) return null;
 
   return children;
 }

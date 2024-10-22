@@ -3,10 +3,14 @@ import SideBar from "@/components/sidebar";
 import SideBarTrigger from "@/components/sidebar-trigger";
 import Spinner from "@/components/spinners/spinner";
 import { Label } from "@/components/ui/label";
+import useRole from "@/lib/state/role";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Navigate, Outlet } from "@tanstack/react-router";
+import { useEffect } from "react";
 
 const Auth = () => {
+  const { setRole } = useRole();
+
   const {
     data: user,
     isFetching: isFetchingAuthentication,
@@ -35,6 +39,14 @@ const Auth = () => {
 
   if (!user?.mfaVerified)
     return <Navigate to="/mfa/verify" search={{ to: location.pathname }} />;
+
+  useEffect(() => {
+    const disposeable = setTimeout(() => {
+      if (user) setRole(user.role);
+    }, 0);
+
+    return () => clearTimeout(disposeable);
+  }, [user]);
 
   return (
     <div className="flex w-full h-full bg-muted overflow-hidden">
