@@ -1,9 +1,9 @@
 import {
   deleteApiCollectionsByIdMutation,
   getApiCollectionsOptions,
+  getApiCollectionsPagingOptions,
   getApiCollectionsPagingQueryKey,
   getApiCollectionsQueryKey,
-  getApiProductsPagingOptions,
 } from "@/api-client/@tanstack/react-query.gen";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -68,7 +68,7 @@ export default function CollectionsTable({ caption = undefined }) {
     isLoading: isLoadingPaging,
     isError: isPagingError,
   } = useQuery({
-    ...getApiProductsPagingOptions({ query: { count } }),
+    ...getApiCollectionsPagingOptions({ query: { count } }),
   });
 
   const {
