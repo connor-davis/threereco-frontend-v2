@@ -133,6 +133,7 @@ export type GetApiUsersData = {
         count?: (number) | null;
         page?: (number) | null;
         role?: ('system_admin' | 'admin' | 'staff' | 'business' | 'collector') | null;
+        usePaging?: 'true' | 'false' | '1' | '0';
     };
 };
 
@@ -238,6 +239,22 @@ export type DeleteApiUsersByIdError = ({
     message: string;
 });
 
+export type PostApiUsersDeleteAccountData = {
+    /**
+     * The delete user object for the deleted user.
+     */
+    body: {
+        email: string;
+        password: string;
+    };
+};
+
+export type PostApiUsersDeleteAccountResponse = (string);
+
+export type PostApiUsersDeleteAccountError = ({
+    message: string;
+});
+
 export type GetApiBusinessesPagingData = {
     query?: {
         count?: (number) | null;
@@ -258,6 +275,7 @@ export type GetApiBusinessesData = {
         count?: (number) | null;
         includeUser?: 'true' | 'false' | '1' | '0';
         page?: (number) | null;
+        usePaging?: 'true' | 'false' | '1' | '0';
     };
 };
 
@@ -455,6 +473,7 @@ export type GetApiCollectorsData = {
         count?: (number) | null;
         includeUser?: 'true' | 'false' | '1' | '0';
         page?: (number) | null;
+        usePaging?: 'true' | 'false' | '1' | '0';
     };
 };
 
@@ -550,6 +569,7 @@ export type GetApiCollectorsByIdData = {
     };
     query?: {
         includeUser?: 'true' | 'false' | '1' | '0';
+        usePaging?: 'true' | 'false' | '1' | '0';
     };
 };
 
@@ -675,10 +695,11 @@ export type GetApiProductsData = {
         includeBusiness?: 'true' | 'false' | '1' | '0';
         includeBusinessUser?: 'true' | 'false' | '1' | '0';
         page?: (number) | null;
+        usePaging?: 'true' | 'false' | '1' | '0';
     };
 };
 
-export type GetApiProductsResponse = (({
+export type GetApiProductsResponse = (Array<{
     id: string;
     name: string;
     price: string;
@@ -711,40 +732,7 @@ export type GetApiProductsResponse = (({
             updatedAt: string;
         };
     } | null;
-} | Array<{
-    id: string;
-    name: string;
-    price: string;
-    gwCode: string;
-    carbonFactor: string;
-    businessId: string;
-    createdAt: string;
-    updatedAt: string;
-    business?: {
-        id: string;
-        name: string;
-        type: 'Recycler' | 'Waste Collector' | 'Buy Back Centre';
-        description: string;
-        phoneNumber: string;
-        address: string;
-        city: string;
-        province: string;
-        zipCode: string;
-        userId: string;
-        createdAt: string;
-        updatedAt: string;
-        user?: {
-            id: string;
-            email: string;
-            active: boolean;
-            role: 'system_admin' | 'admin' | 'staff' | 'business' | 'collector';
-            mfaEnabled: boolean;
-            mfaVerified: boolean;
-            createdAt: string;
-            updatedAt: string;
-        };
-    } | null;
-}>));
+}>);
 
 export type GetApiProductsError = ({
     message: string;
@@ -812,7 +800,7 @@ export type GetApiProductsByIdData = {
     };
 };
 
-export type GetApiProductsByIdResponse = (({
+export type GetApiProductsByIdResponse = ({
     id: string;
     name: string;
     price: string;
@@ -845,40 +833,7 @@ export type GetApiProductsByIdResponse = (({
             updatedAt: string;
         };
     } | null;
-} | Array<{
-    id: string;
-    name: string;
-    price: string;
-    gwCode: string;
-    carbonFactor: string;
-    businessId: string;
-    createdAt: string;
-    updatedAt: string;
-    business?: {
-        id: string;
-        name: string;
-        type: 'Recycler' | 'Waste Collector' | 'Buy Back Centre';
-        description: string;
-        phoneNumber: string;
-        address: string;
-        city: string;
-        province: string;
-        zipCode: string;
-        userId: string;
-        createdAt: string;
-        updatedAt: string;
-        user?: {
-            id: string;
-            email: string;
-            active: boolean;
-            role: 'system_admin' | 'admin' | 'staff' | 'business' | 'collector';
-            mfaEnabled: boolean;
-            mfaVerified: boolean;
-            createdAt: string;
-            updatedAt: string;
-        };
-    } | null;
-}>));
+});
 
 export type GetApiProductsByIdError = ({
     message: string;
@@ -977,6 +932,7 @@ export type GetApiCollectionsData = {
         includeProductBusiness?: 'true' | 'false' | '1' | '0';
         includeProductBusinessUser?: 'true' | 'false' | '1' | '0';
         page?: (number) | null;
+        usePaging?: 'true' | 'false' | '1' | '0';
     };
 };
 

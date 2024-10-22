@@ -37,7 +37,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import {
   Select,
@@ -130,13 +129,7 @@ export default function CollectorsTable({ caption = undefined }) {
   return (
     <div className="flex flex-col w-full h-auto space-y-2">
       <div className="flex flex-col w-full lg:flex-row items-center lg:justify-between space-y-2 lg:space-y-0 lg:space-x-2">
-        <div className="flex flex-col w-full lg:flex-row items-center space-y-2 lg:space-y-0 lg:space-x-2">
-          <Input
-            type="text"
-            className="w-full lg:max-w-[200px]"
-            placeholder="Search for collector..."
-          />
-        </div>
+        <div className="flex flex-col w-full lg:flex-row items-center space-y-2 lg:space-y-0 lg:space-x-2"></div>
 
         <div className="flex flex-col w-full lg:flex-row items-center lg:justify-end space-y-2 lg:space-y-0 lg:space-x-2">
           <Link to="/collectors/create" className="w-full lg:max-w-[200px]">

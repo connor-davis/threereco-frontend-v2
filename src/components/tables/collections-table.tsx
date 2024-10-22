@@ -1,9 +1,9 @@
 import {
-  deleteApiBusinessesByIdMutation,
-  getApiBusinessesOptions,
-  getApiBusinessesPagingOptions,
-  getApiBusinessesPagingQueryKey,
-  getApiBusinessesQueryKey,
+  deleteApiCollectionsByIdMutation,
+  getApiCollectionsOptions,
+  getApiCollectionsPagingQueryKey,
+  getApiCollectionsQueryKey,
+  getApiProductsPagingOptions,
 } from "@/api-client/@tanstack/react-query.gen";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import ExportCollectionsDialog from "../dialogs/export/export-collections";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -56,7 +57,7 @@ import {
 } from "../ui/table";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
-export default function BusinessesTable({ caption = undefined }) {
+export default function CollectionsTable({ caption = undefined }) {
   const [page, setPage] = useState<number>(1);
   const [count, setCount] = useState<number>(10);
 
@@ -67,25 +68,27 @@ export default function BusinessesTable({ caption = undefined }) {
     isLoading: isLoadingPaging,
     isError: isPagingError,
   } = useQuery({
-    ...getApiBusinessesPagingOptions({ query: { count } }),
+    ...getApiProductsPagingOptions({ query: { count } }),
   });
 
   const {
-    data: businesses,
-    isLoading: isLoadingBusinesses,
-    isError: isBusinessesError,
+    data: collections,
+    isLoading: isLoadingCollections,
+    isError: isCollectionsError,
   } = useQuery({
-    ...getApiBusinessesOptions({
+    ...getApiCollectionsOptions({
       query: {
         count,
         page,
-        includeUser: "true",
+        includeBusiness: "true",
+        includeCollector: "true",
+        includeProduct: "true",
       },
     }),
   });
 
-  const deleteBusiness = useMutation({
-    ...deleteApiBusinessesByIdMutation(),
+  const deleteCollection = useMutation({
+    ...deleteApiCollectionsByIdMutation(),
     onError: (error, variables) => {
       toast.error("Failed", {
         description: error.message,
@@ -94,10 +97,13 @@ export default function BusinessesTable({ caption = undefined }) {
     },
     onSuccess: () =>
       queryClient.invalidateQueries({
-        queryKey: getApiBusinessesQueryKey({
+        queryKey: getApiCollectionsQueryKey({
           query: {
             count,
             page,
+            includeBusiness: "true",
+            includeCollector: "true",
+            includeProduct: "true",
           },
         }),
       }),
@@ -106,7 +112,7 @@ export default function BusinessesTable({ caption = undefined }) {
   useEffect(() => {
     const disposeable = setTimeout(() => {
       queryClient.invalidateQueries({
-        queryKey: getApiBusinessesPagingQueryKey({
+        queryKey: getApiCollectionsPagingQueryKey({
           query: {
             count,
           },
@@ -114,10 +120,13 @@ export default function BusinessesTable({ caption = undefined }) {
       });
 
       queryClient.invalidateQueries({
-        queryKey: getApiBusinessesQueryKey({
+        queryKey: getApiCollectionsQueryKey({
           query: {
             count,
             page,
+            includeBusiness: "true",
+            includeCollector: "true",
+            includeProduct: "true",
           },
         }),
       });
@@ -132,12 +141,14 @@ export default function BusinessesTable({ caption = undefined }) {
         <div className="flex flex-col w-full lg:flex-row items-center space-y-2 lg:space-y-0 lg:space-x-2"></div>
 
         <div className="flex flex-col w-full lg:flex-row items-center lg:justify-end space-y-2 lg:space-y-0 lg:space-x-2">
-          <Link to="/businesses/create" className="w-full lg:max-w-[200px]">
+          <Link to="/collections/create" className="w-full lg:max-w-[200px]">
             <Button variant="outline" className="w-full">
               <PlusIcon className="size-4 mr-2" />
-              Create Business
+              Create Collection
             </Button>
           </Link>
+
+          <ExportCollectionsDialog />
         </div>
       </div>
 
@@ -145,38 +156,73 @@ export default function BusinessesTable({ caption = undefined }) {
         <Table>
           {caption && <TableCaption>{caption}</TableCaption>}
 
-          {businesses?.length === 0 && (
+          {collections?.length === 0 && (
             <TableCaption className="py-4">
-              There are no businesses.
+              There are no collection.
             </TableCaption>
           )}
 
           <TableHeader>
             <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>Type</TableCell>
-              <TableCell>Description</TableCell>
-              <TableCell>User</TableCell>
+              <TableCell>Business</TableCell>
+              <TableCell>Collector</TableCell>
+              <TableCell>Product</TableCell>
+              <TableCell>Weight (kg)</TableCell>
             </TableRow>
           </TableHeader>
 
           <TableBody>
-            {businesses?.map((business, index) => (
+            {collections?.map((collection, index) => (
               <TableRow key={index}>
-                <TableCell>{business.name}</TableCell>
-                <TableCell>{business.type}</TableCell>
-                <TableCell>{business.description}</TableCell>
                 <TableCell>
-                  {business.userId ? (
-                    <Link to="/users/$id" params={{ id: business.userId }}>
+                  {collection.businessId ? (
+                    <Link
+                      to="/businesses/$id"
+                      params={{ id: collection.businessId }}
+                    >
                       <Label className="font-normalh-auto text-primary underline cursor-pointer">
-                        {business.user?.email}
+                        {collection.business?.name}
                       </Label>
                     </Link>
                   ) : (
                     "--"
                   )}
                 </TableCell>
+
+                <TableCell>
+                  {collection.collectorId ? (
+                    <Link
+                      to="/collectors/$id"
+                      params={{ id: collection.collectorId }}
+                    >
+                      <Label className="font-normalh-auto text-primary underline cursor-pointer">
+                        {[
+                          collection.collector?.firstName,
+                          collection.collector?.lastName,
+                        ].join(" ")}
+                      </Label>
+                    </Link>
+                  ) : (
+                    "--"
+                  )}
+                </TableCell>
+
+                <TableCell>
+                  {collection.productId ? (
+                    <Link
+                      to="/products/$id"
+                      params={{ id: collection.productId }}
+                    >
+                      <Label className="font-normalh-auto text-primary underline cursor-pointer">
+                        {collection.product?.name}
+                      </Label>
+                    </Link>
+                  ) : (
+                    "--"
+                  )}
+                </TableCell>
+
+                <TableCell>{collection.weight}</TableCell>
 
                 <TableCell>
                   <AlertDialog>
@@ -189,8 +235,8 @@ export default function BusinessesTable({ caption = undefined }) {
                       <DropdownMenuContent>
                         <DropdownMenuGroup>
                           <Link
-                            to={"/businesses/$id"}
-                            params={{ id: business.id }}
+                            to={"/collections/$id"}
+                            params={{ id: collection.id }}
                           >
                             <DropdownMenuItem>
                               <EyeIcon className="size-4 mr-2" />
@@ -199,8 +245,8 @@ export default function BusinessesTable({ caption = undefined }) {
                           </Link>
 
                           <Link
-                            to={"/businesses/edit/$id"}
-                            params={{ id: business.id }}
+                            to={"/collections/edit/$id"}
+                            params={{ id: collection.id }}
                           >
                             <DropdownMenuItem>
                               <PencilIcon className="size-4 mr-2" />
@@ -224,18 +270,18 @@ export default function BusinessesTable({ caption = undefined }) {
                           Are you absolutely sure?
                         </AlertDialogTitle>
                         <AlertDialogDescription>
-                          This action can not be undone. The business will be
+                          This action can not be undone. The collection will be
                           permanently removed from the server a long with all
-                          their data.
+                          it's data.
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
                         <AlertDialogCancel>Cancel</AlertDialogCancel>
                         <AlertDialogAction
                           onClick={() =>
-                            deleteBusiness.mutate({
+                            deleteCollection.mutate({
                               path: {
-                                id: business.id,
+                                id: collection.id,
                               },
                             })
                           }
@@ -249,7 +295,7 @@ export default function BusinessesTable({ caption = undefined }) {
               </TableRow>
             ))}
 
-            {(isLoadingPaging || isLoadingBusinesses) &&
+            {(isLoadingPaging || isLoadingCollections) &&
               new Array(count).fill(0).map((_, index) => (
                 <TableRow>
                   <TableCell>
