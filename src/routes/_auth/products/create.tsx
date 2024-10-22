@@ -31,18 +31,9 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 const createSchema = z.object({
-  name: z
-    .string()
-    .optional()
-    .nullable(),
-  gwCode: z
-    .string()
-    .optional()
-    .nullable(),
-  carbonFactor: z
-    .string()
-    .optional()
-    .nullable(),
+  name: z.string(),
+  gwCode: z.string(),
+  carbonFactor: z.string(),
   price: z.string(),
   businessId: z.string(),
 });
@@ -92,17 +83,9 @@ function Create() {
         <Form {...createForm}>
           <form
             onSubmit={createForm.handleSubmit((values) =>
-              selectedProduct
-                ? createProduct.mutate({
-                    body: {
-                      ...values,
-                      ...selectedProduct,
-                    },
-                  })
-                : toast.error("Failed", {
-                    description: "Please select a product.",
-                    duration: 2000,
-                  })
+              createProduct.mutate({
+                body: values,
+              })
             )}
             className="space-y-2"
           >
@@ -159,6 +142,8 @@ function Create() {
                   }
 
                   setSelectedProduct(product);
+
+                  createForm.reset(product);
                 }}
                 value={selectedProduct?.name ?? ""}
                 defaultValue={selectedProduct?.name ?? ""}

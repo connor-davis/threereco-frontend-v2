@@ -122,10 +122,7 @@ function Edit() {
           <form
             onSubmit={editForm.handleSubmit((values) =>
               editProduct.mutate({
-                body: {
-                  ...values,
-                  ...selectedProduct,
-                },
+                body: values,
                 path: {
                   id: params.id,
                 },
@@ -186,6 +183,8 @@ function Edit() {
                   }
 
                   setSelectedProduct(product);
+
+                  editForm.reset(product);
                 }}
                 value={selectedProduct?.name ?? ""}
                 defaultValue={selectedProduct?.name ?? ""}
