@@ -10,6 +10,7 @@ import {
   UsersIcon,
 } from "lucide-react";
 import { toast } from "sonner";
+import RoleGuard from "./guards/role";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -75,19 +76,21 @@ export default function SideBar() {
               </Tooltip>
             </SidebarMenuItem>
 
-            <SidebarMenuItem>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <SidebarMenuButton asChild>
-                    <Link to="/users">
-                      <UsersIcon className="size-4" />
-                      <Label className="cursor-pointer">Users</Label>
-                    </Link>
-                  </SidebarMenuButton>
-                </TooltipTrigger>
-                {!open && <TooltipContent side="right">Users</TooltipContent>}
-              </Tooltip>
-            </SidebarMenuItem>
+            <RoleGuard requiredRoles={["system_admin", "admin"]}>
+              <SidebarMenuItem>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <SidebarMenuButton asChild>
+                      <Link to="/users">
+                        <UsersIcon className="size-4" />
+                        <Label className="cursor-pointer">Users</Label>
+                      </Link>
+                    </SidebarMenuButton>
+                  </TooltipTrigger>
+                  {!open && <TooltipContent side="right">Users</TooltipContent>}
+                </Tooltip>
+              </SidebarMenuItem>
+            </RoleGuard>
 
             <SidebarMenuItem>
               <Tooltip>
