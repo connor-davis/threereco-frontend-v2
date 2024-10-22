@@ -113,15 +113,15 @@ export type PutApiAuthenticationPasswordResetError = ({
     message: string;
 });
 
-export type PutApiAuthenticationDisableMfaData = {
+export type DeleteApiAuthenticationDisableMfaData = {
     query: {
         id: string;
     };
 };
 
-export type PutApiAuthenticationDisableMfaResponse = (string);
+export type DeleteApiAuthenticationDisableMfaResponse = (string);
 
-export type PutApiAuthenticationDisableMfaError = ({
+export type DeleteApiAuthenticationDisableMfaError = ({
     message: string;
 });
 
