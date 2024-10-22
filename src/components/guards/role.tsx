@@ -17,6 +17,8 @@ export default function RoleGuard({
     ...getApiAuthenticationCheckOptions(),
   });
 
+  alert(user);
+
   if (!user) return null;
   if (!requiredRoles.includes(user.role)) return null;
 
