@@ -1,5 +1,4 @@
 import {
-  deleteApiAuthenticationDisableMfaMutation,
   deleteApiUsersByIdMutation,
   getApiUsersByIdOptions,
 } from "@/api-client/@tanstack/react-query.gen";
@@ -62,20 +61,6 @@ function User() {
     onSuccess: () => navigate({ to: "/users" }),
   });
 
-  const disableMfa = useMutation({
-    ...deleteApiAuthenticationDisableMfaMutation(),
-    onError: (error) =>
-      toast.error("Failed", {
-        description: error.message,
-        duration: 2000,
-      }),
-    onSuccess: () =>
-      toast.success("Success", {
-        description: "The users MFA has been disabled.",
-        duration: 2000,
-      }),
-  });
-
   if (isLoadingUser)
     return (
       <div className="flex flex-col w-full h-full items-center justify-center">
@@ -113,41 +98,6 @@ function User() {
             <Link to="/users/edit/$id" params={{ id: params.id }}>
               <Button className="w-full">Edit User</Button>
             </Link>
-
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button
-                  className="w-full"
-                  variant="destructive"
-                  onClick={() => {}}
-                >
-                  Disable MFA
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Hold On!</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    Are you sure you want to disable this user's MFA? This will
-                    require them to re-enable their MFA.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction
-                    onClick={() =>
-                      disableMfa.mutate({
-                        query: {
-                          id: params.id,
-                        },
-                      })
-                    }
-                  >
-                    Continue
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
 
             <AlertDialog>
               <AlertDialogTrigger>
