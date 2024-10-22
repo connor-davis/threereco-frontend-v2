@@ -15,7 +15,7 @@ export default function RoleGuard({
     isError: isAuthenticationError,
   } = useQuery({
     ...getApiAuthenticationCheckOptions({
-      keepalive: true,
+      priority: "high",
     }),
   });
 
