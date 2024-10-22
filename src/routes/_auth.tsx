@@ -19,6 +19,14 @@ const Auth = () => {
     ...getApiAuthenticationCheckOptions(),
   });
 
+  useEffect(() => {
+    const disposeable = setTimeout(() => {
+      if (user) setRole(user.role);
+    }, 0);
+
+    return () => clearTimeout(disposeable);
+  }, [user]);
+
   if (isFetchingAuthentication)
     return (
       <div className="flex flex-col items-center justify-center w-full h-full">
@@ -39,14 +47,6 @@ const Auth = () => {
 
   if (!user?.mfaVerified)
     return <Navigate to="/mfa/verify" search={{ to: location.pathname }} />;
-
-  useEffect(() => {
-    const disposeable = setTimeout(() => {
-      if (user) setRole(user.role);
-    }, 0);
-
-    return () => clearTimeout(disposeable);
-  }, [user]);
 
   return (
     <div className="flex w-full h-full bg-muted overflow-hidden">
