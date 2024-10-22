@@ -2,8 +2,8 @@
 
 import type { Options } from '@hey-api/client-fetch';
 import { queryOptions, type UseMutationOptions, infiniteQueryOptions, type InfiniteData } from '@tanstack/react-query';
-import { client, getApi, postApiAuthenticationLogin, postApiAuthenticationLogout, postApiAuthenticationRegister, getApiAuthenticationCheck, getApiAuthenticationMfaEnable, postApiAuthenticationMfaVerify, putApiAuthenticationPasswordReset, getApiUsersPaging, getApiUsers, postApiUsers, getApiUsersById, putApiUsersById, deleteApiUsersById, postApiUsersDeleteAccount, getApiBusinessesPaging, getApiBusinesses, postApiBusinesses, getApiBusinessesById, putApiBusinessesById, deleteApiBusinessesById, getApiCollectorsPaging, getApiCollectors, postApiCollectors, getApiCollectorsById, deleteApiCollectorsById, putApiCollectorsById, getApiProductsPaging, getApiProducts, postApiProducts, getApiProductsById, deleteApiProductsById, putApiProductsById, getApiCollectionsPaging, getApiCollections, postApiCollections, getApiCollectionsById, deleteApiCollectionsById, putApiCollectionsById, getApiCollectionsExport } from '../services.gen';
-import type { PostApiAuthenticationLoginData, PostApiAuthenticationLoginError, PostApiAuthenticationLoginResponse, PostApiAuthenticationLogoutError, PostApiAuthenticationLogoutResponse, PostApiAuthenticationRegisterData, PostApiAuthenticationRegisterError, PostApiAuthenticationRegisterResponse, PostApiAuthenticationMfaVerifyData, PostApiAuthenticationMfaVerifyError, PostApiAuthenticationMfaVerifyResponse, PutApiAuthenticationPasswordResetData, PutApiAuthenticationPasswordResetError, PutApiAuthenticationPasswordResetResponse, GetApiUsersPagingData, GetApiUsersData, GetApiUsersError, GetApiUsersResponse, PostApiUsersData, PostApiUsersError, PostApiUsersResponse, GetApiUsersByIdData, PutApiUsersByIdData, PutApiUsersByIdError, PutApiUsersByIdResponse, DeleteApiUsersByIdData, DeleteApiUsersByIdError, DeleteApiUsersByIdResponse, PostApiUsersDeleteAccountData, PostApiUsersDeleteAccountError, PostApiUsersDeleteAccountResponse, GetApiBusinessesPagingData, GetApiBusinessesData, GetApiBusinessesError, GetApiBusinessesResponse, PostApiBusinessesData, PostApiBusinessesError, PostApiBusinessesResponse, GetApiBusinessesByIdData, PutApiBusinessesByIdData, PutApiBusinessesByIdError, PutApiBusinessesByIdResponse, DeleteApiBusinessesByIdData, DeleteApiBusinessesByIdError, DeleteApiBusinessesByIdResponse, GetApiCollectorsPagingData, GetApiCollectorsData, GetApiCollectorsError, GetApiCollectorsResponse, PostApiCollectorsData, PostApiCollectorsError, PostApiCollectorsResponse, GetApiCollectorsByIdData, DeleteApiCollectorsByIdData, DeleteApiCollectorsByIdError, DeleteApiCollectorsByIdResponse, PutApiCollectorsByIdData, PutApiCollectorsByIdError, PutApiCollectorsByIdResponse, GetApiProductsPagingData, GetApiProductsData, GetApiProductsError, GetApiProductsResponse, PostApiProductsData, PostApiProductsError, PostApiProductsResponse, GetApiProductsByIdData, DeleteApiProductsByIdData, DeleteApiProductsByIdError, DeleteApiProductsByIdResponse, PutApiProductsByIdData, PutApiProductsByIdError, PutApiProductsByIdResponse, GetApiCollectionsPagingData, GetApiCollectionsData, GetApiCollectionsError, GetApiCollectionsResponse, PostApiCollectionsData, PostApiCollectionsError, PostApiCollectionsResponse, GetApiCollectionsByIdData, DeleteApiCollectionsByIdData, DeleteApiCollectionsByIdError, DeleteApiCollectionsByIdResponse, PutApiCollectionsByIdData, PutApiCollectionsByIdError, PutApiCollectionsByIdResponse, GetApiCollectionsExportData, GetApiCollectionsExportError, GetApiCollectionsExportResponse } from '../types.gen';
+import { client, getApi, postApiAuthenticationLogin, postApiAuthenticationLogout, postApiAuthenticationRegister, getApiAuthenticationCheck, getApiAuthenticationMfaEnable, postApiAuthenticationMfaVerify, putApiAuthenticationPasswordReset, putApiAuthenticationMfaDisable, getApiUsersPaging, getApiUsers, postApiUsers, getApiUsersById, putApiUsersById, deleteApiUsersById, postApiUsersDeleteAccount, getApiBusinessesPaging, getApiBusinesses, postApiBusinesses, getApiBusinessesById, putApiBusinessesById, deleteApiBusinessesById, getApiCollectorsPaging, getApiCollectors, postApiCollectors, getApiCollectorsById, deleteApiCollectorsById, putApiCollectorsById, getApiProductsPaging, getApiProducts, postApiProducts, getApiProductsById, deleteApiProductsById, putApiProductsById, getApiCollectionsPaging, getApiCollectionsExport, getApiCollections, postApiCollections, getApiCollectionsById, deleteApiCollectionsById, putApiCollectionsById } from '../services.gen';
+import type { PostApiAuthenticationLoginData, PostApiAuthenticationLoginError, PostApiAuthenticationLoginResponse, PostApiAuthenticationLogoutError, PostApiAuthenticationLogoutResponse, PostApiAuthenticationRegisterData, PostApiAuthenticationRegisterError, PostApiAuthenticationRegisterResponse, PostApiAuthenticationMfaVerifyData, PostApiAuthenticationMfaVerifyError, PostApiAuthenticationMfaVerifyResponse, PutApiAuthenticationPasswordResetData, PutApiAuthenticationPasswordResetError, PutApiAuthenticationPasswordResetResponse, PutApiAuthenticationMfaDisableData, PutApiAuthenticationMfaDisableError, PutApiAuthenticationMfaDisableResponse, GetApiUsersPagingData, GetApiUsersData, GetApiUsersError, GetApiUsersResponse, PostApiUsersData, PostApiUsersError, PostApiUsersResponse, GetApiUsersByIdData, PutApiUsersByIdData, PutApiUsersByIdError, PutApiUsersByIdResponse, DeleteApiUsersByIdData, DeleteApiUsersByIdError, DeleteApiUsersByIdResponse, PostApiUsersDeleteAccountData, PostApiUsersDeleteAccountError, PostApiUsersDeleteAccountResponse, GetApiBusinessesPagingData, GetApiBusinessesData, GetApiBusinessesError, GetApiBusinessesResponse, PostApiBusinessesData, PostApiBusinessesError, PostApiBusinessesResponse, GetApiBusinessesByIdData, PutApiBusinessesByIdData, PutApiBusinessesByIdError, PutApiBusinessesByIdResponse, DeleteApiBusinessesByIdData, DeleteApiBusinessesByIdError, DeleteApiBusinessesByIdResponse, GetApiCollectorsPagingData, GetApiCollectorsData, GetApiCollectorsError, GetApiCollectorsResponse, PostApiCollectorsData, PostApiCollectorsError, PostApiCollectorsResponse, GetApiCollectorsByIdData, DeleteApiCollectorsByIdData, DeleteApiCollectorsByIdError, DeleteApiCollectorsByIdResponse, PutApiCollectorsByIdData, PutApiCollectorsByIdError, PutApiCollectorsByIdResponse, GetApiProductsPagingData, GetApiProductsData, GetApiProductsError, GetApiProductsResponse, PostApiProductsData, PostApiProductsError, PostApiProductsResponse, GetApiProductsByIdData, DeleteApiProductsByIdData, DeleteApiProductsByIdError, DeleteApiProductsByIdResponse, PutApiProductsByIdData, PutApiProductsByIdError, PutApiProductsByIdResponse, GetApiCollectionsPagingData, GetApiCollectionsExportData, GetApiCollectionsExportError, GetApiCollectionsExportResponse, GetApiCollectionsData, GetApiCollectionsError, GetApiCollectionsResponse, PostApiCollectionsData, PostApiCollectionsError, PostApiCollectionsResponse, GetApiCollectionsByIdData, DeleteApiCollectionsByIdData, DeleteApiCollectionsByIdError, DeleteApiCollectionsByIdResponse, PutApiCollectionsByIdData, PutApiCollectionsByIdError, PutApiCollectionsByIdResponse } from '../types.gen';
 
 type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
@@ -191,6 +191,17 @@ export const postApiAuthenticationMfaVerifyMutation = (options?: Partial<Options
 export const putApiAuthenticationPasswordResetMutation = (options?: Partial<Options<PutApiAuthenticationPasswordResetData>>) => { const mutationOptions: UseMutationOptions<PutApiAuthenticationPasswordResetResponse, PutApiAuthenticationPasswordResetError, Options<PutApiAuthenticationPasswordResetData>> = {
     mutationFn: async (localOptions) => {
         const { data } = await putApiAuthenticationPasswordReset({
+            ...options,
+            ...localOptions,
+            throwOnError: true
+        });
+        return data;
+    }
+}; return mutationOptions; };
+
+export const putApiAuthenticationMfaDisableMutation = (options?: Partial<Options<PutApiAuthenticationMfaDisableData>>) => { const mutationOptions: UseMutationOptions<PutApiAuthenticationMfaDisableResponse, PutApiAuthenticationMfaDisableError, Options<PutApiAuthenticationMfaDisableData>> = {
+    mutationFn: async (localOptions) => {
+        const { data } = await putApiAuthenticationMfaDisable({
             ...options,
             ...localOptions,
             throwOnError: true
@@ -759,6 +770,47 @@ export const getApiCollectionsPagingOptions = (options?: Options<GetApiCollectio
     queryKey: getApiCollectionsPagingQueryKey(options)
 }); };
 
+export const getApiCollectionsExportQueryKey = (options?: Options<GetApiCollectionsExportData>) => [
+    createQueryKey("getApiCollectionsExport", options)
+];
+
+export const getApiCollectionsExportOptions = (options?: Options<GetApiCollectionsExportData>) => { return queryOptions({
+    queryFn: async ({ queryKey }) => {
+        const { data } = await getApiCollectionsExport({
+            ...options,
+            ...queryKey[0],
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getApiCollectionsExportQueryKey(options)
+}); };
+
+export const getApiCollectionsExportInfiniteQueryKey = (options?: Options<GetApiCollectionsExportData>): QueryKey<Options<GetApiCollectionsExportData>> => [
+    createQueryKey("getApiCollectionsExport", options, true)
+];
+
+export const getApiCollectionsExportInfiniteOptions = (options?: Options<GetApiCollectionsExportData>) => { return infiniteQueryOptions<GetApiCollectionsExportResponse, GetApiCollectionsExportError, InfiniteData<GetApiCollectionsExportResponse>, QueryKey<Options<GetApiCollectionsExportData>>, string | Pick<QueryKey<Options<GetApiCollectionsExportData>>[0], 'body' | 'headers' | 'path' | 'query'>>(
+// @ts-ignore
+{
+    queryFn: async ({ pageParam, queryKey }) => {
+        // @ts-ignore
+        const page: Pick<QueryKey<Options<GetApiCollectionsExportData>>[0], 'body' | 'headers' | 'path' | 'query'> = typeof pageParam === "object" ? pageParam : {
+            query: {
+                startDate: pageParam
+            }
+        };
+        const params = createInfiniteParams(queryKey, page);
+        const { data } = await getApiCollectionsExport({
+            ...options,
+            ...params,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getApiCollectionsExportInfiniteQueryKey(options)
+}); };
+
 export const getApiCollectionsQueryKey = (options?: Options<GetApiCollectionsData>) => [
     createQueryKey("getApiCollections", options)
 ];
@@ -864,44 +916,3 @@ export const putApiCollectionsByIdMutation = (options?: Partial<Options<PutApiCo
         return data;
     }
 }; return mutationOptions; };
-
-export const getApiCollectionsExportQueryKey = (options?: Options<GetApiCollectionsExportData>) => [
-    createQueryKey("getApiCollectionsExport", options)
-];
-
-export const getApiCollectionsExportOptions = (options?: Options<GetApiCollectionsExportData>) => { return queryOptions({
-    queryFn: async ({ queryKey }) => {
-        const { data } = await getApiCollectionsExport({
-            ...options,
-            ...queryKey[0],
-            throwOnError: true
-        });
-        return data;
-    },
-    queryKey: getApiCollectionsExportQueryKey(options)
-}); };
-
-export const getApiCollectionsExportInfiniteQueryKey = (options?: Options<GetApiCollectionsExportData>): QueryKey<Options<GetApiCollectionsExportData>> => [
-    createQueryKey("getApiCollectionsExport", options, true)
-];
-
-export const getApiCollectionsExportInfiniteOptions = (options?: Options<GetApiCollectionsExportData>) => { return infiniteQueryOptions<GetApiCollectionsExportResponse, GetApiCollectionsExportError, InfiniteData<GetApiCollectionsExportResponse>, QueryKey<Options<GetApiCollectionsExportData>>, string | Pick<QueryKey<Options<GetApiCollectionsExportData>>[0], 'body' | 'headers' | 'path' | 'query'>>(
-// @ts-ignore
-{
-    queryFn: async ({ pageParam, queryKey }) => {
-        // @ts-ignore
-        const page: Pick<QueryKey<Options<GetApiCollectionsExportData>>[0], 'body' | 'headers' | 'path' | 'query'> = typeof pageParam === "object" ? pageParam : {
-            query: {
-                startDate: pageParam
-            }
-        };
-        const params = createInfiniteParams(queryKey, page);
-        const { data } = await getApiCollectionsExport({
-            ...options,
-            ...params,
-            throwOnError: true
-        });
-        return data;
-    },
-    queryKey: getApiCollectionsExportInfiniteQueryKey(options)
-}); };

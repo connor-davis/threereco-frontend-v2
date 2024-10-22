@@ -113,6 +113,18 @@ export type PutApiAuthenticationPasswordResetError = ({
     message: string;
 });
 
+export type PutApiAuthenticationMfaDisableData = {
+    query: {
+        id: string;
+    };
+};
+
+export type PutApiAuthenticationMfaDisableResponse = (string);
+
+export type PutApiAuthenticationMfaDisableError = ({
+    message: string;
+});
+
 export type GetApiUsersPagingData = {
     query?: {
         count?: (number) | null;
@@ -702,7 +714,7 @@ export type GetApiProductsData = {
 export type GetApiProductsResponse = (Array<{
     id: string;
     name: string;
-    price: string;
+    price?: unknown;
     gwCode: string;
     carbonFactor: string;
     businessId: string;
@@ -744,7 +756,7 @@ export type PostApiProductsData = {
      */
     body: {
         name: string;
-        price: string;
+        price?: unknown;
         gwCode: string;
         carbonFactor: string;
         businessId?: (string) | null;
@@ -754,7 +766,7 @@ export type PostApiProductsData = {
 export type PostApiProductsResponse = ({
     id: string;
     name: string;
-    price: string;
+    price?: unknown;
     gwCode: string;
     carbonFactor: string;
     businessId: string;
@@ -803,7 +815,7 @@ export type GetApiProductsByIdData = {
 export type GetApiProductsByIdResponse = ({
     id: string;
     name: string;
-    price: string;
+    price?: unknown;
     gwCode: string;
     carbonFactor: string;
     businessId: string;
@@ -857,7 +869,7 @@ export type PutApiProductsByIdData = {
      */
     body?: {
         name: string;
-        price: string;
+        price?: unknown;
         gwCode: string;
         carbonFactor: string;
         businessId?: (string) | null;
@@ -870,7 +882,7 @@ export type PutApiProductsByIdData = {
 export type PutApiProductsByIdResponse = ({
     id: string;
     name: string;
-    price: string;
+    price?: unknown;
     gwCode: string;
     carbonFactor: string;
     businessId: string;
@@ -921,6 +933,19 @@ export type GetApiCollectionsPagingError = ({
     message: string;
 });
 
+export type GetApiCollectionsExportData = {
+    query?: {
+        endDate?: (string) | null;
+        startDate?: (string) | null;
+    };
+};
+
+export type GetApiCollectionsExportResponse = (string);
+
+export type GetApiCollectionsExportError = ({
+    message: string;
+});
+
 export type GetApiCollectionsData = {
     query?: {
         count?: (number) | null;
@@ -941,7 +966,7 @@ export type GetApiCollectionsResponse = (Array<{
     businessId: string;
     collectorId: string;
     productId: string;
-    weight: string;
+    weight?: unknown;
     createdAt: string;
     updatedAt: string;
     business?: {
@@ -998,7 +1023,7 @@ export type GetApiCollectionsResponse = (Array<{
     product?: {
         id: string;
         name: string;
-        price: string;
+        price?: unknown;
         gwCode: string;
         carbonFactor: string;
         businessId: string;
@@ -1042,7 +1067,7 @@ export type PostApiCollectionsData = {
     body: {
         collectorId: string;
         productId: string;
-        weight: string;
+        weight?: unknown;
         businessId?: (string) | null;
     };
 };
@@ -1052,7 +1077,7 @@ export type PostApiCollectionsResponse = ({
     businessId: string;
     collectorId: string;
     productId: string;
-    weight: string;
+    weight?: unknown;
     createdAt: string;
     updatedAt: string;
     business?: {
@@ -1109,7 +1134,7 @@ export type PostApiCollectionsResponse = ({
     product?: {
         id: string;
         name: string;
-        price: string;
+        price?: unknown;
         gwCode: string;
         carbonFactor: string;
         businessId: string;
@@ -1166,7 +1191,7 @@ export type GetApiCollectionsByIdResponse = ({
     businessId: string;
     collectorId: string;
     productId: string;
-    weight: string;
+    weight?: unknown;
     createdAt: string;
     updatedAt: string;
     business?: {
@@ -1223,7 +1248,7 @@ export type GetApiCollectionsByIdResponse = ({
     product?: {
         id: string;
         name: string;
-        price: string;
+        price?: unknown;
         gwCode: string;
         carbonFactor: string;
         businessId: string;
@@ -1279,7 +1304,7 @@ export type PutApiCollectionsByIdData = {
     body?: {
         collectorId: string;
         productId: string;
-        weight: string;
+        weight?: unknown;
         businessId?: (string) | null;
     };
     path: {
@@ -1292,7 +1317,7 @@ export type PutApiCollectionsByIdResponse = ({
     businessId: string;
     collectorId: string;
     productId: string;
-    weight: string;
+    weight?: unknown;
     createdAt: string;
     updatedAt: string;
     business?: {
@@ -1349,7 +1374,7 @@ export type PutApiCollectionsByIdResponse = ({
     product?: {
         id: string;
         name: string;
-        price: string;
+        price?: unknown;
         gwCode: string;
         carbonFactor: string;
         businessId: string;
@@ -1383,18 +1408,5 @@ export type PutApiCollectionsByIdResponse = ({
 });
 
 export type PutApiCollectionsByIdError = ({
-    message: string;
-});
-
-export type GetApiCollectionsExportData = {
-    query?: {
-        endDate?: (string) | null;
-        startDate?: (string) | null;
-    };
-};
-
-export type GetApiCollectionsExportResponse = (string);
-
-export type GetApiCollectionsExportError = ({
     message: string;
 });
