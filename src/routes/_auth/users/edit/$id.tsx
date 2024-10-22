@@ -129,44 +129,46 @@ function Edit() {
               )}
             />
 
-            <FormField
-              control={editForm.control}
-              name="role"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    value={field.value}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger className="capitalize">
-                        <SelectValue
-                          className="capitalize"
-                          placeholder="Select a user role"
-                        />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {[
-                        "system_admin",
-                        "admin",
-                        "staff",
-                        "business",
-                        "collector",
-                      ].map((role) => (
-                        <SelectItem value={role} className="capitalize">
-                          {role.replace("_", " ")}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormDescription>This is their role.</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <RoleGuard requiredRoles={["system_admin", "admin"]}>
+              <FormField
+                control={editForm.control}
+                name="role"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      value={field.value}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="capitalize">
+                          <SelectValue
+                            className="capitalize"
+                            placeholder="Select a user role"
+                          />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {[
+                          "system_admin",
+                          "admin",
+                          "staff",
+                          "business",
+                          "collector",
+                        ].map((role) => (
+                          <SelectItem value={role} className="capitalize">
+                            {role.replace("_", " ")}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormDescription>This is their role.</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </RoleGuard>
 
             <RoleGuard requiredRoles={["system_admin", "admin"]}>
               <FormField

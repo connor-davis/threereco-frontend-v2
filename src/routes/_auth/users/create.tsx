@@ -1,4 +1,5 @@
 import { postApiUsers } from "@/api-client";
+import RoleGuard from "@/components/guards/role";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -117,43 +118,45 @@ function Create() {
               )}
             />
 
-            <FormField
-              control={createForm.control}
-              name="role"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger className="capitalize">
-                        <SelectValue
-                          className="capitalize"
-                          placeholder="Select a user role"
-                        />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {[
-                        "system_admin",
-                        "admin",
-                        "staff",
-                        "business",
-                        "collector",
-                      ].map((role) => (
-                        <SelectItem value={role} className="capitalize">
-                          {role.replace("_", " ")}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormDescription>This is their role.</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <RoleGuard requiredRoles={["system_admin", "admin"]}>
+              <FormField
+                control={createForm.control}
+                name="role"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="capitalize">
+                          <SelectValue
+                            className="capitalize"
+                            placeholder="Select a user role"
+                          />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {[
+                          "system_admin",
+                          "admin",
+                          "staff",
+                          "business",
+                          "collector",
+                        ].map((role) => (
+                          <SelectItem value={role} className="capitalize">
+                            {role.replace("_", " ")}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormDescription>This is their role.</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </RoleGuard>
 
             <Button type="submit" className="w-full">
               Create User
