@@ -6,5 +6,8 @@ export default function RoleGuard({
 }: React.PropsWithChildren<{ requiredRoles: string[] }>) {
   const { role } = useRole();
 
-  return role;
+  if (!role) return null;
+  if (!requiredRoles.includes(role)) return null;
+
+  return children;
 }
