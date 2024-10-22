@@ -1,7 +1,7 @@
 import {
   deleteApiAuthenticationDisableMfaMutation,
   deleteApiUsersByIdMutation,
-  getApiUsersByIdOptions
+  getApiUsersByIdOptions,
 } from "@/api-client/@tanstack/react-query.gen";
 import Spinner from "@/components/spinners/spinner";
 import {
