@@ -15,6 +15,7 @@ export default function RoleGuard({
     isError: isAuthenticationError,
   } = useQuery({
     ...getApiAuthenticationCheckOptions(),
+    queryHash: crypto.randomUUID(),
   });
 
   if (!requiredRoles.includes(user!.role)) return null;
