@@ -42,6 +42,8 @@ export default function ExportCollectionsDialog() {
         duration: 2000,
       });
     else {
+      console.log(data);
+
       if (data.length === 0)
         return toast.error("Failed", {
           description: "There are no collections for that date range.",
