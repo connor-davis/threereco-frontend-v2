@@ -7,6 +7,7 @@ import {
 } from "@/api-client/@tanstack/react-query.gen";
 import Spinner from "@/components/spinners/spinner";
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Form,
   FormControl,
@@ -19,12 +20,18 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
@@ -33,6 +40,9 @@ import {
   useNavigate,
   useParams,
 } from "@tanstack/react-router";
+import { format, parseISO } from "date-fns";
+import { toZonedTime } from "date-fns-tz";
+import { CalendarIcon } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -43,6 +53,9 @@ const editSchema = z.object({
   collectorId: z.string(),
   productId: z.string(),
   weight: z.string(),
+  createdAt: z
+    .string()
+    .default(toZonedTime(new Date(), "Africa/Johannesburg").toLocaleString()),
 });
 
 function Edit() {
@@ -276,6 +289,56 @@ function Edit() {
                   <FormDescription>
                     This is the collection weight
                   </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={editForm.control}
+              name="createdAt"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Collection Date</FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant={"outline"}
+                          className={cn(
+                            "w-full pl-3 text-left font-normal",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          {field.value ? (
+                            format(field.value, "PPP")
+                          ) : (
+                            <span>Pick a date</span>
+                          )}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={parseISO(field.value)}
+                        onSelect={(value: Date | undefined) =>
+                          field.onChange(
+                            toZonedTime(
+                              value ?? new Date(),
+                              "Africa/Johannesburg"
+                            ).toLocaleString()
+                          )
+                        }
+                        disabled={(date) =>
+                          date > new Date() || date < new Date("1900-01-01")
+                        }
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <FormDescription>The date of the collection.</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
