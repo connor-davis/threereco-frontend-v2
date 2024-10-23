@@ -41,6 +41,7 @@ import {
   useParams,
 } from "@tanstack/react-router";
 import { format, parseISO } from "date-fns";
+import { toZonedTime } from "date-fns-tz";
 import { CalendarIcon } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -52,7 +53,7 @@ const editSchema = z.object({
   collectorId: z.string(),
   productId: z.string(),
   weight: z.string(),
-  createdAt: z.string().default(new Date().toLocaleString()),
+  createdAt: z.string(),
 });
 
 function Edit() {
@@ -109,6 +110,9 @@ function Edit() {
 
   const editForm = useForm<z.infer<typeof editSchema>>({
     resolver: zodResolver(editSchema),
+    defaultValues: {
+      createdAt: toZonedTime(new Date(), "Africa/Johannesburg").toISOString(),
+    },
   });
 
   const editCollection = useMutation({
@@ -320,7 +324,14 @@ function Edit() {
                       <Calendar
                         mode="single"
                         selected={parseISO(field.value)}
-                        onSelect={field.onChange}
+                        onSelect={(value: Date | undefined) =>
+                          field.onChange(
+                            toZonedTime(
+                              value ?? new Date(),
+                              "Africa/Johannesburg"
+                            ).toLocaleString()
+                          )
+                        }
                         disabled={(date) =>
                           date > new Date() || date < new Date("1900-01-01")
                         }

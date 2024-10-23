@@ -44,9 +44,7 @@ const createSchema = z.object({
   collectorId: z.string(),
   productId: z.string(),
   weight: z.string(),
-  createdAt: z
-    .string()
-    .default(toZonedTime(new Date(), "Africa/Johannesburg").toLocaleString()),
+  createdAt: z.string(),
 });
 
 function Create() {
@@ -54,7 +52,9 @@ function Create() {
 
   const createForm = useForm<z.infer<typeof createSchema>>({
     resolver: zodResolver(createSchema),
-    defaultValues: {},
+    defaultValues: {
+      createdAt: toZonedTime(new Date(), "Africa/Johannesburg").toISOString(),
+    },
   });
 
   const {
