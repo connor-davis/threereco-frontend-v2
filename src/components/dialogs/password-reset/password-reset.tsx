@@ -20,6 +20,7 @@ import { Input } from "@/components/ui/input";
 import {
   InputOTP,
   InputOTPGroup,
+  InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -99,12 +100,13 @@ export default function PasswordResetDialog({
                     <FormControl>
                       <InputOTP maxLength={6} {...field}>
                         <InputOTPGroup>
-                          <InputOTPSlot index={0} />
-                          <InputOTPSlot index={1} />
-                          <InputOTPSlot index={2} />
-                          <InputOTPSlot index={3} />
-                          <InputOTPSlot index={4} />
-                          <InputOTPSlot index={5} />
+                          <InputOTPSlot index={0} className="bg-background" />
+                          <InputOTPSlot index={1} className="bg-background" />
+                          <InputOTPSlot index={2} className="bg-background" />
+                          <InputOTPSeparator />
+                          <InputOTPSlot index={3} className="bg-background" />
+                          <InputOTPSlot index={4} className="bg-background" />
+                          <InputOTPSlot index={5} className="bg-background" />
                         </InputOTPGroup>
                       </InputOTP>
                     </FormControl>
