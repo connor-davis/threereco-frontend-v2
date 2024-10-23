@@ -25,6 +25,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 const resetSchema = z.object({
@@ -56,6 +57,16 @@ export default function PasswordResetDialog({
 
   const resetPassword = useMutation({
     ...putApiAuthenticationPasswordResetMutation(),
+    onError: (error) =>
+      toast.error("Failed", {
+        description: error.message,
+        duration: 2000,
+      }),
+    onSuccess: () =>
+      toast.success("Success", {
+        description: "The password has been reset.",
+        duration: 2000,
+      }),
   });
 
   return (
@@ -121,6 +132,10 @@ export default function PasswordResetDialog({
                   </FormItem>
                 )}
               />
+
+              <Button type="submit" className="w-full">
+                Reset Password
+              </Button>
             </form>
           </Form>
         </div>
