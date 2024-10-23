@@ -320,9 +320,7 @@ function Edit() {
                       <Calendar
                         mode="single"
                         selected={parseISO(field.value)}
-                        onSelect={(value: Date | undefined) =>
-                          field.onChange((value ?? new Date()).toLocaleString())
-                        }
+                        onSelect={field.onChange}
                         disabled={(date) =>
                           date > new Date() || date < new Date("1900-01-01")
                         }
