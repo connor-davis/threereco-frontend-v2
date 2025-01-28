@@ -330,6 +330,7 @@
 /* width */
 ::-webkit-scrollbar {
   width: 10px;
+  height: 10px;
 }
 
 /* Track */
@@ -339,12 +340,56 @@
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: hsla(var(--border-h), var(--border-s), var(--border-l), 80%);
+  background: hsla(
+    var(--border-h),
+    var(--border-s),
+    calc(var(--border-l) - 12%),
+    80%
+  ); /* Decrease lightness */
   border-radius: var(--radius);
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: hsla(var(--border-h), var(--border-s), var(--border-l), 100%);
+  background: hsla(
+    var(--border-h),
+    var(--border-s),
+    calc(var(--border-l) - 20%),
+    100%
+  ); /* Slightly lighter on hover */
+  cursor: default;
+}
+
+/* Scrollbar */
+/* width */
+.dark ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+/* Track */
+.dark ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Handle */
+.dark ::-webkit-scrollbar-thumb {
+  background: hsla(
+    var(--border-h),
+    var(--border-s),
+    calc(var(--border-l) - 11%),
+    100%
+  ); /* Decrease lightness */
+  border-radius: var(--radius);
+}
+
+/* Handle on hover */
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: hsla(
+    var(--border-h),
+    var(--border-s),
+    calc(var(--border-l) - 13%),
+    100%
+  ); /* Slightly lighter on hover */
   cursor: default;
 }
