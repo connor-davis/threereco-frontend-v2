@@ -2,6 +2,7 @@ import {
   deleteApiUsersByIdMutation,
   getApiUsersByIdOptions,
 } from "@/api-client/@tanstack/react-query.gen";
+import PasswordResetDialog from "@/components/dialogs/password-reset/password-reset";
 import Spinner from "@/components/spinners/spinner";
 import {
   AlertDialog,
@@ -98,6 +99,8 @@ function User() {
             <Link to="/users/edit/$id" params={{ id: params.id }}>
               <Button className="w-full">Edit User</Button>
             </Link>
+
+            <PasswordResetDialog userId={params.id} />
 
             <AlertDialog>
               <AlertDialogTrigger>
