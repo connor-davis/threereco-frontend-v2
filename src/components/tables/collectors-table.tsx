@@ -1,3 +1,4 @@
+import { getApiCollectorsExport } from "@/api-client";
 import {
   deleteApiCollectorsByIdMutation,
   getApiCollectorsOptions,
@@ -8,9 +9,11 @@ import {
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
+import { format } from "date-fns";
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
+  DownloadCloudIcon,
   EyeIcon,
   PencilIcon,
   PlusIcon,
@@ -103,6 +106,42 @@ export default function CollectorsTable({ caption = undefined }) {
       }),
   });
 
+  const exportData = async () => {
+    const { data, error } = await getApiCollectorsExport();
+
+    if (error)
+      return toast.error("Failed", {
+        description: error.message,
+        duration: 2000,
+      });
+    else {
+      if (data.length === 0 || typeof data !== "string")
+        return toast.error("Failed", {
+          description: "There are no collections for that date range.",
+          duration: 2000,
+        });
+
+      const blob = new Blob([data], { type: "text/csv" });
+
+      // Create a URL for the Blob
+      const url = URL.createObjectURL(blob);
+
+      // Create an anchor tag for downloading
+      const a = document.createElement("a");
+
+      // Set the URL and download attribute of the anchor tag
+      a.href = url;
+      a.download =
+        "collectors-export-" +
+        format(new Date(), "dd-MM-yyyy-hh-mm-ss") +
+        ".csv";
+
+      // Trigger the download by clicking the anchor tag
+      a.click();
+      return;
+    }
+  };
+
   useEffect(() => {
     const disposeable = setTimeout(() => {
       queryClient.invalidateQueries({
@@ -138,6 +177,11 @@ export default function CollectorsTable({ caption = undefined }) {
               Create Collector
             </Button>
           </Link>
+
+          <Button variant="outline" onClick={() => exportData()}>
+            <DownloadCloudIcon className="w-4 h-4 mr-2" />
+            Export Collectors
+          </Button>
         </div>
       </div>
 
