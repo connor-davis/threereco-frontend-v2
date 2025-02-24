@@ -13,6 +13,4 @@ import type { ClientOptions } from './types.gen';
  */
 export type CreateClientConfig<T extends DefaultClientOptions = ClientOptions> = (override?: Config<DefaultClientOptions & T>) => Config<Required<DefaultClientOptions> & T>;
 
-export const client = createClient(createConfig<ClientOptions>({
-    baseUrl: 'https://3reco.vps2.lone-wolf.dev'
-}));
+export const client = createClient(createConfig<ClientOptions>());

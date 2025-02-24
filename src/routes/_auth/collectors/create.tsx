@@ -66,6 +66,7 @@ function Create() {
   } = useQuery({
     ...getApiUsersOptions({
       query: {
+        usePaging: "false",
         role: "collector",
       },
     }),
