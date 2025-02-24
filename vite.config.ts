@@ -13,7 +13,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "http://localhost:4000",
+        target: "https://3reco.vps2.lone-wolf.dev",
         changeOrigin: false,
       },
     },
