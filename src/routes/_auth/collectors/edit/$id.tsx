@@ -69,6 +69,7 @@ function Edit() {
   } = useQuery({
     ...getApiUsersOptions({
       query: {
+        usePaging: "false",
         role: "collector",
       },
     }),
