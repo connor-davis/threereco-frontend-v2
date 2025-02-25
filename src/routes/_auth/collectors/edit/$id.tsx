@@ -329,6 +329,65 @@ function Edit() {
               )}
             />
 
+            <FormField
+              control={createForm.control}
+              name="bankName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Bank Name</FormLabel>
+                  <FormControl>
+                    <Input type="text" placeholder="Bank Name" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    This is the collector bank name
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={createForm.control}
+              name="bankAccountHolder"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Bank Account Holder</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="text"
+                      placeholder="Bank Account Holder"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    This is the collector bank account holder
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={createForm.control}
+              name="bankAccountNumber"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Bank Account Number</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="text"
+                      placeholder="Bank Account Number"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    This is the collector bank account number
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <Button type="submit" className="w-full">
               Edit Collector
             </Button>
