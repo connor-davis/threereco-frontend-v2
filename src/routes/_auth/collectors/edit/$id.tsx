@@ -5,6 +5,7 @@ import {
   putApiCollectorsByIdMutation,
 } from "@/api-client/@tanstack/react-query.gen";
 import CreateUserForm from "@/components/forms/create-user";
+import RoleGuard from "@/components/guards/role";
 import Spinner from "@/components/spinners/spinner";
 import { Button } from "@/components/ui/button";
 import {
@@ -329,64 +330,66 @@ function Edit() {
               )}
             />
 
-            <FormField
-              control={createForm.control}
-              name="bankName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Bank Name</FormLabel>
-                  <FormControl>
-                    <Input type="text" placeholder="Bank Name" {...field} />
-                  </FormControl>
-                  <FormDescription>
-                    This is the collector bank name
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <RoleGuard requiredRoles={["system_admin", "admin"]}>
+              <FormField
+                control={editForm.control}
+                name="bankName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Bank Name</FormLabel>
+                    <FormControl>
+                      <Input type="text" placeholder="Bank Name" {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      This is the collector bank name
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <FormField
-              control={createForm.control}
-              name="bankAccountHolder"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Bank Account Holder</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="text"
-                      placeholder="Bank Account Holder"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    This is the collector bank account holder
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+              <FormField
+                control={editForm.control}
+                name="bankAccountHolder"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Bank Account Holder</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="text"
+                        placeholder="Bank Account Holder"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      This is the collector bank account holder
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <FormField
-              control={createForm.control}
-              name="bankAccountNumber"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Bank Account Number</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="text"
-                      placeholder="Bank Account Number"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    This is the collector bank account number
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+              <FormField
+                control={editForm.control}
+                name="bankAccountNumber"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Bank Account Number</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="text"
+                        placeholder="Bank Account Number"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      This is the collector bank account number
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </RoleGuard>
 
             <Button type="submit" className="w-full">
               Edit Collector
