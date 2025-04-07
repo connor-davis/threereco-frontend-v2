@@ -199,6 +199,7 @@ export default function CollectorsTable({ caption = undefined }) {
             <TableRow>
               <TableCell>Full Name</TableCell>
               <TableCell>ID Number</TableCell>
+              <TableCell>Tracker Code</TableCell>
               <TableCell>User</TableCell>
             </TableRow>
           </TableHeader>
@@ -210,6 +211,7 @@ export default function CollectorsTable({ caption = undefined }) {
                   {[collector.firstName, collector.lastName].join(" ")}
                 </TableCell>
                 <TableCell>{collector.idNumber}</TableCell>
+                <TableCell>{collector.trackerCode ?? "--"}</TableCell>
                 <TableCell>
                   {collector.userId ? (
                     <Link to="/users/$id" params={{ id: collector.userId }}>
