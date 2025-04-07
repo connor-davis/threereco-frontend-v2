@@ -52,6 +52,10 @@ const editSchema = z.object({
   bankName: z.string(),
   bankAccountHolder: z.string(),
   bankAccountNumber: z.string(),
+  trackerCode: z
+    .string()
+    .nullable()
+    .optional(),
   userId: z.string().uuid(),
 });
 
@@ -128,7 +132,14 @@ function Edit() {
           <form
             onSubmit={editForm.handleSubmit((values) =>
               editCollector.mutate({
-                body: values,
+                body: {
+                  ...values,
+                  trackerCode:
+                    values.trackerCode === null ||
+                    values.trackerCode?.length === 0
+                      ? undefined
+                      : values.trackerCode,
+                },
                 path: {
                   id: params.id,
                 },
@@ -384,6 +395,28 @@ function Edit() {
                     </FormControl>
                     <FormDescription>
                       This is the collector bank account number
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={editForm.control}
+                name="trackerCode"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Tracker Code</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="text"
+                        placeholder="Tracker Code"
+                        {...field}
+                        value={field.value ?? ""}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      This is the collector tracker code
                     </FormDescription>
                     <FormMessage />
                   </FormItem>

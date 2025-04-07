@@ -55,6 +55,21 @@ export const PRODUCTS = [
     carbonFactor: "0.12",
   },
   {
+    name: "Unrecyclable",
+    gwCode: "--",
+    carbonFactor: "--",
+  },
+  {
+    name: "Upcycled",
+    gwCode: "--",
+    carbonFactor: "--",
+  },
+  {
+    name: "Reused",
+    gwCode: "--",
+    carbonFactor: "--",
+  },
+  {
     name: "Other",
     gwCode: "GW 580",
     carbonFactor: "Varies",
