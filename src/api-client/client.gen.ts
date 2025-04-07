@@ -14,6 +14,6 @@ import type { ClientOptions } from './types.gen';
 export type CreateClientConfig<T extends DefaultClientOptions = ClientOptions> = (override?: Config<DefaultClientOptions & T>) => Config<Required<DefaultClientOptions> & T>;
 
 export const client = createClient(createConfig<ClientOptions>({
-    baseUrl: 'https://3reco.connor-davis.dev',
+    baseUrl: 'https://3reco.co.za',
     credentials: "include"
 }));
