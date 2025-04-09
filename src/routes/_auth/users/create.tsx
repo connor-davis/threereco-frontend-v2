@@ -20,6 +20,8 @@ import {
 } from "@/components/ui/select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { Loader2 } from "lucide-react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -58,6 +60,8 @@ const createSchema = z.object({
 function Create() {
   const navigate = useNavigate();
 
+  const [isDone, setIsDone] = useState<boolean>(true);
+
   const createForm = useForm<z.infer<typeof createSchema>>({
     resolver: zodResolver(createSchema),
     defaultValues: {
@@ -68,9 +72,13 @@ function Create() {
   });
 
   const onSubmit = async (values: z.infer<typeof createSchema>) => {
+    setIsDone(false);
+
     const { error } = await postApiUsers({
       body: values,
     });
+
+    setIsDone(true);
 
     if (error)
       return toast.error("Failed", {
@@ -158,7 +166,8 @@ function Create() {
               />
             </RoleGuard>
 
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full" disabled={!isDone}>
+              {!isDone && <Loader2 className="size-4 animate-spin" />}
               Create User
             </Button>
           </form>

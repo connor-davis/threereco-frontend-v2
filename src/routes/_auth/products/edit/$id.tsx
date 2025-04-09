@@ -32,6 +32,7 @@ import {
   useNavigate,
   useParams,
 } from "@tanstack/react-router";
+import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -54,6 +55,7 @@ function Edit() {
     gwCode: string;
     carbonFactor: string;
   } | null>(null);
+  const [isDone, setIsDone] = useState<boolean>(true);
 
   const {
     data: productBusinesses,
@@ -85,6 +87,7 @@ function Edit() {
 
   const editProduct = useMutation({
     ...putApiProductsByIdMutation(),
+    onMutate: () => setIsDone(false),
     onError: (error) => {
       return toast.error("Failed", {
         description: error.message,
@@ -92,6 +95,8 @@ function Edit() {
       });
     },
     onSuccess: () => {
+      setIsDone(true);
+
       return navigate({ to: "/products" });
     },
   });
@@ -224,7 +229,8 @@ function Edit() {
               )}
             />
 
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full" disabled={!isDone}>
+              {!isDone && <Loader2 className="size-4 animate-spin" />}
               Edit Product
             </Button>
           </form>

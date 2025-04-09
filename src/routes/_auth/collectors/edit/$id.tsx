@@ -35,6 +35,7 @@ import {
   useNavigate,
   useParams,
 } from "@tanstack/react-router";
+import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -66,6 +67,7 @@ function Edit() {
   const queryClient = useQueryClient();
 
   const [newUser, setNewUser] = useState<boolean>(false);
+  const [isDone, setIsDone] = useState<boolean>(true);
 
   const {
     data: collectorUsers,
@@ -98,6 +100,7 @@ function Edit() {
 
   const editCollector = useMutation({
     ...putApiCollectorsByIdMutation(),
+    onMutate: () => setIsDone(false),
     onError: (error) => {
       return toast.error("Failed", {
         description: error.message,
@@ -105,6 +108,8 @@ function Edit() {
       });
     },
     onSuccess: () => {
+      setIsDone(true);
+
       return navigate({ to: "/collectors" });
     },
   });
@@ -424,7 +429,8 @@ function Edit() {
               />
             </RoleGuard>
 
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full" disabled={!isDone}>
+              {!isDone && <Loader2 className="size-4 animate-spin" />}
               Edit Collector
             </Button>
           </form>

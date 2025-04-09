@@ -34,7 +34,8 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { format, parseISO } from "date-fns";
 import { toZonedTime } from "date-fns-tz";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Loader2 } from "lucide-react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -49,6 +50,8 @@ const createSchema = z.object({
 
 function Create() {
   const navigate = useNavigate();
+
+  const [isDone, setIsDone] = useState<boolean>(true);
 
   const createForm = useForm<z.infer<typeof createSchema>>({
     resolver: zodResolver(createSchema),
@@ -95,6 +98,7 @@ function Create() {
 
   const createProduct = useMutation({
     ...postApiCollectionsMutation(),
+    onMutate: () => setIsDone(false),
     onError: (error) => {
       return toast.error("Failed", {
         description: error.message,
@@ -102,6 +106,8 @@ function Create() {
       });
     },
     onSuccess: () => {
+      setIsDone(true);
+
       return navigate({ to: "/collections" });
     },
   });
@@ -302,7 +308,8 @@ function Create() {
               )}
             />
 
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full" disabled={!isDone}>
+              {!isDone && <Loader2 className="size-4 animate-spin" />}
               Create Collection
             </Button>
           </form>

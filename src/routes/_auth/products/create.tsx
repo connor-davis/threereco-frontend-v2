@@ -25,6 +25,7 @@ import { PRODUCTS } from "@/lib/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -40,6 +41,8 @@ const createSchema = z.object({
 
 function Create() {
   const navigate = useNavigate();
+
+  const [isDone, setIsDone] = useState<boolean>(true);
 
   const createForm = useForm<z.infer<typeof createSchema>>({
     resolver: zodResolver(createSchema),
@@ -66,6 +69,7 @@ function Create() {
 
   const createProduct = useMutation({
     ...postApiProductsMutation(),
+    onMutate: () => setIsDone(false),
     onError: (error) => {
       return toast.error("Failed", {
         description: error.message,
@@ -73,6 +77,8 @@ function Create() {
       });
     },
     onSuccess: () => {
+      setIsDone(true);
+
       return navigate({ to: "/products" });
     },
   });
@@ -183,7 +189,8 @@ function Create() {
               )}
             />
 
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full" disabled={!isDone}>
+              {!isDone && <Loader2 className="size-4 animate-spin" />}
               Create Product
             </Button>
           </form>

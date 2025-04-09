@@ -30,7 +30,8 @@ import {
   useNavigate,
   useParams,
 } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -55,6 +56,8 @@ const editSchema = z.object({
 function Edit() {
   const params = useParams({ from: "/_auth/users/edit/$id" });
   const navigate = useNavigate();
+
+  const [isDone, setIsDone] = useState<boolean>(true);
 
   const {
     data: user,
@@ -81,12 +84,16 @@ function Edit() {
   }, [user]);
 
   const onSubmit = async (values: z.infer<typeof editSchema>) => {
+    setIsDone(false);
+
     const { error } = await putApiUsersById({
       body: values,
       path: {
         id: params.id,
       },
     });
+
+    setIsDone(true);
 
     if (error)
       return toast.error("Failed", {
@@ -193,7 +200,8 @@ function Edit() {
               />
             </RoleGuard>
 
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full" disabled={!isDone}>
+              {!isDone && <Loader2 className="size-4 animate-spin" />}
               Edit User
             </Button>
           </form>

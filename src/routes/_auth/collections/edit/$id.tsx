@@ -42,8 +42,8 @@ import {
 } from "@tanstack/react-router";
 import { format, parseISO } from "date-fns";
 import { toZonedTime } from "date-fns-tz";
-import { CalendarIcon } from "lucide-react";
-import { useEffect } from "react";
+import { CalendarIcon, Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -59,6 +59,8 @@ const editSchema = z.object({
 function Edit() {
   const params = useParams({ from: "/_auth/collections/edit/$id" });
   const navigate = useNavigate();
+
+  const [isDone, setIsDone] = useState<boolean>(true);
 
   const {
     data: collectionBusinesses,
@@ -117,6 +119,7 @@ function Edit() {
 
   const editCollection = useMutation({
     ...putApiCollectionsByIdMutation(),
+    onMutate: () => setIsDone(false),
     onError: (error) => {
       return toast.error("Failed", {
         description: error.message,
@@ -124,6 +127,8 @@ function Edit() {
       });
     },
     onSuccess: () => {
+      setIsDone(true);
+
       return navigate({ to: "/collections" });
     },
   });
@@ -345,7 +350,8 @@ function Edit() {
               )}
             />
 
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full" disabled={!isDone}>
+              {!isDone && <Loader2 className="size-4 animate-spin" />}
               Edit Collection
             </Button>
           </form>
