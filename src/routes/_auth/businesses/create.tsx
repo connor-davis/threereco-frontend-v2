@@ -28,6 +28,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -51,6 +52,7 @@ function Create() {
   const queryClient = useQueryClient();
 
   const [newUser, setNewUser] = useState<boolean>(false);
+  const [isDone, setIsDone] = useState<boolean>(true);
 
   const createForm = useForm<z.infer<typeof createSchema>>({
     resolver: zodResolver(createSchema),
@@ -71,6 +73,7 @@ function Create() {
 
   const createBusiness = useMutation({
     ...postApiBusinessesMutation(),
+    onMutate: () => setIsDone(false),
     onError: (error) => {
       return toast.error("Failed", {
         description: error.message,
@@ -78,6 +81,8 @@ function Create() {
       });
     },
     onSuccess: () => {
+      setIsDone(true);
+
       return navigate({ to: "/businesses" });
     },
   });
@@ -298,7 +303,8 @@ function Create() {
               )}
             />
 
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full" disabled={!isDone}>
+              {!isDone && <Loader2 className="size-4 animate-spin" />}
               Create Business
             </Button>
           </form>

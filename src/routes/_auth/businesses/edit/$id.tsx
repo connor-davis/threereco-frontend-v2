@@ -35,6 +35,7 @@ import {
   useNavigate,
   useParams,
 } from "@tanstack/react-router";
+import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -59,6 +60,7 @@ function Edit() {
   const queryClient = useQueryClient();
 
   const [newUser, setNewUser] = useState<boolean>(false);
+  const [isDone, setIsDone] = useState<boolean>(true);
 
   const {
     data: businessUsers,
@@ -90,6 +92,7 @@ function Edit() {
 
   const editBusiness = useMutation({
     ...putApiBusinessesByIdMutation(),
+    onMutate: () => setIsDone(false),
     onError: (error) => {
       return toast.error("Failed", {
         description: error.message,
@@ -97,6 +100,8 @@ function Edit() {
       });
     },
     onSuccess: () => {
+      setIsDone(true);
+
       return navigate({ to: "/businesses" });
     },
   });
@@ -343,7 +348,8 @@ function Edit() {
         </Form>
 
         <Link to="/businesses">
-          <Button variant="outline" className="w-full">
+          <Button variant="outline" className="w-full" disabled={!isDone}>
+            {!isDone && <Loader2 className="size-4 animate-spin" />}
             Back To Businesses
           </Button>
         </Link>
