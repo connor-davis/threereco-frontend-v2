@@ -70,6 +70,11 @@ export const PRODUCTS = [
     carbonFactor: "--",
   },
   {
+    name: "Tetrapak",
+    gwCode: "--",
+    carbonFactor: "--",
+  },
+  {
     name: "Other",
     gwCode: "GW 580",
     carbonFactor: "Varies",
