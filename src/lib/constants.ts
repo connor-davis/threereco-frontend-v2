@@ -75,6 +75,11 @@ export const PRODUCTS = [
     carbonFactor: "--",
   },
   {
+    name: "Aluminium Cans",
+    gwCode: "--",
+    carbonFactor: "--",
+  },
+  {
     name: "Other",
     gwCode: "GW 580",
     carbonFactor: "Varies",
