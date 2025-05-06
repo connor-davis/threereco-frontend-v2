@@ -85,9 +85,14 @@ export const PRODUCTS = [
     carbonFactor: "0.8",
   },
   {
+    name: "Metal",
+    gwCode: "GW 572",
+    carbonFactor: "0.5",
+  },
+  {
     name: "Other",
     gwCode: "GW 580",
-    carbonFactor: "0",
+    carbonFactor: "0.5",
   },
 ].sort((a, b) => {
   if (a.name > b.name) return -1;
